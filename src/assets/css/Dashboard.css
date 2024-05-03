@@ -1,0 +1,251 @@
+.dashboard-menu{
+    /* position: fixed; */
+    /* left: 0;
+    top: 0; */
+    /* min-height: 100vh ;
+    max-height: max-content; */
+    min-height: 100vh !important;
+    background-color: #f6f6f6;
+    color: gray;
+    border-right: 1px solid lightgray;
+    border-radius: 0 20px 20px 0;
+    justify-content: space-between;
+    z-index: 100;
+    width: 300px;
+}
+
+.dashboard{
+    /* width: 100vw; */
+    /* width: 100%; */
+    min-height: 100vh;
+    max-height: max-content;
+    background-color: white;
+}
+
+.dashboard-menu a{
+    color:gray;
+    margin: 15px 0 !important;
+    flex: 0 0 auto;
+}
+
+
+.dashboard-menu label{
+    font-size: 0.8rem;
+}
+
+.header-heading{
+    align-self: center; 
+}
+
+.header-heading a{
+    color: black !important;
+}
+
+.dashboard-right-section{
+    /* border: 1px solid red; */
+    height: 100vh;
+    /* width: calc(100% - 248px); */
+    z-index: 0;
+    /* position: absolute; */
+    /* top: 0; */
+    /* left: calc(10% + 55px); */
+}
+
+.dashboard-right-section-header{
+    width: 100%;
+height: 10vh;
+border-bottom: 1px solid lightgray;
+/* border: 1px solid blue; */
+    
+}
+
+.dashboard-header-profilePic{
+    clip-path: circle();
+    width: 40px;
+    height: 40px;
+}
+
+.dashboard-right-section-header input{
+    border: 1px solid lightgray;
+    border-radius: 6px;
+    background-color: rgb(239, 239, 239);
+}
+
+.dashboard-right-section-header input:focus{
+    outline: none;
+}
+
+.right-section-small-container{
+    border-radius: 10px;
+    /* width: 50%; */
+    /* height: 10vh; */
+}
+
+.right-section-small-container h6{
+    font-weight: bold;
+}
+
+.right-section-small-container h4{
+    font-weight: bolder;
+}
+
+.right-section-small-container p{
+    font-size: 12px;
+    color:#FF5151;
+}
+
+.dashboard-right-section-bottom-left{
+    width: 60%;
+}
+
+.dashboard-graphs-section{
+    width: 40%;
+    padding: 0 20px;
+}
+
+.all-projects-graph{
+    border: 1px solid lightgray;
+    border-radius: 8px;
+}
+
+.your-projects-details{
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    width: 40%;
+}
+
+.dashboard-table{
+    margin-top: 1vh;
+    table-layout: fixed;
+    width: 100%;
+    padding: 0;
+    border-spacing: 0;
+}
+
+.dashboard-table thead{
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: white;
+}
+
+.dashboard-table tr{
+    display: table-row;
+    vertical-align: inherit;
+    border-color: white;
+}
+
+.dashboard-table th{
+    font-weight: 400;
+    font-size: 1rem;
+    text-align: center;
+    background: #15589c;
+    border-left: 1px solid #ccc;
+    padding: 10px 0;
+    color: white;
+    line-height: 1;
+    display: table-cell;
+    vertical-align: inherit;
+}
+
+.dashboard-table th:first-child{
+    border-left: 0;
+    border-radius: 8px 0 0 0 ;
+}
+
+.dashboard-table th:last-child{
+    border-radius: 0 8px 0 0;
+}
+
+.dashboard-table tbody{
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: white;
+}
+
+.dashboard-table td{
+    background: rgb(180, 204, 228);
+    text-align: center;
+    /* border-bottom: 1px solid #ccc; */
+    border-left: 1px solid #ccc;
+    padding: 7px 5px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    display: table-cell;
+    vertical-align: inherit;
+    color: #3e3e3e;
+}
+
+.dashboard-table td:first-child{
+    border-left: 0;
+}
+
+.dashboard-table tr:last-child {
+    td:first-child {
+      border-radius: 0 0 0 8px;
+    }
+  }
+
+  .dashboard-table tr:last-child {
+    td:last-child {
+      border-radius: 0 0 8px 0 ;
+    }
+  }
+
+.dashboard-add-open-project>div{
+    /* border:1px solid lightgray; */
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+.dashboard-add-open-project li{
+    text-decoration: underline;
+    color:#15589c;
+}
+
+.dashboard-add-open-project label{
+    color:black;
+    font-weight: bold;
+}
+
+.dashboard-add-open-project a{
+    color:#15589c;
+}
+
+.file-input-container {
+    position: relative;
+    display: inline-block; 
+}
+
+.dashboard-add-open-project input[type="text"]{
+    border: 1px solid lightgray;
+    border-radius: 6px;
+}
+
+.dashboard-add-open-project button{
+    background-color: #15589c;
+    border: none;
+    border-radius: 6px;
+    color:white;
+}
+
+
+.custom-file-upload {
+    border: 1px solid #15589c;
+    display: inline-block;
+    padding: 2px 12px;
+    cursor: pointer;
+    background-color: transparent;
+    border-radius: 4px;
+    color:#15589c !important;
+    font-size: 0.8rem;
+}
+
+.custom-file-upload:hover{
+    background-color: var(--primary-color);
+    color: white !important;
+}
+/* Style the file input to be hidden */
+input[type="file"] {
+    display: none;
+}
+

@@ -1,0 +1,60 @@
+.dashboardmenu{
+    background-color: #344955;
+    height: 88vh;   
+    width: 225px; 
+}
+
+.dashboardmenu>a{
+    font-size: 0.85rem;
+    color:white;
+    padding: 3px 14px;
+}
+
+.dashboard-menu-newproject{
+    background-color: #78A083 !important;
+    border-radius: 9999px !important;
+    padding: 2px 40px !important;
+}
+
+.dashboard-menu-newproject:hover{
+    background-color: #78A083 !important;
+    border-radius: 9999px !important;
+    padding: 2px 40px !important;
+}
+
+.dashboard-menu-newproject:focus{
+    background-color: #78A083 !important;
+    border-radius: 9999px !important;
+    padding: 2px 40px !important;
+}
+
+
+
+.dashboardmenu>a:hover{
+    background-color: #50727B;
+    color:white !important;
+}
+
+.dashboardmenu>a:focus{
+    background-color: rgb(53, 55, 75) !important;
+    color:white !important;
+}
+
+#newprojectModal {
+    display: block;
+    position: fixed;
+    top: 40%;
+    left: 30%;
+    /* transform: translate(-50%, -50%); */
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    border: var(--primary-color);
+    border-radius: 10px;
+    width: 40vw;
+    /* min-height: 480px !important;
+    max-height: 584px !important; */
+    height: 26vh;
+    /* max-height: 30vw; */
+    color:black !important
+}

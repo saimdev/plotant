@@ -1,0 +1,91 @@
+a{
+  text-decoration: none;
+  color: black;
+}
+
+a:hover{
+  color: black !important;
+}
+
+.light {
+  --text-color: #000000;
+  background: linear-gradient(180deg, #FFF 0%, #d1e9ff 100%) !important;
+  color: var(--text-color);
+}
+
+.dark {
+  --background-color: #141414;
+  --text-color: #ffffff;
+  background-color: var(--background-color) !important;
+  color: var(--text-color) !important;
+}
+
+.dark a{
+  color: white !important;
+}
+
+.dark .version-control{
+  background-color: var(--secondary-color);
+}
+
+.dark .features-starter{
+  background-color: var(--secondary-color);
+}
+
+.dark .data-upload-container{
+  background-color: var(--secondary-color) !important;
+}
+
+.dark .data-upload-container>h2{
+  color: rgb(84, 84, 84) !important;
+}
+
+.dark .upload-svg path{
+  fill:rgb(84, 84, 84);
+}
+
+.row{
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.dark .results-home-container{
+  background-color: #e8eef5 !important;
+}
+
+.dark .home-dashboard-col-header{
+  color: black !important;
+}
+
+.dark .chart-container{
+  color: black !important;
+}
+
+.canvasjs-chart-credit{
+  display: none !important;
+}
+
+.dark .color-theme-div>div>p{
+  color: black;
+}
+
+.dark .color-theme-div>h5{
+  color: black;
+}
+
+.dark .color-theme-div>div>div>p{
+  color: black;
+} 
+
+.modal-dialog-centered{
+  width: 100vw !important;
+}
+
+.fade .modal .show{
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.Toastify__toast-icon{
+  margin-right: 10px !important;
+}

@@ -1,0 +1,40 @@
+.newprojectsecondmenu{
+    background-color: white;
+    height: max-content;   
+    min-height: 100vh;
+    width: 230px;
+    border-right: 6px solid #0b2c4e;
+}
+
+.newprojectsecondmenu-links>div>div{
+    font-size: 0.7rem;
+    color:white
+}
+
+.newprojectsecondmenu-links{
+    background-color: #0b2c4e !important;
+}
+
+.newprojectsecondmenu-links .custom-home-dashboard-menu-btn-data{
+    border-radius: 0 !important;
+}
+
+.newprojectsecondmenu-links .custom-dropdown{
+    color: black !important;
+}
+
+/* .newprojectfirstmenu>a{
+    font-size: 0.85rem;
+    color:white;
+    padding: 3px 14px;
+}
+
+.newprojectfirstmenu>a:hover{
+    background-color: #50727B;
+    color:white !important;
+}
+
+.newprojectfirstmenu>a:focus{
+    background-color: #78A083 !important;
+    color:white !important;
+} */

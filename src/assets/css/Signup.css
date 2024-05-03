@@ -1,0 +1,37 @@
+.signup-form{
+    border-radius: 1.25rem;
+    background: var(--secondary-color);
+    backdrop-filter: blur(15px);
+    padding: 5rem 3rem;
+}
+
+.signup-form>input:focus{
+    outline: none;
+    /* border: none; */
+}
+
+.signup-form>input{
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 2px 8px;
+}
+
+.signup-form>input::placeholder{
+    font-size: 0.9rem;
+}
+
+.signup-button{
+    border-radius: 0.375rem;
+    background: var(--primary-color) !important;
+    font-weight: 400;
+}
+
+.signup-page{
+    height: 90vh;
+    width: 100%;
+    /* border: 1px solid red; */
+    padding: 0 140px !important;
+    backdrop-filter: blur(80px);
+   
+  background-color: rgba(255, 255, 255, 0.1);
+}

@@ -1,0 +1,9 @@
+.upload-container{
+    background-color: var(--secondary-color);
+    padding: 200px;
+    border-radius: 10px;
+}
+
+.canvasjs-chart-credit{
+    display: none;
+}

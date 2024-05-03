@@ -1,0 +1,104 @@
+.home-data-table{
+    margin-top: 1vh;
+    table-layout: fixed;
+    width: 100%;
+    padding: 0;
+    border-spacing: 0;
+    min-height: max-content;
+    max-height: 54vh;
+    overflow-y: auto;
+}
+
+.home-data-table thead{
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+
+.home-data-table tr:last-child td:first-child {
+    border-bottom-left-radius: 10px; 
+    border-bottom: none;
+  }
+  
+.home-data-table tr:last-child td:last-child {
+    border-bottom-right-radius: 10px; 
+    border-bottom: none;
+}
+
+.label-table>.home-data-table tr:last-child td:last-child{
+    border-bottom-right-radius: 0 !important;
+}
+
+.label-table>.home-data-table tr:last-child td:first-child{
+    border-bottom-right-radius: 0 !important;
+}
+
+
+.home-data-table tr{
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+}
+
+.home-data-table th{
+    font-weight: 400;
+    font-size: 0.9em;
+    text-align: center;
+    background: var(--primary-color);
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    border-left: 1px solid #ccc;
+    padding: 10px 0;
+    color: white;
+    line-height: 1;
+    letter-spacing: -0.1em;
+    display: table-cell;
+    vertical-align: inherit;
+}
+
+.home-data-table th:first-child{
+    border-left: 1px solid black;
+}
+
+.home-data-table tbody{
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+
+.home-data-table td{
+    background: #eee2ff;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    padding: 7px 5px;
+    font-size: .8em;
+    line-height: 1.2;
+    display: table-cell;
+    vertical-align: inherit;
+    color: #555;
+}
+
+.home-data-table>table>tbody>tr>td>input{
+    text-align: center;
+    outline: none;
+    border: none;
+    background-color: transparent;
+}
+
+.home-data-table td:first-child{
+    border-left: 0;
+}
+
+.home-data-table>h4{
+    color: var(--primary-color);
+}
+
+.label-table{
+    min-height: 250px;
+    max-height: 250px;
+    overflow-y: auto;
+    min-width: 180px;
+    max-width: 180px;
+}
+

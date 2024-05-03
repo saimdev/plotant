@@ -1,0 +1,14 @@
+.all-projects-search{
+    border: 1px solid gray;
+    border-radius: 4px;
+}
+
+.info-badge{
+    background-color: #3265b2;
+    border-radius: 9999px;
+    color: white;
+    font-family: Merriweather, serif;
+    font-style: italic;
+    padding: 6px;
+    clip-path: circle();
+}

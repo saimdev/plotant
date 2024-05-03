@@ -1,0 +1,23 @@
+.newprojectfirstmenu{
+    background-color: white;
+    height: max-content;   
+    min-height: 100vh;
+    width: 190px;
+    border-right: 6px solid #0b2c4e;
+}
+
+.newprojectfirstmenu>a{
+    font-size: 0.85rem;
+    color:black;
+    padding: 3px 14px;
+}
+
+.newprojectfirstmenu>a:hover{
+    background-color: #0f3e6d;
+    color:white !important;
+}
+
+.newprojectfirstmenu>a:focus{
+    background-color: #0f3e6d !important;
+    color:white !important;
+}
