@@ -2,6 +2,7 @@ import React from "react";
 import { Bar } from "react-chartjs-2";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
+import { Chart } from "chart.js";
 
 function HorizontalBarChart({
   chartData,
@@ -38,6 +39,10 @@ function HorizontalBarChart({
     }
     return new Blob([u8arr], { type: mime });
   }
+
+  const maxDataValue = Math.max(...chartData.datasets.flatMap(dataset => dataset.data));
+
+  const maxYValue = Math.ceil(maxDataValue / stepSize) * stepSize;
 
   const downloadChart = async (format) => {
     const canvas = document
@@ -95,6 +100,16 @@ function HorizontalBarChart({
     const numDataPoints = labels.length;
     const desiredDistance = 15; // Set the desired distance between x labels
     const barHeight = desiredDistance / numDataPoints; // Changed from barWidth to barHeight
+
+    const canvas = document.getElementById("barChartCanvas").getContext("2d").canvas;
+    const chartInstance = Chart.getChart("barChartCanvas");
+    const options = chartInstance.config.options;
+    console.log(options);
+    const stepSize = options.scales.y.ticks.stepSize;
+    const canvasWidth = canvas.width;
+    const numBars = labels.length;
+
+    const barWidth = (canvasWidth / numBars);
   
     let colorDefinitions = ""; // String to hold color definitions
     let plots = ""; // String to hold plot commands
@@ -117,6 +132,7 @@ function HorizontalBarChart({
           xbar, % Changed from ybar to xbar
           fill=mycolor${labelIndex}, % Use defined color for dataset
           draw=black,
+          bar width=${barWidth - 290},
         ] coordinates {(${value},${labels[labelIndex]})};\n`; // Changed coordinates order
       });
     });
@@ -146,6 +162,8 @@ function HorizontalBarChart({
           bar height=${barHeight}, % Set the height of the bars (changed from bar width to bar height)
           enlarge y limits=0.1, % Enlarge y limits to avoid cropping bars
           y dir=reverse, % Reverse the direction of y-axis
+          ymax=${maxYValue},
+          ytick distance=${stepSize},
           reverse legend, % Reverse the order of legend entries
         ]
       

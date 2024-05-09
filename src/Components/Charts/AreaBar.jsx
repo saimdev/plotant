@@ -32,6 +32,9 @@ function AreaBar({
   legendPosition,
 }) {
   const { labels, barData, lineData } = chartData;
+  const maxDataValue = Math.max(...chartData.datasets.flatMap(dataset => dataset.data));
+
+  const maxYValue = Math.ceil(maxDataValue / stepSize) * stepSize;
   function dataURLtoBlob(dataurl) {
     var arr = dataurl.split(","),
       mime = arr[0].match(/:(.*?);/)[1],
@@ -160,68 +163,101 @@ function AreaBar({
   };
 
   const generateLatex = (format) => {
-    const numDataPoints = labels.length;
-    const desiredDistance = 15; // Set the desired distance between x labels
+    const { datasets, labels } = chartData;
+    // const numDataPoints = labels.length;
+    // const desiredDistance = 15; // Set the desired distance between x labels
+    const canvas = document.getElementById("barChartCanvas").getContext("2d").canvas;
+    const chartInstance = Chart.getChart("barChartCanvas");
+    const options = chartInstance.config.options;
+    console.log(options);
+    const stepSize = options.scales.y.ticks.stepSize;
+    const canvasWidth = canvas.width;
+    const numBars = labels.length;
 
-    let barPlot = `
-      \\addplot[
-        ybar,
-        fill=orange!80,
-        draw=none,
-        bar width=15, % Set the width of the bars
-      ] coordinates {
-    `;
+    const barWidth = (canvasWidth / numBars);
+    let colorDefinitions = ""; // String to hold color definitions
+    let plots = ""; // String to hold plot commands
 
-    let linePlot = `
-      \\addplot[
-        % color=green!50,
-        fill=blue!60, % Set the fill color for the shaded area
-        fill opacity=0.5, % Set the opacity for the shaded area
-        draw=none
-      ] coordinates {
-    `;
+    // Generate color definitions
+    barColors.forEach((color, index) => {
+      colorDefinitions += `\\definecolor{mycolor${index}}{HTML}{${color.substring(
+        1
+      )}}\n`; // Remove '#' from hex color
+    });
+    const areacolor="#FF6384";
+    colorDefinitions += `\\definecolor{mycolor${(labels.length)+1}}{HTML}{${areacolor.substring(
+      1
+    )}}\n`;
+    // Generate plot commands
+    datasets.forEach((dataset, index) => {
+      let color = `mycolor${index}`; // Use defined color for dataset
+      const datasetLabel = dataset.label || `Dataset ${index + 1}`;
 
-    labels.forEach((label, labelIndex) => {
-      const barDataPoint = data.datasets[0].data[labelIndex];
-      const lineDataPoint = data.datasets[0].data[labelIndex];
-
-      barPlot += `(${label}, ${barDataPoint}) `;
-      linePlot += `(${label}, ${lineDataPoint}) `;
+      labels.forEach((label, labelIndex) => {
+        plots += `
+        \\addplot[
+          ybar,
+          fill=mycolor${labelIndex}, % Use defined color for dataset
+          draw=black,
+          bar width=${barWidth - 290}, % Set the width of the bars
+        ] coordinates {(${label}, ${dataset.data[labelIndex]}) };\n`;
+      });
+      
+      // plots += `};`;
+      plots += `
+  \\addplot[
+    fill=mycolor${(labels.length)+1},
+    fill opacity=0.2,
+    draw=none,
+  ] coordinates {
+    ${labels.map((label, labelIndex) => `(${label}, ${dataset.data[labelIndex]})`).join(" ")}
+  };`;
+      console.log(color);
+      console.log(plots);
     });
 
-    barPlot += `};`;
-    linePlot += `};`;
-
     const latexCode = `
-      \\documentclass{article}
-      \\usepackage{pgfplots}
-       
-      \\begin{document}
-       
-      \\begin{figure}
-        \\centering
-        \\begin{tikzpicture}
-          \\begin{axis}[
-            title={${graphHeading}},
-            xlabel={${xLabel}},
-            ylabel={${yLabel}},
-            xtick=data,
-            symbolic x coords={${labels.join(", ")}},
-            ymin=0,
-            legend style={at={(0.5,-0.15)}, anchor=north, legend columns=-1},
-            width=${numDataPoints + 7}cm, % Set the width of the chart
-            grid=both,
-          ]
-        ${barPlot}
-        ${linePlot}
-          \\end{axis}
-        \\end{tikzpicture}
-        \\caption{${graphHeading}}
-      \\end{figure}
-       
-      \\end{document}
-    `;
+    \\documentclass{article}
+    \\usepackage{pgfplots}
+    \\usepackage{xcolor} % Add xcolor package for defining custom colors
+    \\usepackage{geometry}
+\\geometry{
+  a4paper, % or letterpaper (US)
+  left=1in,
+  right=1in,
+  top=1in,
+  bottom=1in,
+}
+    ${colorDefinitions} % Define colors
 
+    \\begin{document}
+    
+    \\begin{figure}
+      \\centering
+      \\begin{tikzpicture}
+        \\begin{axis}[
+          title={${graphHeading}},
+          xlabel={${xLabel}},
+          ylabel={${yLabel}},
+          xtick={${labels.join(", ")}},
+          symbolic x coords={${labels.join(", ")}},
+          ymin=0,
+          ymax=${maxYValue},
+          legend style={at={(0.5,-0.15)}, anchor=north, legend columns=-1},
+          ytick distance=${stepSize},
+          width=1.0\\textwidth, % Set the width of the chart
+          grid=both,
+        ]
+      
+      ${plots} % Plot commands
+
+        \\end{axis}
+      \\end{tikzpicture}
+      \\caption{${graphHeading}}
+    \\end{figure}
+    
+    \\end{document}
+  `;
     switch (format) {
       case "tex":
         const blob = new Blob([latexCode], {
@@ -230,7 +266,7 @@ function AreaBar({
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = `${graphHeading}_AreaBar.tex`;
+        link.download = `${graphHeading}_BarChart.tex`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

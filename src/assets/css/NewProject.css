@@ -1,0 +1,19 @@
+/* CSS for custom scrollbar */
+.custom-scrollbar {
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: var(--primary-color) rgba(0, 0, 0, 0); /* For Firefox */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 2px; /* Width of the scrollbar */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1); /* Color of the track */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.5); /* Color of the scrollbar */
+    border-radius: 4px; /* Rounded corners */
+  }
+  

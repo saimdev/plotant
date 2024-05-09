@@ -43,7 +43,7 @@ export function SelectChart({
   stepSize,
   legendPosition,
 }) {
-  // console.log(parameters);
+  console.log(chartName);
   let labels = Array.isArray(parameters.x)
     ? parameters.x.map((param) => param)
     : [parameters.x];
@@ -131,6 +131,7 @@ export function SelectChart({
           fontFamily={fontFamily}
           stepSize={stepSize}
           legendPosition={legendPosition}
+          barColors={barColors}
         />
       );
     case "Doghnut":

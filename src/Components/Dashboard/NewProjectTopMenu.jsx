@@ -5,7 +5,7 @@ import HeaderLogo from "../HeaderLogo";
 import { useTheme } from "../ThemeContext";
 import ShareModal from "../Modals/ShareModal";
 
-export function NewProjectTopMenu({ projectId }) {
+export function NewProjectTopMenu({ projectId, fileId, updateLogs }) {
   const { toggleTheme } = useTheme();
   const [theme, setTheme] = useState();
   // const [userEmail, setUserEmail] = useState("");
@@ -39,6 +39,40 @@ export function NewProjectTopMenu({ projectId }) {
       window.alert(data.error);
     }
   };
+
+
+  const formateDate = (dateStr) => {
+    const dateObj = new Date(dateStr);
+
+    const year = dateObj.getFullYear();
+    const month = dateObj.getMonth() + 1;
+    const day = dateObj.getDate();
+
+    const formattedDate = `${year}-${month < 10 ? "0" : ""}${month}-${
+      day < 10 ? "0" : ""
+    }${day}`;
+
+    return formattedDate;
+  };
+
+  const openLogs = async ()=>{
+    const response = await fetch("/analysis/getLogs",
+      {
+        headers:{
+          "Content-Type": "application/json"
+        },
+        method:"POST",
+        body:JSON.stringify({
+          projectId,
+          fileId
+        })
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+
+    updateLogs(data.data);
+  }
 
   // const [accessType, setAccessType] = useState("");
 
@@ -150,15 +184,18 @@ export function NewProjectTopMenu({ projectId }) {
             style={{ borderRight: "1px solid white" }}
             className="px-2 py-1"
           >
-            Submit
+            Save
           </Link>
-          <Link
+          {
+            fileId && <Link
             to=""
             style={{ borderRight: "1px solid white" }}
             className="px-2 py-1"
+            onClick={openLogs}
           >
             History
           </Link>
+          }
           {/* <Link to="" className="px-2 py-1">Chat</Link> */}
           {/* <Link to="" className="nav-projects-link">Projects</Link>
                 <select name="" id="" className="nav-account-link">

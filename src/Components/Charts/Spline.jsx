@@ -3,6 +3,7 @@ import { Line } from "react-chartjs-2";
 import "../../assets/css/Charts.css";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
+import { Chart } from "chart.js";
 
 function Spline({
   chartData,
@@ -28,6 +29,7 @@ function Spline({
   stepSize,
   legendPosition,
 }) {
+
   function dataURLtoBlob(dataurl) {
     var arr = dataurl.split(","),
       mime = arr[0].match(/:(.*?);/)[1],
@@ -90,9 +92,23 @@ function Spline({
     }
   };
 
+  const maxDataValue = Math.max(...chartData.datasets.flatMap(dataset => dataset.data));
+
+  const maxYValue = Math.ceil(maxDataValue / stepSize) * stepSize;
+
   const generateLatex = (format) => {
     const { datasets, labels } = chartData;
     const numDataPoints = labels.length;
+
+    const canvas = document.getElementById("barChartCanvas").getContext("2d").canvas;
+    const chartInstance = Chart.getChart("barChartCanvas");
+    const options = chartInstance.config.options;
+    console.log(options);
+    const stepSize = options.scales.y.ticks.stepSize;
+    const canvasWidth = canvas.width;
+    const numBars = labels.length;
+
+    const barWidth = (canvasWidth / numBars);
 
     let latexCode = `
       \\documentclass{article}
@@ -111,8 +127,10 @@ function Spline({
             symbolic x coords={${labels.join(", ")}},
             ymin=0,
             legend style={at={(0.5,-0.15)}, anchor=north, legend columns=-1},
+            ymax=${maxYValue},
+          ytick distance=${stepSize},
             width=15cm, % Set the width of the chart
-            grid=none,
+            grid=both,
           ]
         `;
 
@@ -122,9 +140,8 @@ function Spline({
       latexCode += `
             \\addplot[
               mark=*,
-              ${
-                stepped ? "const plot, no markers," : "smooth,"
-              }, % Smooth the line if not stepped
+              ${stepped ? "const plot, no markers," : "smooth,"
+        }, % Smooth the line if not stepped
               line width=1.5pt,
             ] coordinates {
           `;
@@ -211,9 +228,7 @@ function Spline({
           ...chartData,
           datasets: chartData.datasets.map((dataset, index) => ({
             ...dataset,
-            borderColor: `rgba(${Math.random() * 255}, ${
-              Math.random() * 255
-            }, ${Math.random() * 255}, 1)`,
+            borderColor: 'black',
           })),
         }}
         options={{
@@ -262,6 +277,7 @@ function Spline({
                 },
                 stepSize: stepSize,
               },
+              max:maxYValue
             },
             x: {
               stacked: true,

@@ -331,7 +331,7 @@ export function NewProjectSecondLeftMenu({
     }
   };
 
-  const newGraph = () => {
+  const newGraph = async () => {
     // console.log(condition);
     // console.log(conditionalParameters);
     // console.log(yAxisConditions);
@@ -371,6 +371,53 @@ export function NewProjectSecondLeftMenu({
       dataLabelsConfig,
       fontFamily,
     ];
+
+    // const response = await fetch("/analysis/saveGraph", {
+    //   headers:{
+    //     "Content-Type":"application/json"
+    //   },
+    //   body:JSON.stringify({
+    //     graphName,
+    //   parameters,
+    //   barColors,
+    //   xAxis,
+    //   yAxis,
+    //   selectedLabels,
+    //   xLabelColor,
+    //   yLabelColor,
+    //   graphHeadSize,
+    //   graphHeadWeight,
+    //   xLabelSize,
+    //   xLabelWeight,
+    //   yLabelSize,
+    //   yLabelWeight,
+    //   graphHeading,
+    //   barBorders,
+    //   condition,
+    //   conditionalParameters,
+    //   yAxisConditions,
+    //   yAxisValue,
+    //   textureColor,
+    //   textureBg,
+    //   legends,
+    //   reference,
+    //   colorStatesTexture,
+    //   colorStatesBgTexture,
+    //   dictionaryState,
+    //   borderColor,
+    //   dlSize,
+    //   dlWeight,
+    //   dlColor,
+    //   stepped,
+    //   dataLabelsConfig,
+    //   fontFamily,
+    //   })
+    // });
+
+    // const data = await response.json();
+    // console.log(data);
+    // window.alert(data.message);
+
     setGraphHistory((prevHistory) => [newGraphState, ...prevHistory]);
     handleGraphNameChange("");
     setXAxis("");

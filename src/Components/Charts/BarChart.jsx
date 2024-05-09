@@ -46,6 +46,10 @@ function BarChart({
     return new Blob([u8arr], { type: mime });
   }
 
+  const maxDataValue = Math.max(...chartData.datasets.flatMap(dataset => dataset.data));
+
+  const maxYValue = Math.ceil(maxDataValue / stepSize) * stepSize;
+
   const downloadChart = async (format) => {
     const canvas = document
       .getElementById("barChartCanvas")
@@ -131,10 +135,17 @@ function BarChart({
 
   const generateLatex = (format) => {
     const { datasets, labels } = chartData;
-    const numDataPoints = labels.length;
-    const desiredDistance = 15; // Set the desired distance between x labels
-    const barWidth = desiredDistance / numDataPoints;
+    // const numDataPoints = labels.length;
+    // const desiredDistance = 15; // Set the desired distance between x labels
+    const canvas = document.getElementById("barChartCanvas").getContext("2d").canvas;
+    const chartInstance = Chart.getChart("barChartCanvas");
+    const options = chartInstance.config.options;
+    console.log(options);
+    const stepSize = options.scales.y.ticks.stepSize;
+    const canvasWidth = canvas.width;
+    const numBars = labels.length;
 
+    const barWidth = (canvasWidth / numBars);
     let colorDefinitions = ""; // String to hold color definitions
     let plots = ""; // String to hold plot commands
 
@@ -156,20 +167,28 @@ function BarChart({
           ybar,
           fill=mycolor${labelIndex}, % Use defined color for dataset
           draw=black,
-          bar width=15, % Set the width of the bars
+          bar width=${barWidth-200}, % Set the width of the bars
         ] coordinates {(${label}, ${dataset.data[labelIndex]}) };\n`;
       });
-
+      
       // plots += `};`;
       console.log(color);
       console.log(plots);
     });
 
+    
     const latexCode = `
     \\documentclass{article}
     \\usepackage{pgfplots}
     \\usepackage{xcolor} % Add xcolor package for defining custom colors
-
+    \\usepackage{geometry}
+\\geometry{
+  a4paper, % or letterpaper (US)
+  left=1in,
+  right=1in,
+  top=1in,
+  bottom=1in,
+}
     ${colorDefinitions} % Define colors
 
     \\begin{document}
@@ -184,8 +203,10 @@ function BarChart({
           xtick={${labels.join(", ")}},
           symbolic x coords={${labels.join(", ")}},
           ymin=0,
+          ymax=${maxYValue},
           legend style={at={(0.5,-0.15)}, anchor=north, legend columns=-1},
-          width=14cm, % Set the width of the chart
+          ytick distance=${stepSize},
+          width=1.0\\textwidth, % Set the width of the chart
           grid=both,
         ]
       
@@ -279,6 +300,7 @@ function BarChart({
                 },
                 stepSize: stepSize,
               },
+              max:maxYValue,
             },
             x: {
               title: {

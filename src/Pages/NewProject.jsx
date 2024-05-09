@@ -68,7 +68,7 @@ export function NewProject() {
   const [graphHeading, setGraphHeading] = useState("");
   const [fileId, setFileId] = useState("");
   const [stepSize, setStepSize] = useState(1);
-
+  const [legendPosition, setLegendPosition] = useState("Top");
   const [barBorders, setBarBoders] = useState(1);
   const [condition, setCondition] = useState([]);
   const [conditionalParameters, setConditionalParameters] = useState([]);
@@ -89,6 +89,15 @@ export function NewProject() {
   const [hoveredLink, setHoveredLink] = useState(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [historyIndex, setHistoryIndex] = useState(0);
+  const [logsColor, setLogsColor] = useState([]);
+  const [logsDisplay, setLogsDisplay] = useState(false);
+  const [greyShadeCheck, setGreyShadeCheck] = useState(false);
+  const [logs, setLogs] = useState([]);
+
+  const updateLogs = (newLogs) => {
+    setLogs(newLogs);
+    setLogsDisplay(true);
+  };
 
   const getFileNameWithoutExtension = (fileName) => {
     return fileName.split(".")[0];
@@ -126,52 +135,14 @@ export function NewProject() {
     setStepped(false);
   };
 
-  useEffect(()=>{
-    console.log("JSON DATA CHANGED");
-  },[jsonData]);
+
 
   useEffect(() => {
-    handleGraphNameChange("");
-    setXAxis("");
-    setYAxis("");
-    setSelectedLabels([]);
-    setIsOpen(false);
-    setIsOpenFilterX(false);
-    setIsOpenFilterY(false);
-    setReference("");
-    setModalOption("color");
-    setIsModalOpen(false);
-    setXLabelColor("lightgray");
-    setYLabelColor("lightgray");
-    setGraphHeadSize(16);
-    setGraphHeadWeight("normal");
-    setXLabelSize(12);
-    setXLabelWeight("normal");
-    setYLabelSize(12);
-    setYLabelWeight("normal");
-    setIsContainerDataOpen(true);
-    setIsContainerFilterOpen(false);
-    setIsContainerVisualOpen(false);
-    setGraphHeading("");
-    // setColumnsData(null);
-    setBarBoders(1);
-    setCondition([]);
-    setConditionalParameters([]);
-    setTextureBg("white");
-    setTextureColor("black");
-    setLegends("");
-    setDictionaryState([]);
-    setColorStatesBgTexture([]);
-    setColorStatesTexture([]);
-    setBarBoders(1);
-    setBorderColor("#000000");
-    setDLSize(12);
-    setDLWeight("normal");
-    setDLColor("#ffffff");
-    setStepped(false);
-    setDataLabelsConfig(false);
-    setFontFamily("Arial");
-    setParameters(null);
+    // console.log("JSON DATA CHANGED");
+  }, [jsonData]);
+
+  useEffect(() => {
+    generateColors();
   }, [fileId]);
 
   // const handleGraphNameChange = (newName) => {
@@ -270,13 +241,204 @@ export function NewProject() {
   const [showModal, setShowModal] = useState(false);
   // const [projectName, setProjectName] = useState("");
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setLoader(false);
-    }, 3000);
+  // useEffect(() => {
 
-    return () => clearTimeout(timeout);
-  }, []);
+
+
+  // }, []);
+
+  const getGraphs = async (fileId) => {
+    setGraphHistory([]);
+    const response = await fetch("/analysis/getGraph", {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "POST",
+      body: JSON.stringify({
+        projectId: projectName,
+        fileId
+      }),
+      credentials: "include"
+    });
+
+    const data = await response.json();
+    // console.log(data.data);
+    // if (!data.data===null) {
+    // console.log(data.data);
+
+    //  console.log(data.data.length);
+    // console.log(data.data[lastIndex].parameters);
+    // handleGraphNameChange(data.data[lastIndex].graphName);
+    // setXAxis(data.data[lastIndex].xAxis);
+    // setYAxis(data.data[lastIndex].yAxis);
+    // setParameters(data.data[lastIndex].parameters);
+    // setSelectedLabels(data.data[lastIndex].selectedLabels);
+    // setIsOpen(data.data[lastIndex].isOpen);
+    // setIsOpenFilterX(data.data[lastIndex].isOpenFilterX);
+    // setIsOpenFilterY(data.data[lastIndex].isOpenFilterY);
+    // setReference(data.data[lastIndex].reference);
+    // setModalOption(data.data[lastIndex].modalOption);
+    // setIsModalOpen(data.data[lastIndex].isModalOpen);
+    // setXLabelColor(data.data[lastIndex].xLabelColor);
+    // setYLabelColor(data.data[lastIndex].yLabelColor);
+    // setGraphHeadSize(data.data[lastIndex].graphHeadSize);
+    // setGraphHeadWeight(data.data[lastIndex].graphHeadWeight);
+    // setXLabelSize(data.data[lastIndex].xLabelSize);
+    // setXLabelWeight(data.data[lastIndex].xLabelWeight);
+    // setYLabelSize(data.data[lastIndex].yLabelSize);
+    // setYLabelWeight(data.data[lastIndex].yLabelWeight);
+    // setIsContainerDataOpen(data.data[lastIndex].isContainerDataOpen);
+    // setIsContainerFilterOpen(data.data[lastIndex].isContainerFilterOpen);
+    // setIsContainerVisualOpen(data.data[lastIndex].isContainerVisualOpen);
+    // setGraphHeading(data.data[lastIndex].graphHeading);
+    // // setColumnsData(null);
+    // setBarBoders(data.data[lastIndex].barBorders);
+    // setCondition(data.data[lastIndex].condition);
+    // setConditionalParameters(data.data[lastIndex].conditionalParameters);
+    // setTextureBg(data.data[lastIndex].textureBg);
+    // setTextureColor(data.data[lastIndex].textureColor);
+    // setLegends(data.data[lastIndex].legends);
+    // setDictionaryState(data.data[lastIndex].dictionaryState);
+    // setColorStatesBgTexture(data.data[lastIndex].colorStatesBgTexture);
+    // setColorStatesTexture(data.data[lastIndex].colorStatesTexture);
+    // setBarBoders(data.data[lastIndex].barBorders);
+    // setBorderColor(data.data[lastIndex].borderColor);
+    // setDLSize(data.data[lastIndex].dlSize);
+    // setDLWeight(data.data[lastIndex].dlWeight);
+    // setDLColor(data.data[lastIndex].dlColor);
+    // setStepped(data.data[lastIndex].stepped);
+    // setDataLabelsConfig(data.data[lastIndex].dataLabelsConfig);
+    // setFontFamily(data.data[lastIndex].fontFamily);
+    // setStepSize(data.data[lastIndex].stepSize);
+    // console.log(parameters);
+    data.data && data.data.forEach(item => {
+      // console.log(item.parameters);
+      // console.log(item.conditionalParameters);
+      // Do something with yLabelColor
+      // handleGraphNameChange(data.data.graphName);
+      // console.log("SAIM", item.xAxis);
+      const xAxis1 = item.xAxis;
+      const graphName1 = item.graphName;
+      const barColors1 = item.barColors;
+      const yAxis1 = item.yAxis;
+      const parameters1 = item.parameters;
+      const selectedLabels1 = item.selectedLabels;
+      const isOpen1 = item.isOpen;
+      const isOpenFilterX1 = item.isOpenFilterX;
+      const isOpenFilterY1 = item.isOpenFilterY;
+      const reference1 = item.reference;
+      const modalOption1 = item.modalOption;
+      const isModalOpen1 = item.isModalOpen;
+      const xLabelColor1 = item.xLabelColor;
+      const yLabelColor1 = item.yLabelColor;
+      const graphHeadSize1 = item.graphHeadSize;
+      const graphHeadWeight1 = item.graphHeadWeight;
+      const xLabelSize1 = item.xLabelSize;
+      const xLabelWeight1 = item.xLabelWeight;
+      const yLabelSize1 = item.yLabelSize;
+      const yAxisConditions1 = item.yAxisConditions;
+      const yAxisValue1 = item.yAxisValue;
+      const yLabelWeight1 = item.yLabelWeight;
+      const isContainerDataOpen1 = item.isContainerDataOpen;
+      const isContainerFilterOpen1 = item.isContainerFilterOpen;
+      const isContainerVisualOpen1 = item.isContainerVisualOpen;
+      const graphHeading1 = item.graphHeading;
+      const barBorders1 = item.barBorders;
+      const condition1 = item.condition;
+      const conditionalParameters1 = item.conditionalParameters;
+      const textureBg1 = item.textureBg;
+      const textureColor1 = item.textureColor;
+      const legends1 = item.legends;
+      const dictionaryState1 = item.dictionaryState;
+      const colorStatesBgTexture1 = item.colorStatesBgTexture;
+      const colorStatesTexture1 = item.colorStatesTexture;
+      const borderColor1 = item.borderColor;
+      const dlSize1 = item.dlSize;
+      const dlWeight1 = item.dlWeight;
+      const dlColor1 = item.dlColor;
+      const stepped1 = item.stepped;
+      const dataLabelsConfig1 = item.dataLabelsConfig;
+      const fontFamily1 = item.fontFamily;
+      const stepSize1 = item.stepSize;
+      const greyShadeCheck1 = item.greyShadeCheck;
+      const legendPosition1 = item.legendPosition;
+      const graphid = item.id;
+
+      // console.log(parameters);
+      const newGraphState = [
+        graphName1,
+        parameters1,
+        barColors1,
+        xAxis1,
+        yAxis1,
+        selectedLabels1,
+        xLabelColor1,
+        yLabelColor1,
+        graphHeadSize1,
+        graphHeadWeight1,
+        xLabelSize1,
+        xLabelWeight1,
+        yLabelSize1,
+        yLabelWeight1,
+        graphHeading1,
+        barBorders1,
+        condition1,
+        conditionalParameters1,
+        yAxisConditions1,
+        yAxisValue1,
+        textureColor1,
+        textureBg1,
+        legends1,
+        reference1,
+        colorStatesTexture1,
+        colorStatesBgTexture1,
+        dictionaryState1,
+        borderColor1,
+        dlSize1,
+        dlWeight1,
+        dlColor1,
+        stepped1,
+        dataLabelsConfig1,
+        fontFamily1,
+        stepSize1,
+        greyShadeCheck1,
+        legendPosition1,
+        graphid
+      ];
+      console.log("CHECK");
+      setGraphHistory((prevHistory) => [newGraphState, ...prevHistory]);
+    });
+    // }
+
+
+
+
+
+  }
+
+  const deleteGraph = async (graphId) => {
+    console.log(graphId);
+    const res = await fetch("/analysis/deleteGraph", {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        fileId,
+        projectId: projectName,
+        graphId
+      }),
+      method: "POST"
+    });
+
+    const data = await res.json();
+    if (data.message) {
+      window.alert(data.message);
+      getGraphs(fileId);
+    }
+    else if (data.error) {
+      window.alert(data.error);
+    }
+  }
 
   // const handleNewProjectClick = () => {
   //   setShowModal(true);
@@ -415,6 +577,7 @@ export function NewProject() {
     // console.log(index);
     // console.log(graphHistory[index][16]);
     setHistoryIndex(index);
+    console.log(graphHistory[index][34], graphHistory[index][35], graphHistory[index][36]);
     setGraphName(graphHistory[index][0]);
     setParameters(graphHistory[index][1]);
     setBarColors(graphHistory[index][2]);
@@ -450,12 +613,67 @@ export function NewProject() {
     setDataLabelsConfig(graphHistory[index][32]);
     setFontFamily(graphHistory[index][33]);
     setStepSize(graphHistory[index][34]);
+    setLegendPosition(graphHistory[index][35]);
+    setGreyShadeCheck(graphHistory[index][36]);
   };
 
-  const newGraph = () => {
+  const newGraph = async () => {
     // console.log(condition);
     // console.log(conditionalParameters);
     // console.log(yAxisConditions);
+
+
+    const response = await fetch("/analysis/saveGraph", {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "POST",
+      body: JSON.stringify({
+        graphName,
+        parameters,
+        barColors,
+        xAxis,
+        yAxis,
+        selectedLabels,
+        xLabelColor,
+        yLabelColor,
+        graphHeadSize,
+        graphHeadWeight,
+        xLabelSize,
+        xLabelWeight,
+        yLabelSize,
+        yLabelWeight,
+        graphHeading,
+        barBorders,
+        condition,
+        conditionalParameters,
+        yAxisConditions,
+        yAxisValue,
+        textureColor,
+        textureBg,
+        legends,
+        reference,
+        colorStatesTexture,
+        colorStatesBgTexture,
+        dictionaryState,
+        borderColor,
+        dlSize,
+        dlWeight,
+        dlColor,
+        stepped,
+        dataLabelsConfig,
+        fontFamily,
+        stepSize,
+        legendPosition,
+        greyShadeCheck,
+        project_id: projectName,
+        file_id: fileId
+      }),
+      credentials: "include"
+    });
+
+    const data = await response.json();
+    const graphid = data.id;
     const newGraphState = [
       graphName,
       parameters,
@@ -492,7 +710,12 @@ export function NewProject() {
       dataLabelsConfig,
       fontFamily,
       stepSize,
+      greyShadeCheck,
+      legendPosition,
+      graphid
     ];
+    // console.log(data);
+    window.alert(data.message);
     setGraphHistory((prevHistory) => [newGraphState, ...prevHistory]);
     handleGraphNameChange("");
     setXAxis("");
@@ -535,6 +758,8 @@ export function NewProject() {
     setDataLabelsConfig(false);
     setFontFamily("Arial");
     setStepSize(1);
+    setGreyShadeCheck(false);
+    setLegendPosition("Top");
     // setXAxis("");
     // setYAxis("");
     // setSelectedLabels([]);
@@ -562,6 +787,61 @@ export function NewProject() {
     setIsModalOpen(true);
     // console.log(barColors);
   };
+
+
+  function generateGreyShadeColors() {
+    setGreyShadeCheck(!greyShadeCheck);
+    if (!greyShadeCheck === true) {
+      if (parameters) {
+        let generatedColorPalette;
+        if (Array.isArray(parameters.y)) {
+          // Generate an array of random grey values (0-255)
+          generatedColorPalette = parameters.y.map((_) => {
+            const greyValue = Math.floor(Math.random() * 256);
+            const hex = greyValue.toString(16).padStart(2, "0"); // Ensure two digits for each component
+            return `#${hex}${hex}${hex}`; // Use the same value for R, G, and B components
+          });
+        } else {
+          // Generate a single random grey value
+          const greyValue = Math.floor(Math.random() * 256);
+          const hex = greyValue.toString(16).padStart(2, "0");
+          generatedColorPalette = [`#${hex}${hex}${hex}`]; // Use the same value for R, G, and B components
+        }
+        console.log(generatedColorPalette);
+        // Ensure colors are not identical (loop until different)
+        let unique = false;
+        while (!unique) {
+          unique = true;
+          for (let i = 0; i < generatedColorPalette.length - 1; i++) {
+            if (generatedColorPalette[i] === generatedColorPalette[i + 1]) {
+              // Regenerate the duplicate color
+              const greyValue = Math.floor(Math.random() * 256);
+              const hex = greyValue.toString(16).padStart(2, "0");
+              generatedColorPalette[i + 1] = `#${hex}${hex}${hex}`; // Use the same value for R, G, and B components
+              unique = false;
+              break;
+            }
+          }
+        }
+
+        setBarColors(generatedColorPalette);
+      }
+    } else {
+      if (parameters) {
+        let generatedColorPalette;
+        if (Array.isArray(parameters.y)) {
+          generatedColorPalette = parameters.y.map(
+            (_) => `#${Math.floor(Math.random() * 16777215).toString(16)}`
+          );
+        } else {
+          generatedColorPalette = [
+            `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+          ];
+        }
+        setBarColors(generatedColorPalette);
+      }
+    }
+  }
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -658,6 +938,19 @@ export function NewProject() {
     setHoveredLink(null);
   };
 
+  const formateDate = (dateStr) => {
+    const dateObj = new Date(dateStr);
+
+    const year = dateObj.getFullYear();
+    const month = dateObj.getMonth() + 1;
+    const day = dateObj.getDate();
+
+    const formattedDate = `${year}-${month < 10 ? "0" : ""}${month}-${day < 10 ? "0" : ""
+      }${day}`;
+
+    return formattedDate;
+  };
+
   useEffect(() => {
     if (
       parameters &&
@@ -683,14 +976,59 @@ export function NewProject() {
   }, [parameters, graphHistory, historyIndex]);
   const handleSelectedFile = (file) => {
     setSelectedFile(file);
-    console.log("Selected file in parent component:", file);
+    // console.log("Selected file in parent component:", file);
   };
   const handleFileId = (fileId) => {
+    console.log("SAIM");
     setFileId(fileId);
-    console.log("Selected file in parent component:", fileId);
+    getGraphs(fileId);
+    handleGraphNameChange("");
+    setXAxis("");
+    setYAxis("");
+    setSelectedLabels([]);
+    setIsOpen(false);
+    setIsOpenFilterX(false);
+    setIsOpenFilterY(false);
+    setReference("");
+    setModalOption("color");
+    setIsModalOpen(false);
+    setXLabelColor("lightgray");
+    setYLabelColor("lightgray");
+    setGraphHeadSize(16);
+    setGraphHeadWeight("normal");
+    setXLabelSize(12);
+    setXLabelWeight("normal");
+    setYLabelSize(12);
+    setYLabelWeight("normal");
+    setIsContainerDataOpen(true);
+    setIsContainerFilterOpen(false);
+    setIsContainerVisualOpen(false);
+    setGraphHeading("");
+    // setColumnsData(null);
+    setBarBoders(1);
+    setCondition([]);
+    setConditionalParameters([]);
+    setTextureBg("white");
+    setTextureColor("black");
+    setLegends("");
+    setDictionaryState([]);
+    setColorStatesBgTexture([]);
+    setColorStatesTexture([]);
+    setBarBoders(1);
+    setBorderColor("#000000");
+    setDLSize(12);
+    setDLWeight("normal");
+    setDLColor("#ffffff");
+    setStepped(false);
+    setDataLabelsConfig(false);
+    setFontFamily("Arial");
+    setParameters(null);
+
+    // newGraph();
+    // console.log("Selected file in parent component:", fileId);
   };
   const handleJsonData = (newJsonData) => {
-    console.log(newJsonData);
+    // console.log(newJsonData);
     setJsonData(newJsonData);
     // setTimeout(() => {
     //   // Reset jsonData to null after 2 seconds
@@ -717,6 +1055,22 @@ export function NewProject() {
     setGraphName(newName);
   };
 
+  const generateColors = () => {
+    // console.log("BarColors before", barColors);
+
+    const generatedColorPalette = [];
+    for (let i = 0; i < 1; i++) {
+      generatedColorPalette.push(
+        `#${Math.floor(Math.random() * 16777215).toString(16)}`
+      );
+    }
+
+    const combinedColors = [...logsColor, ...generatedColorPalette];
+    setLogsColor(combinedColors);
+    // console.log(combinedColors);
+    // console.log("BarColors After", barColors);
+  };
+
   // if(loader){
   //   return (
   //     <div className="loader d-flex text-center flex-column justify-content-center align-items-center">
@@ -726,17 +1080,49 @@ export function NewProject() {
   //   )
   // }
 
-  const deleteGraph = (index) => {
-    const updatedHistory = [...graphHistory];
-    updatedHistory.splice(index, 1);
-    setGraphHistory(updatedHistory);
-  };
+
 
   return (
     <div className="dashboard">
       <div className="dashboard-main d-flex flex-column">
-        <NewProjectTopMenu projectId={projectName} />
+        <NewProjectTopMenu projectId={projectName} fileId={fileId} updateLogs={updateLogs} />
         <div className="d-flex flex-row">
+          <div className="py-3" style={{ height: '100vh', width: '16vw', background: 'white', zIndex: 9999999, position: 'absolute', top: 0, right: 0, boxShadow: 'rgba(21,88,156, 0.50) 0px 3px 8px', display: logsDisplay ? 'block' : 'none' }}>
+            <div className="d-flex flex-row justify-content-between align-items-center w-100 px-3">
+              <h4>Logs</h4>
+              <button style={{ padding: '0.05rem 0.35rem' }} className="btn btn-danger" onClick={()=>setLogsDisplay(false)}>x</button>
+            </div>
+            <div className="d-flex flex-column my-3 px-3 custom-scrollbar" style={{ overflowY: 'auto', height: '88vh' }}>
+
+              {logs && logs.map((log, index) => (
+                <div className="d-flex flex-column w-100 my-2" key={index}>
+                  <div className="d-flex flex-row w-100 justify-content-between align-items-center">
+                    <p style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>{log.date} {log.time}</p>
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 60 60"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M5 30C5 18.2149 5 12.3223 8.66117 8.66117C12.3223 5 18.2149 5 30 5C41.785 5 47.6777 5 51.3387 8.66117C55 12.3223 55 18.2149 55 30C55 41.785 55 47.6777 51.3387 51.3387C47.6777 55 41.785 55 30 55C18.2149 55 12.3223 55 8.66117 51.3387C5 47.6777 5 41.785 5 30ZM30 15.625C31.0355 15.625 31.875 16.4645 31.875 17.5V30.4732L36.1742 26.1742C36.9065 25.442 38.0935 25.442 38.8258 26.1742C39.558 26.9065 39.558 28.0935 38.8258 28.8258L31.3258 36.3258C30.9743 36.6775 30.4972 36.875 30 36.875C29.5028 36.875 29.0257 36.6775 28.6742 36.3258L21.1742 28.8258C20.442 28.0935 20.442 26.9065 21.1742 26.1742C21.9064 25.442 23.0936 25.442 23.8258 26.1742L28.125 30.4732V17.5C28.125 16.4645 28.9645 15.625 30 15.625ZM20 40.625C18.9645 40.625 18.125 41.4645 18.125 42.5C18.125 43.5355 18.9645 44.375 20 44.375H40C41.0355 44.375 41.875 43.5355 41.875 42.5C41.875 41.4645 41.0355 40.625 40 40.625H20Z"
+                        fill="#15589c"
+                      />
+                    </svg>
+                  </div>
+                  <p style={{ color: 'gray', fontSize: '0.9rem' }}>{log.message}</p>
+                  <div className="d-flex flex-row align-items-center">
+                    <div className="p-1 mx-2" style={{ background: logsColor[0], borderRadius: '0.5rem' }}></div>
+                    <p style={{ color: 'gray', fontSize: '0.8rem' }}>{log.userName}</p>
+                  </div>
+                </div>
+              ))}
+
+            </div>
+          </div>
           <NewProjectFirstLeftMenu
             onFileSelect={handleSelectedFile}
             onFileId={handleFileId}
@@ -993,6 +1379,35 @@ export function NewProject() {
                         </div>
                       )}
                     </div>
+                    <div className="d-flex flex-row my-1 data-labels-config align-items-center mt-3">
+                      <label htmlFor="" className="">
+                        Step Size
+                      </label>
+                      <input
+                        type="text"
+                        name=""
+                        id=""
+                        value={stepSize}
+                        className="mx-2 step-size-input"
+                        onChange={(e) => setStepSize(e.target.value)}
+                      />
+                    </div>
+                    <div className="d-flex flex-row my-1 data-labels-config align-items-center mt-3">
+                      <label htmlFor="" className="">
+                        Legend Position
+                      </label>
+                      <select
+                        className="mx-2 step-size-input"
+                        onChange={(e) => setLegendPosition(e.target.value)}
+                      >
+                        <option value="left">Left</option>
+                        <option value="right">Right</option>
+                        <option value="top" selected>
+                          Top
+                        </option>
+                        <option value="bottom">Bottom</option>
+                      </select>
+                    </div>
                     <div className="d-flex flex-row my-1 data-labels-config align-items-center">
                       <input
                         type="checkbox"
@@ -1085,6 +1500,17 @@ export function NewProject() {
                               ])
                             }
                           />
+                        </div>
+                        <div className="d-flex flex-row my-1 data-labels-config align-items-center">
+                          <input
+                            type="checkbox"
+                            name=""
+                            id=""
+                            onChange={() => generateGreyShadeColors()}
+                          />
+                          <label htmlFor="" className="mx-2">
+                            Grey Shade Color
+                          </label>
                         </div>
                         <div className="d-flex flex-row justify-content-between align-items-center">
                           <Link
@@ -1344,6 +1770,8 @@ export function NewProject() {
                   stepped={stepped}
                   dataLabelsConfig={dataLabelsConfig}
                   fontFamily={fontFamily}
+                  stepSize={stepSize}
+                  legendPosition={legendPosition}
                 />
               ) : (
                 <SelectChart
@@ -1373,6 +1801,8 @@ export function NewProject() {
                   stepped={stepped}
                   dataLabelsConfig={dataLabelsConfig}
                   fontFamily={fontFamily}
+                  stepSize={stepSize}
+                  legendPosition={legendPosition}
                 />
               )
             ) : (
@@ -1387,7 +1817,6 @@ export function NewProject() {
                 key={index}
                 className="d-flex flex-row align-items-start mx-3"
               >
-                {/* {console.log(history[17])} */}
                 <div
                   onClick={() => handlePreviousGraph(index)}
                   style={{ cursor: "pointer" }}
@@ -1433,7 +1862,7 @@ export function NewProject() {
                 <img
                   src={require("../assets/imgs/delete.png")}
                   style={{ width: "20px", cursor: "pointer" }}
-                  onClick={() => deleteGraph(index)}
+                  onClick={() => deleteGraph(history[37])}
                   alt=""
                 />
               </div>
@@ -1443,12 +1872,12 @@ export function NewProject() {
           ""
         )}
         {
-          jsonData &&<div
+          jsonData && <div
             className="row"
             style={{ borderTop: "1px solid rgb(167, 167, 167)" }}
           >
             <div className="col-12">
-           <UserTable
+              <UserTable
                 jsonData={jsonData}
                 xLabel={xAxis}
                 yLabel={yAxis}
@@ -1456,8 +1885,8 @@ export function NewProject() {
                 projectId={projectName}
                 fileId={fileId}
               />
-           
-           
+
+
             </div>
           </div>
         }

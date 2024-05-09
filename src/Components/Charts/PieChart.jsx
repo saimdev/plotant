@@ -90,101 +90,108 @@ function PieChart({
   };
 
   const generateLatex = (format) => {
-    /// Check if chartData is defined
-  if (!chartData) {
-    console.error('chartData is undefined.');
-    return;
-  }
-
-  // Check if chartData has required properties
-  if (!chartData || !chartData.datasets || !chartData.labels) {
-    console.error('chartData or its properties (datasets, labels) are undefined.');
-    return;
-  }
-
-  const { datasets, labels } = chartData;
-
-  const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33FF', '#FFFF33'];
-
-  let colorDefinitions = ""; // String to hold color definitions
+    const { datasets, labels } = chartData;
+    let colorDefinitions = ""; // String to hold color definitions
   // Generate color definitions
-  colors.forEach((color, index) => {
+  console.log(datasets[0].backgroundColor);
+  barColors.forEach((color, index) => {
     colorDefinitions += `\\definecolor{mycolor${index}}{HTML}{${color.substring(
       1
-    )}}\n`; 
+    )}}\n`; // Remove '#' from hex color
   });
-
-  let latexCode = `
+    let colorList = "";
+    for (let i = 0; i < labels.length; i++) {
+        colorList += `mycolor${i}, `;
+    }
+    // Remove the trailing comma
+    colorList = colorList.slice(0, -2);
+    let latexCode = `
       \\documentclass{article}
       \\usepackage{pgf-pie}
-      \\usepackage{xcolor} % Add xcolor package for defining custom colors
+      \\usepackage{xcolor}
       
-      % Add more color definitions as needed
       ${colorDefinitions}
-      
-      \\begin{document}
-      
-      \\begin{figure}
+      \\begin{document}`
+      let totalSum = 0;
+
+    datasets.forEach((dataset, index) => {
+      labels.forEach((label, labelIndex) => {
+        totalSum += dataset.data[labelIndex];
+      });
+    });
+    let colorArray = colorList.split(", ");
+
+// Reverse the order of the colorArray
+colorArray.reverse();
+
+// Join the reversed colorArray back into a string
+colorList = colorArray.join(", ");
+      latexCode+=`\\begin{figure}
         \\centering
         \\begin{tikzpicture}
-        \\pie[rotate=180, 
+        \\pie[rotate=150, 
           text=inside, 
           radius=5,
-          color={mycolor0, mycolor1, mycolor2, mycolor3, mycolor4}, % Use defined colors
-        ]
+          sum=${totalSum},
+          hide number, 
+          before number = {},
+          after number = {},
+          color={${colorList}},]
         {`;
 
-  let totalSum = 0;
+    
 
-  datasets.forEach((dataset, index) => {
-    labels.forEach((label, labelIndex) => {
-      totalSum += dataset.data[labelIndex];
-    });
-  });
+    // Iterate over the datasets array in reverse
+for (let i = datasets.length - 1; i >= 0; i--) {
+  const dataset = datasets[i];
+  // Iterate over the labels array starting from the last index
+  for (let j = labels.length - 1; j >= 0; j--) {
+      const label = labels[j];
+      // Access the dataValue from the end of the labels array
+      const dataValue = dataset.data[j];
+      // Append the dataValue to the latexCode
+      latexCode += `${dataValue}/, `;
+  }
+}
 
-  datasets.forEach((dataset, index) => {
-    labels.forEach((label, labelIndex) => {
-      const dataValue = dataset.data[labelIndex];
-      const percentage = (dataValue / totalSum) * 100;
-      latexCode += `${percentage.toFixed(2)}/${label} (${dataValue}), `;
-    });
-  });
 
-  // Remove the trailing comma and close the tikzpicture and figure environments
-  latexCode = latexCode.slice(0, -2) + "}\n";
-  latexCode += `
-        \\end{tikzpicture}
-        \\caption{${graphHeading}}
-      \\end{figure}
+    // Remove the trailing comma and close the tikzpicture and figure environments
+    latexCode = latexCode.slice(0, -2) + "}\n";
+
+    // Draw a white-colored circle in the center to represent the hole (donut)
+    latexCode += `
+      \\end{tikzpicture}
+      \\caption{${graphHeading}}
+    \\end{figure}
       
-      \\end{document}
+    \\end{document}
     `;
 
     switch (format) {
-        case "tex":
-            const blob = new Blob([latexCode], {
-                type: "text/plain;charset=utf-8",
-            });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = `${graphHeading}_PieChart.tex`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            break;
-        case "copycode":
-            const textarea = document.createElement("textarea");
-            textarea.value = latexCode;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand("copy");
-            document.body.removeChild(textarea);
-            alert("LaTeX code copied to clipboard!");
-            break;
+      case "tex":
+        const blob = new Blob([latexCode], {
+          type: "text/plain;charset=utf-8",
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${graphHeading}_DonutChart.tex`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        break;
+      case "copycode":
+        const textarea = document.createElement("textarea");
+        textarea.value = latexCode;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        alert("LaTeX code copied to clipboard!");
+        break;
     }
 };
-
+  
 
 
 

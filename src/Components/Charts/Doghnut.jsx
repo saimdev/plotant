@@ -94,11 +94,26 @@ function Doghnut({
 
   const generateLatex = (format) => {
     const { datasets, labels } = chartData;
-
+    let colorDefinitions = ""; // String to hold color definitions
+  // Generate color definitions
+  console.log(datasets[0].backgroundColor);
+  barColors.forEach((color, index) => {
+    colorDefinitions += `\\definecolor{mycolor${index}}{HTML}{${color.substring(
+      1
+    )}}\n`; // Remove '#' from hex color
+  });
+    let colorList = "";
+    for (let i = 0; i < labels.length; i++) {
+        colorList += `mycolor${i}, `;
+    }
+    // Remove the trailing comma
+    colorList = colorList.slice(0, -2);
     let latexCode = `
       \\documentclass{article}
       \\usepackage{pgf-pie}
+      \\usepackage{xcolor}
       
+      ${colorDefinitions}
       \\begin{document}
       
       \\begin{figure}
@@ -107,9 +122,10 @@ function Doghnut({
         \\pie[rotate=180, 
           text=inside, 
           radius=5,
+          hide number, 
           before number = {},
           after number = {},
-          color={blue!50, red!50, green!50, yellow!50, purple!50}]
+          color={${colorList}},]
         {`;
 
     let totalSum = 0;
@@ -124,7 +140,7 @@ function Doghnut({
       labels.forEach((label, labelIndex) => {
         const dataValue = dataset.data[labelIndex];
         const percentage = (dataValue / totalSum) * 100;
-        latexCode += `${percentage.toFixed(2)}/${label}, `;
+        latexCode += `${dataValue*10}/, `;
       });
     });
 
