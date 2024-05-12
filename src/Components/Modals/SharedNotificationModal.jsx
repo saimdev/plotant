@@ -15,6 +15,7 @@ const SharedNotificationModal = ({
   sharedEmail,
   sharedAccessType,
   acceptanceStatus,
+  previous
 }) => {
   return (
     <Modal show={show} onHide={onClose} centered>
@@ -29,10 +30,10 @@ const SharedNotificationModal = ({
           <strong>Project AccessType:</strong> {sharedAccessType}
         </p>
         <p>
-          <strong>Shared By Name:</strong> {sharedPerson}
+         {acceptanceStatus==="3"?previous==="1"?<strong>Accepted By Name:</strong>:<strong>Rejected By Name:</strong>:<strong>Shared By Name:</strong>} {sharedPerson}
         </p>
         <p>
-          <strong>Shared By Email:</strong> {sharedEmail}
+        {acceptanceStatus==="3"?previous==="1"?<strong>Accepted By Email:</strong>:<strong>Rejected By Name:</strong>:<strong>Shared By Email:</strong>} {sharedEmail}
         </p>
         <p>
           <strong>Shared Date:</strong> {sharedDate}

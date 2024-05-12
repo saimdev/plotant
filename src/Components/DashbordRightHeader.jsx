@@ -12,6 +12,7 @@ const DashboardRightHeader = ({ username, profile }) => {
   const [sharedPersonEmail, setSharedPersonEmail] = useState("");
   const [sharedAccessType, setSharedAccessType] = useState("");
   const [acceptanceStatus, setAcceptanceStatus] = useState("");
+  const [previous, setPrevious] = useState("");
   const { notifications, notificationsToast, updateNotifications } =
     useContext(NotificationContext);
 
@@ -81,9 +82,10 @@ const DashboardRightHeader = ({ username, profile }) => {
     });
 
     const data = await res.json();
-
+    console.log(data.message);
     if (data.message) {
       // window.alert(data.message);
+      setPrevious(data.sharerInfo.previous);
       setSharedPersonName(data.sharerInfo.username);
       setSharedProjectName(data.sharerInfo.project);
       setSharedProjectDate(formateDate(data.sharerInfo.date));
@@ -252,6 +254,8 @@ const DashboardRightHeader = ({ username, profile }) => {
             style={{
               position: "absolute",
               zIndex: 100000,
+              top:60,
+              right:40,
               background: "white",
               border: "1px solid lightgray",
               borderRadius: "4px",
@@ -340,8 +344,8 @@ const DashboardRightHeader = ({ username, profile }) => {
                       You accepted this Project
                     </p>
                   )}
-                  {notification.acceptance === "0" ||
-                    (notification.acceptance === null && (
+                  {
+                    notification.acceptance === null && 
                       <div>
                         <button
                           className="btn btn-danger"
@@ -366,7 +370,11 @@ const DashboardRightHeader = ({ username, profile }) => {
                           Accept
                         </button>
                       </div>
-                    ))}
+                    }
+                  {/* {
+                    notification.acceptance==="3" && 
+                      ""
+                    } */}
 
                   {/* {notification.acceptance === "2" ? (
                     <p style={{ fontSize: "0.6rem", color: "red" }}>
@@ -494,6 +502,7 @@ const DashboardRightHeader = ({ username, profile }) => {
         sharedEmail={selectedNotification ? sharedPersonEmail : ""}
         sharedAccessType={selectedNotification ? sharedAccessType : ""}
         acceptanceStatus={selectedNotification ? acceptanceStatus : ""}
+        previous = {selectedNotification ? previous : ""}
       />
     </div>
   );

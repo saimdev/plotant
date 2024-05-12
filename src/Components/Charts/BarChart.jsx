@@ -264,7 +264,7 @@ function BarChart({
               },
             },
             legend: {
-              display: legendCheck,
+              display: true,
               position: legendPosition,
             },
             datalabels: {

@@ -93,11 +93,16 @@ export function NewProject() {
   const [logsDisplay, setLogsDisplay] = useState(false);
   const [greyShadeCheck, setGreyShadeCheck] = useState(false);
   const [logs, setLogs] = useState([]);
+  const [logsCheck, setLogsCheck] = useState(false);
 
   const updateLogs = (newLogs) => {
     setLogs(newLogs);
     setLogsDisplay(true);
   };
+
+  useEffect(()=>{
+    console.log(barColors);
+  },[barColors])
 
   const getFileNameWithoutExtension = (fileName) => {
     return fileName.split(".")[0];
@@ -790,8 +795,8 @@ export function NewProject() {
 
 
   function generateGreyShadeColors() {
-    setGreyShadeCheck(!greyShadeCheck);
-    if (!greyShadeCheck === true) {
+    setGreyShadeCheck(greyShadeCheck?false:true);
+    if (greyShadeCheck === true) {
       if (parameters) {
         let generatedColorPalette;
         if (Array.isArray(parameters.y)) {
@@ -960,7 +965,8 @@ export function NewProject() {
       return;
     }
 
-    if (parameters) {
+    if (parameters && logsCheck===false) {
+      console.log("SAIM");
       let generatedColorPalette;
       if (Array.isArray(parameters.y)) {
         generatedColorPalette = parameters.y.map(
@@ -972,6 +978,20 @@ export function NewProject() {
         ];
       }
       setBarColors(generatedColorPalette);
+    }
+    else{
+      setLogsCheck(false);
+      // let generatedColorPalette;
+      // if (Array.isArray(parameters.y)) {
+      //   generatedColorPalette = parameters.y.map(
+      //     (_) => `#${Math.floor(Math.random() * 16777215).toString(16)}`
+      //   );
+      // } else {
+      //   generatedColorPalette = [
+      //     `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+      //   ];
+      // }
+      // setBarColors(generatedColorPalette);
     }
   }, [parameters, graphHistory, historyIndex]);
   const handleSelectedFile = (file) => {
@@ -1071,6 +1091,70 @@ export function NewProject() {
     // console.log("BarColors After", barColors);
   };
 
+  const getLogsGraph = async (id) => {
+    setLogsCheck(true);
+    console.log(id);
+    const res = await fetch("/analysis/getLogsGraph", {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        logId: id
+      }),
+      method: "POST"
+    });
+    const data = await res.json();
+    console.log(data);
+    console.log(data.data.parameters);
+    handleGraphNameChange(data.data.graphName);
+    setXAxis(data.data.xAxis);
+    setYAxis(data.data.yAxis);
+    setParameters(data.data.parameters);
+    setSelectedLabels(data.data.selectedLabels);
+    setIsOpen(data.data.isOpen);
+    setIsOpenFilterX(data.data.isOpenFilterX);
+    setIsOpenFilterY(data.data.isOpenFilterY);
+    setReference(data.data.reference);
+    setModalOption(data.data.modalOption);
+    setIsModalOpen(data.data.isModalOpen);
+    setXLabelColor(data.data.xLabelColor);
+    setYLabelColor(data.data.yLabelColor);
+    setGraphHeadSize(data.data.graphHeadSize);
+    setGraphHeadWeight(data.data.graphHeadWeight);
+    setXLabelSize(data.data.xLabelSize);
+    setXLabelWeight(data.data.xLabelWeight);
+    setYLabelSize(data.data.yLabelSize);
+    setYLabelWeight(data.data.yLabelWeight);
+    // setIsContainerDataOpen(data.data.isContainerDataOpen);
+    // setIsContainerFilterOpen(data.data.isContainerFilterOpen);
+    // setIsContainerVisualOpen(data.data.isContainerVisualOpen);
+    setGraphHeading(data.data.graphHeading);
+    setYAxisConditions(data.data.yAxisConditions);
+    setYAxisValue(data.data.yAxisValue);
+    // setColumnsData(null);
+    setBarBoders(data.data.barBorders);
+    setCondition(data.data.condition);
+    setConditionalParameters(data.data.conditionalParameters);
+    setTextureBg(data.data.textureBg);
+    setTextureColor(data.data.textureColor);
+    setLegends(data.data.legends);
+    setDictionaryState(data.data.dictionaryState);
+    setColorStatesBgTexture(data.data.colorStatesBgTexture);
+    setColorStatesTexture(data.data.colorStatesTexture);
+    setBarBoders(data.data.barBorders);
+    setBorderColor(data.data.borderColor);
+    setDLSize(data.data.dlSize);
+    setDLWeight(data.data.dlWeight);
+    setDLColor(data.data.dlColor);
+    setStepped(data.data.stepped);
+    setDataLabelsConfig(data.data.dataLabelsConfig);
+    setFontFamily(data.data.fontFamily);
+    setStepSize(data.data.stepSize);
+    setBarColors(data.data.barColors);
+    setGreyShadeCheck(data.data.greyShadeCheck);
+    setLegendPosition(data.data.legendPosition);
+  }
+
   // if(loader){
   //   return (
   //     <div className="loader d-flex text-center flex-column justify-content-center align-items-center">
@@ -1087,15 +1171,16 @@ export function NewProject() {
       <div className="dashboard-main d-flex flex-column">
         <NewProjectTopMenu projectId={projectName} fileId={fileId} updateLogs={updateLogs} />
         <div className="d-flex flex-row">
-          <div className="py-3" style={{ height: '100vh', width: '16vw', background: 'white', zIndex: 9999999, position: 'absolute', top: 0, right: 0, boxShadow: 'rgba(21,88,156, 0.50) 0px 3px 8px', display: logsDisplay ? 'block' : 'none' }}>
-            <div className="d-flex flex-row justify-content-between align-items-center w-100 px-3">
+          <div className="py-3" style={{ height: '100vh', width: '16vw', background: 'white', zIndex: 9999999, position: 'absolute', top: 0, right: 0, boxShadow: 'rgba(21,88,156, 0.50) 0px 3px 8px', display: logsDisplay ? 'block' : 'none', borderRadius: '8px 0 0 8px' }}>
+            <div className="d-flex flex-row justify-content-between align-items-center w-100 px-3 pb-2" style={{ borderBottom: '1px solid lightgray' }}>
               <h4>Logs</h4>
-              <button style={{ padding: '0.05rem 0.35rem' }} className="btn btn-danger" onClick={()=>setLogsDisplay(false)}>x</button>
+              <button style={{ padding: '0.05rem 0.35rem' }} className="btn btn-danger" onClick={() => setLogsDisplay(false)}>x</button>
             </div>
             <div className="d-flex flex-column my-3 px-3 custom-scrollbar" style={{ overflowY: 'auto', height: '88vh' }}>
 
               {logs && logs.map((log, index) => (
-                <div className="d-flex flex-column w-100 my-2" key={index}>
+
+                <button className="d-flex flex-column w-100 pb-1 log-entity p-3" key={index} onClick={() => getLogsGraph(log.logId)}>
                   <div className="d-flex flex-row w-100 justify-content-between align-items-center">
                     <p style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>{log.date} {log.time}</p>
                     <svg
@@ -1118,7 +1203,7 @@ export function NewProject() {
                     <div className="p-1 mx-2" style={{ background: logsColor[0], borderRadius: '0.5rem' }}></div>
                     <p style={{ color: 'gray', fontSize: '0.8rem' }}>{log.userName}</p>
                   </div>
-                </div>
+                </button>
               ))}
 
             </div>

@@ -86,6 +86,27 @@ export function TrashProjects() {
     getProjectDetails();
   };
 
+  const deleteProject = async (projectId) => {
+    const res = await fetch("/analysis/projectDeletePermenantly", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        trashId: projectId,
+      }),
+      credentials: "include",
+    });
+
+    const data = await res.json();
+    if (data.message) {
+      window.alert(data.message);
+    }
+    console.log(data);
+    getProjectDetails();
+  };
+
   const formateDate = (dateStr) => {
     const dateObj = new Date(dateStr);
 
@@ -338,8 +359,9 @@ export function TrashProjects() {
                     <td>{project.project}</td>
                     <td>{formateDate(project.projectcreatedate)}</td>
                     <td>{formateDate(project.date)}</td>
-                    <td>
+                    <td className="d-flex flex-row align-items-center justify-content-center">
                       <Link
+                      className="mx-1"
                         style={{
                           color: "green",
                           fontWeight: "bold",
@@ -348,6 +370,17 @@ export function TrashProjects() {
                         onClick={() => restoreProject(project.id)}
                       >
                         Restore
+                      </Link>
+                      <Link
+                      className="mx-1"
+                        style={{
+                          color: "red",
+                          fontWeight: "bold",
+                          textDecoration: "underline",
+                        }}
+                        onClick={() => deleteProject(project.id)}
+                      >
+                        Delete
                       </Link>
                     </td>
                   </tr>

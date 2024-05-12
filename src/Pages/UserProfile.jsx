@@ -5,6 +5,7 @@ import "../assets/css/AllProjects.css";
 import HeaderLogo from "../Components/HeaderLogo";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import DashboardRightHeader from "../Components/DashbordRightHeader";
 
 export function UserProfile() {
   const imagePaths = ["dp1", "dp2", "dp3"];
@@ -322,43 +323,7 @@ export function UserProfile() {
         </div>
       </div>
       <div className="dashboard-right-section d-flex flex-column w-100 px-4">
-        <div className="dashboard-right-section-header d-flex flex-row justify-content-between align-items-center px-3 py-2">
-          <input
-            type="search"
-            placeholder="Search here...."
-            name=""
-            id=""
-            className="w-25 p-1"
-          />
-          <div className="dashboard-right-section-header-right d-flex flex-row align-items-center">
-            <svg
-              className="mx-3"
-              width="20"
-              height="24"
-              viewBox="0 0 46 50"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g clip-path="url(#clip0_307_323)">
-                <path
-                  d="M13.8795 45.6045C15.9822 48.2775 19.2855 50 23 50C26.7145 50 30.0178 48.2775 32.1205 45.6045C26.066 46.425 19.934 46.425 13.8795 45.6045Z"
-                  fill="#808080"
-                />
-                <path
-                  d="M39.8728 17.5V19.2602C39.8728 21.3727 40.4757 23.438 41.6055 25.1955L44.374 29.503C46.903 33.4372 44.9725 38.7848 40.574 40.029C29.0682 43.2835 16.9319 43.2835 5.4259 40.029C1.02763 38.7848 -0.902948 33.4372 1.6259 29.503L4.3945 25.1955C5.5243 23.438 6.12718 21.3727 6.12718 19.2602V17.5C6.12718 7.83503 13.6814 0 23 0C32.3185 0 39.8728 7.83503 39.8728 17.5Z"
-                  fill="#808080"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_307_323">
-                  <rect width="46" height="50" fill="white" />
-                </clipPath>
-              </defs>
-            </svg>
-            <img src={profile} alt="" className="dashboard-header-profilePic" />
-            <p className="mx-1">{username}</p>
-          </div>
-        </div>
+      <DashboardRightHeader username={username} profile={profile} />
         <div className="d-flex flex-column dashboard-right-section-bottom mt-3">
           <div className="d-flex flex-row w-100 justify-content-between align-items-center">
             <h4 className="my-3">Profile</h4>
@@ -440,17 +405,17 @@ export function UserProfile() {
               </button>
             </form>
           </div>
-          <div class="d-flex flex-column justify-content-center align-items-center my-5">
-            <div class="card-deck mb-3 text-center d-flex flex-row justify-content-around align-items-center w-100 flex-wrap">
-              <div class="card shadow-sm w-25">
-                <div class="card-header">
-                  <h4 class="my-0 font-weight-normal">Free</h4>
+          <div className="d-flex flex-column justify-content-center align-items-center my-5">
+            <div className="card-deck mb-3 text-center d-flex flex-row justify-content-around align-items-center w-100 flex-wrap">
+              <div className="card shadow-sm w-25">
+                <div className="card-header">
+                  <h4 className="my-0 font-weight-normal">Free</h4>
                 </div>
-                <div class="card-body">
-                  <h1 class="card-title pricing-card-title">
-                    $0 <small class="text-muted">/ mo</small>
+                <div className="card-body">
+                  <h1 className="card-title pricing-card-title">
+                    $0 <small className="text-muted">/ mo</small>
                   </h1>
-                  <ul class="list-unstyled mt-3 mb-4">
+                  <ul className="list-unstyled mt-3 mb-4">
                     <li>5 users included</li>
                     <li>2 GB of storage</li>
                     <li>Email support</li>
@@ -458,21 +423,22 @@ export function UserProfile() {
                   </ul>
                   <button
                     type="button"
-                    class="btn btn-lg btn-block btn-outline-primary"
+                    className="btn btn-lg btn-block btn-outline-primary signup-for-free"
+                    style={{border:'1px solid #15589c', color:"#15589c"}}
                   >
                     Sign up for free
                   </button>
                 </div>
               </div>
-              <div class="card shadow-sm w-25">
-                <div class="card-header">
-                  <h4 class="my-0 font-weight-normal">Pro</h4>
+              <div className="card shadow-sm w-25">
+                <div className="card-header">
+                  <h4 className="my-0 font-weight-normal">Pro</h4>
                 </div>
-                <div class="card-body">
-                  <h1 class="card-title pricing-card-title">
-                    $25 <small class="text-muted">/ mo</small>
+                <div className="card-body">
+                  <h1 className="card-title pricing-card-title">
+                    $25 <small className="text-muted">/ mo</small>
                   </h1>
-                  <ul class="list-unstyled mt-3 mb-4">
+                  <ul className="list-unstyled mt-3 mb-4">
                     <li>20 users included</li>
                     <li>10 GB of storage</li>
                     <li>Priority email support</li>
@@ -480,21 +446,22 @@ export function UserProfile() {
                   </ul>
                   <button
                     type="button"
-                    class="btn btn-lg btn-block btn-primary"
+                    className="btn btn-lg btn-block btn-primary"
+                    style={{backgroundColor:"#15589c"}}
                   >
                     Get started
                   </button>
                 </div>
               </div>
-              <div class="card shadow-sm w-25">
-                <div class="card-header">
-                  <h4 class="my-0 font-weight-normal">Enterprise</h4>
+              <div className="card shadow-sm w-25">
+                <div className="card-header">
+                  <h4 className="my-0 font-weight-normal">Enterprise</h4>
                 </div>
-                <div class="card-body">
-                  <h1 class="card-title pricing-card-title">
-                    $99 <small class="text-muted">/ mo</small>
+                <div className="card-body">
+                  <h1 className="card-title pricing-card-title">
+                    $99 <small className="text-muted">/ mo</small>
                   </h1>
-                  <ul class="list-unstyled mt-3 mb-4">
+                  <ul className="list-unstyled mt-3 mb-4">
                     <li>illimited users included</li>
                     <li>50 GB of storage</li>
                     <li>Phone and email support</li>
@@ -502,7 +469,8 @@ export function UserProfile() {
                   </ul>
                   <button
                     type="button"
-                    class="btn btn-lg btn-block btn-primary"
+                    className="btn btn-lg btn-block btn-primary"
+                    style={{backgroundColor:"#15589c"}}
                   >
                     Contact us
                   </button>

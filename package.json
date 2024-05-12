@@ -2,7 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://192.168.1.73:8800",
+  "proxy": "http://localhost:8000",
   "dependencies": {
     "@canvasjs/react-charts": "^1.0.0",
     "@observablehq/plot": "^0.6.13",
