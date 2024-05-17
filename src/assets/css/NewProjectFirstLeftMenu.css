@@ -1,6 +1,6 @@
 .newprojectfirstmenu{
     background-color: white;
-    height: max-content;   
+    height: 100vh;   
     min-height: 100vh;
     width: 190px;
     border-right: 6px solid #0b2c4e;
@@ -20,4 +20,40 @@
 .newprojectfirstmenu>a:focus{
     background-color: #0f3e6d !important;
     color:white !important;
+}
+
+.disabled-component{
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.disabled-component-table{
+    pointer-events: none;
+}
+
+.plotted-graph-name:hover{
+    background-color: var(--primary-color);
+    color:white;
+    cursor: pointer;
+}
+
+.plotted-graph-name:hover .plotted-span{
+    background-color: white !important;
+}
+
+.plotted-span{
+    clip-path: circle();
+}
+
+.plotted-graph-name:hover .file-names-link{
+    color: white !important;
+}
+
+.index-filename{
+    color:var(--primary-color);
+    font-weight: bold;
+}
+
+.plotted-graph-name:hover .index-filename{
+    color:white;
 }

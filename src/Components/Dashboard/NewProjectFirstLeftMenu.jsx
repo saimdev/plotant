@@ -17,7 +17,8 @@ export function NewProjectFirstLeftMenu({
   onUniqueValues,
   onColumnsData,
   projectName,
-  onAccessType
+  onAccessType,
+  onProjectName
 }) {
   const [loader, setLoader] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -35,6 +36,7 @@ export function NewProjectFirstLeftMenu({
   const [showFileNameModal, setShowModalFileName] = useState(false);
   const [showFolderNameModal, setShowModalFolderName] = useState(false);
   const [allFilesName, setAllFilesName] = useState([]);
+  const [access_type, setAccessType] = useState("");
 
   const handleFileNameLinkClick = () => {
     console.log("check");
@@ -135,7 +137,7 @@ export function NewProjectFirstLeftMenu({
       .then((data) => {
         console.log(data);
         if (data.data) {
-          console.log('jsonData',data.data);
+          console.log('jsonData', data.data);
           // console.log(data.columns);
           setJsonData(data.data);
           setColumns(data.columns);
@@ -151,7 +153,6 @@ export function NewProjectFirstLeftMenu({
           onTypes(data.type);
           onUniqueValues(data.columns_unique_data);
           onColumnsData(data.columns_data);
-          onAccessType(data.access_type);
         } else {
           console.error("Invalid data format");
         }
@@ -159,7 +160,7 @@ export function NewProjectFirstLeftMenu({
         setLoader(false);
       })
       .catch((error) => {
-      
+
         console.error(error);
         setLoader(false);
       });
@@ -255,6 +256,9 @@ export function NewProjectFirstLeftMenu({
       .then((data) => {
         if (data.message) {
           setAllFilesName(data.files);
+          setAccessType(data.files[0].access_type);
+          onAccessType(data.files[0].access_type);
+          onProjectName(data.files[0].project_name);
           console.log(data);
         } else {
           console.error("Invalid data format");
@@ -304,9 +308,9 @@ export function NewProjectFirstLeftMenu({
   }
   // const nodeRef = useRef(null);
   return (
-    <div className="newprojectfirstmenu pb-5 d-flex flex-column">
+    <div className={`newprojectfirstmenu pb-5 d-flex flex-column `}>
       <div
-        className="w-100 d-flex flex-row align-items-center jsutify-content-between px-2 py-1"
+        className={`w-100 d-flex flex-row align-items-center jsutify-content-between px-2 py-1 ${access_type === "read" ? "disabled-component" : ""}`}
         style={{ background: "#0b2c4e" }}
       >
         <div className="d-flex flex-row align-items-center w-100">
@@ -336,49 +340,6 @@ export function NewProjectFirstLeftMenu({
               />
             </div>
           )}
-          {/* <Link className="mx-1" onClick={handleFolderNameLinkClick}>
-            <svg
-              width="20"
-              height="11"
-              viewBox="0 0 50 40"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M17.5 22.5H32.5M25 15V30M25.1568 5.15685L24.8432 4.84315C23.9785 3.97838 23.546 3.546 23.0415 3.2368C22.594 2.96265 22.1063 2.76063 21.5963 2.63815C21.0208 2.5 20.4092 2.5 19.1863 2.5H10.5C7.69975 2.5 6.2996 2.5 5.23005 3.04497C4.28923 3.52432 3.52432 4.28923 3.04497 5.23005C2.5 6.2996 2.5 7.69972 2.5 10.5V29.5C2.5 32.3003 2.5 33.7005 3.04497 34.77C3.52432 35.7108 4.28923 36.4757 5.23005 36.955C6.2996 37.5 7.69972 37.5 10.5 37.5H39.5C42.3002 37.5 43.7005 37.5 44.77 36.955C45.7108 36.4757 46.4757 35.7108 46.955 34.77C47.5 33.7005 47.5 32.3003 47.5 29.5V15.5C47.5 12.6997 47.5 11.2996 46.955 10.2301C46.4757 9.28923 45.7108 8.52432 44.77 8.04497C43.7005 7.5 42.3002 7.5 39.5 7.5H30.8137C29.5907 7.5 28.9792 7.5 28.4037 7.36185C27.8937 7.23937 27.406 7.03735 26.9585 6.7632C26.454 6.454 26.0215 6.02162 25.1568 5.15685Z"
-                stroke="white"
-                stroke-width="5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </Link>
-          {showFolderNameModal && (
-            <div className="d-flex flex-row justify-content-center w-100">
-              <FolderNameModal
-                show={showFolderNameModal}
-                onClose={closeModalFolder}
-                onSubmit={handleFolderNameSubmit}
-              />
-            </div>
-          )} */}
-          {/* <Link onClick={handleLinkClick}>
-            <svg
-              width="18"
-              height="14"
-              viewBox="0 0 50 46"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M37.5 35.5H37.525M34 28H40C42.3298 28 43.4945 28 44.4135 28.3805C45.6385 28.888 46.612 29.8615 47.1195 31.0865C47.5 32.0055 47.5 33.1702 47.5 35.5C47.5 37.8298 47.5 38.9945 47.1195 39.9135C46.612 41.1385 45.6385 42.112 44.4135 42.6195C43.4945 43 42.3298 43 40 43H10C7.6703 43 6.50545 43 5.58658 42.6195C4.36145 42.112 3.38808 41.1385 2.8806 39.9135C2.5 38.9945 2.5 37.8298 2.5 35.5C2.5 33.1702 2.5 32.0055 2.8806 31.0865C3.38808 29.8615 4.36145 28.888 5.58658 28.3805C6.50545 28 7.6703 28 10 28H16M25 30.5V3M25 3L32.5 10.5M25 3L17.5 10.5"
-                stroke="white"
-                stroke-width="5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </Link> */}
         </div>
         <div className="d-flex flex-row align-items-center">
           <Link className="mx-1" onClick={() => setShowModalFileName(true)}>
@@ -453,20 +414,45 @@ export function NewProjectFirstLeftMenu({
           />
         </div>
       </div>
-      {/* <Link className="dashboard-menu-newproject mx-3 mb-2" onClick={handleNewProjectClick}>New Project</Link> */}
-      {allFilesName.map((file, index) => (
-        <Link
-          key={file.id}
-          onClick={() => getData(file.id, file.name)}
-          // to={`/file/${encodeURIComponent(file)}`}
-          style={{
-            display: file ? "flex" : "none",
-            // backgroundColor: file.id === fileId ? "transparent" : "#0f3e6d",
-          }}
-        >
-          {file ? file.name : ""}
-        </Link>
-      ))}
+      <div className="d-flex flex-column w-100" style={{ borderTop: '1px solid lightgray' }}>
+        <h5 style={{ fontSize: '0.9rem', fontWeight: 'bold', borderBottom: '1px solid lightgray' }} className="p-2">Project Files</h5>
+
+        <div className="d-flex flex-column">
+          <div className="d-flex flex-row align-items-center justify-content-center py-1 plotted-graph-name">
+            {allFilesName.map((file, index) => (
+              <Link
+                key={file.id}
+                onClick={() => getData(file.id, file.name)}
+                className="file-names-link"
+                style={{
+                  display: file ? "flex" : "none",
+                  fontSize: '0.8rem'
+                }}
+              >
+                <p><span className="index-filename">{index + 1}.</span> {file ? file.name : ""}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="d-flex flex-column w-100 mt-5" style={{ borderTop: '1px solid lightgray' }}>
+        <h5 style={{ fontSize: '0.9rem', fontWeight: 'bold', borderBottom: '1px solid lightgray' }} className="p-2">Plotted Graphs</h5>
+        <div className="d-flex flex-column">
+          <div className="d-flex flex-row align-items-center justify-content-center py-1 plotted-graph-name">
+            <span style={{ background: 'var(--primary-color)' }} className="p-1 plotted-span"></span>
+            <p style={{ fontSize: '0.8rem' }} className="mx-2">Bar Graph</p>
+          </div>
+          <div className="d-flex flex-row align-items-center justify-content-center py-1 plotted-graph-name">
+            <span style={{ background: 'var(--primary-color)' }} className="p-1 plotted-span"></span>
+            <p style={{ fontSize: '0.8rem' }} className="mx-2">Bar Graph</p>
+          </div>
+          <div className="d-flex flex-row align-items-center justify-content-center py-1 plotted-graph-name">
+            <span style={{ background: 'var(--primary-color)' }} className="p-1 plotted-span"></span>
+            <p style={{ fontSize: '0.8rem' }} className="mx-2">Bar Graph</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../../assets/css/Table.css";
 
-export function UserTable({ jsonData, xLabel, yLabel, onResponse, projectId, fileId }) {
+export function UserTable({ jsonData, xLabel, yLabel, onResponse, projectId, fileId, accessType }) {
     useEffect(()=>{
         setTableData(jsonData);
     },[jsonData]);
@@ -58,7 +58,7 @@ export function UserTable({ jsonData, xLabel, yLabel, onResponse, projectId, fil
     return (
         <div className="home-data-table">
             <h4 className="my-3 text-center">Extracted Data</h4>
-            <table className="w-100">
+            <table className={`w-100 ${accessType==="read"? "disabled-component-table":""}`}>
                 <thead>
                     <tr>
                         {Object.keys(jsonData[0]).map((key) => (

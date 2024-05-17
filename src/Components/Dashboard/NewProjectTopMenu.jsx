@@ -5,7 +5,7 @@ import HeaderLogo from "../HeaderLogo";
 import { useTheme } from "../ThemeContext";
 import ShareModal from "../Modals/ShareModal";
 
-export function NewProjectTopMenu({ projectId, fileId, updateLogs }) {
+export function NewProjectTopMenu({ projectId, fileId, updateLogs, projectName, accessType }) {
   const { toggleTheme } = useTheme();
   const [theme, setTheme] = useState();
   // const [userEmail, setUserEmail] = useState("");
@@ -155,7 +155,7 @@ export function NewProjectTopMenu({ projectId, fileId, updateLogs }) {
             </Link>
           </div>
         </div>
-        <p style={{ fontSize: "0.9rem", color: "white" }}>New Project</p>
+        <p style={{ fontSize: "0.9rem", color: "white" }}>{projectName} ( {accessType==="read"?"Read":"Read & Write"} )</p>
         <div className="d-flex flex-row align-items-center newproject-top-right-links">
           {/* <Link to="" style={{borderRight:'1px solid white', borderLeft:'1px solid white'}} className="px-2 py-1">Review</Link> */}
           <Link
@@ -164,7 +164,7 @@ export function NewProjectTopMenu({ projectId, fileId, updateLogs }) {
               borderRight: "1px solid white",
               borderLeft: "1px solid white",
             }}
-            className="px-2 py-1"
+            className={`px-2 py-1 ${accessType==="read"? "disabled-component":""}`}
             onClick={handleShareButton}
           >
             Share
@@ -182,7 +182,7 @@ export function NewProjectTopMenu({ projectId, fileId, updateLogs }) {
           <Link
             to=""
             style={{ borderRight: "1px solid white" }}
-            className="px-2 py-1"
+            className={`px-2 py-1 ${accessType==="read"? "disabled-component":""}`}
           >
             Save
           </Link>

@@ -94,7 +94,8 @@ export function NewProject() {
   const [greyShadeCheck, setGreyShadeCheck] = useState(false);
   const [logs, setLogs] = useState([]);
   const [logsCheck, setLogsCheck] = useState(false);
-  const [accessType, setAccessType] = useState("")
+  const [accessType, setAccessType] = useState("");
+  const [project_name, setProject_Name] = useState("");
 
   const updateLogs = (newLogs) => {
     setLogs(newLogs);
@@ -628,7 +629,7 @@ export function NewProject() {
     // console.log(conditionalParameters);
     // console.log(yAxisConditions);
 
-
+    console.log(projectName);
     const response = await fetch("/analysis/saveGraph", {
       headers: {
         "Content-Type": "application/json"
@@ -1065,6 +1066,9 @@ export function NewProject() {
   const handleAccessType = (access) => {
     setAccessType(access);
   }
+  const handleProjectName = (project) =>{
+    setProject_Name(project);
+  }
   const handleTypes = (types) => {
     setTypes(types);
   };
@@ -1173,7 +1177,7 @@ export function NewProject() {
   return (
     <div className="dashboard">
       <div className="dashboard-main d-flex flex-column">
-        <NewProjectTopMenu projectId={projectName} fileId={fileId} updateLogs={updateLogs} />
+        <NewProjectTopMenu projectId={projectName} fileId={fileId} updateLogs={updateLogs} projectName={project_name} accessType={accessType}/>
         <div className="d-flex flex-row">
           <div className="py-3" style={{ height: '100vh', width: '16vw', background: 'white', zIndex: 9999999, position: 'absolute', top: 0, right: 0, boxShadow: 'rgba(21,88,156, 0.50) 0px 3px 8px', display: logsDisplay ? 'block' : 'none', borderRadius: '8px 0 0 8px' }}>
             <div className="d-flex flex-row justify-content-between align-items-center w-100 px-3 pb-2" style={{ borderBottom: '1px solid lightgray' }}>
@@ -1223,9 +1227,10 @@ export function NewProject() {
             onColumnsData={handleColumnsData}
             onAccessType={handleAccessType}
             projectName={decodeURIComponent(projectName)}
+            onProjectName={handleProjectName}
           />
           {/* <NewProjectSecondLeftMenu selectedFile={selectedFile} jsonData={jsonData} columns={columns} guestId={guestId} types={types} uniqueValues={uniqueValues} columnsData={columnsData} onGraphNameChange={handleGraphNameChange}/> */}
-          <div className="newprojectsecondmenu pb-5 d-flex flex-column">
+          <div className={`newprojectsecondmenu pb-5 d-flex flex-column ${accessType==="read"? "disabled-component":""}`}>
             <div
               className="w-100 d-flex flex-row align-items-center jsutify-content-between px-2 py-1 newprojectsecondmenu-links"
               style={{ background: "#7c3232" }}
@@ -1974,6 +1979,7 @@ export function NewProject() {
                 onResponse={handleEditedResponse}
                 projectId={projectName}
                 fileId={fileId}
+                accessType={accessType}
               />
 
 
