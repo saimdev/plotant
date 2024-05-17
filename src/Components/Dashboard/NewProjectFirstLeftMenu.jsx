@@ -19,7 +19,8 @@ export function NewProjectFirstLeftMenu({
   projectName,
   onAccessType,
   onProjectName,
-  graphHistory
+  graphHistory,
+  onGraphHistoryClick
 }) {
   const [loader, setLoader] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -418,7 +419,7 @@ export function NewProjectFirstLeftMenu({
       <div className="d-flex flex-column w-100" style={{ borderTop: '1px solid lightgray' }}>
         <h5 style={{ fontSize: '0.9rem', fontWeight: 'bold', borderBottom: '1px solid lightgray' }} className="p-2">Project Files</h5>
 
-        <div className="d-flex flex-column">
+        <div className="d-flex flex-column" style={{minHeight:'40vh', height:'40vh', overflowY:'auto'}}>
           <div className="d-flex flex-row align-items-center justify-content-center py-1 plotted-graph-name">
             {allFilesName.map((file, index) => (
               <Link
@@ -437,7 +438,7 @@ export function NewProjectFirstLeftMenu({
         </div>
       </div>
 
-      <div className="d-flex flex-column w-100 mt-5" style={{ borderTop: '1px solid lightgray' }}>
+      <div className="d-flex flex-column w-100 mt-5" style={{ borderTop: '1px solid lightgray', minHeight:'50vh', height:'50vh', overflowY:'auto' }}>
         <h5 style={{ fontSize: '0.9rem', fontWeight: 'bold', borderBottom: '1px solid lightgray' }} className="p-2">Plotted Graphs</h5>
         <div className="d-flex flex-column">
           {graphHistory.map((graph, index) => (
@@ -448,9 +449,10 @@ export function NewProjectFirstLeftMenu({
                 display: graph ? "flex" : "none",
                 fontSize: '0.8rem'
               }}
+              onClick={()=>onGraphHistoryClick(index)}
             >
               <span style={{ background: 'var(--primary-color)' }} className="p-1 plotted-span"></span>
-              <p style={{ fontSize: '0.8rem', textOverflow:'ellipsis', whiteSpace:'nowrap', overflow:'hidden' }} className="mx-2 plotted-graph-name-p">{graph[14]}</p>
+              <p style={{ fontSize: '0.8rem', textOverflow:'ellipsis', whiteSpace:'nowrap', overflow:'hidden' }} className="mx-2 plotted-graph-name-p" title={graph[14]+', '+graph[0]+' Graph'}>{graph[14]}, {graph[0]}</p>
             </Link>
           ))}
         </div>

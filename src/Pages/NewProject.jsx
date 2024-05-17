@@ -1010,6 +1010,7 @@ export function NewProject() {
     setSelectedFile(file);
     // console.log("Selected file in parent component:", file);
   };
+
   const handleFileId = (fileId) => {
     console.log("SAIM");
     setFileId(fileId);
@@ -1059,6 +1060,7 @@ export function NewProject() {
     // newGraph();
     // console.log("Selected file in parent component:", fileId);
   };
+
   const handleJsonData = (newJsonData) => {
     // console.log(newJsonData);
     setJsonData(newJsonData);
@@ -1067,24 +1069,31 @@ export function NewProject() {
     //   setJsonData(null);
     // }, 2000);
   };
+
   const handleColumns = (columns) => {
     setColumns(columns);
   };
+
   const handleColumnsData = (columnsData) => {
     setColumnsData(columnsData);
   };
+
   const handleAccessType = (access) => {
     setAccessType(access);
   }
+
   const handleProjectName = (project) =>{
     setProject_Name(project);
   }
+
   const handleTypes = (types) => {
     setTypes(types);
   };
+
   const handleGuestId = (guestId) => {
     setGuestId(guestId);
   };
+
   const handleUniqueValues = (uniqueValues) => {
     setUniqueValues(uniqueValues);
   };
@@ -1108,6 +1117,10 @@ export function NewProject() {
     // console.log(combinedColors);
     // console.log("BarColors After", barColors);
   };
+
+  const handleHistoryClick = (index) =>{
+    handlePreviousGraph(index);
+  }
 
   const getLogsGraph = async (id) => {
     setLogsCheck(true);
@@ -1239,6 +1252,7 @@ export function NewProject() {
             projectName={decodeURIComponent(projectName)}
             onProjectName={handleProjectName}
             graphHistory={graphHistory}
+            onGraphHistoryClick={handleHistoryClick}
           />
           {/* <NewProjectSecondLeftMenu selectedFile={selectedFile} jsonData={jsonData} columns={columns} guestId={guestId} types={types} uniqueValues={uniqueValues} columnsData={columnsData} onGraphNameChange={handleGraphNameChange}/> */}
           <div className={`newprojectsecondmenu pb-5 d-flex flex-column ${accessType==="read"? "disabled-component":""}`}>
