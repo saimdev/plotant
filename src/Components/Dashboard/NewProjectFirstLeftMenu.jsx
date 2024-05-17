@@ -17,6 +17,7 @@ export function NewProjectFirstLeftMenu({
   onUniqueValues,
   onColumnsData,
   projectName,
+  onAccessType
 }) {
   const [loader, setLoader] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -150,6 +151,7 @@ export function NewProjectFirstLeftMenu({
           onTypes(data.type);
           onUniqueValues(data.columns_unique_data);
           onColumnsData(data.columns_data);
+          onAccessType(data.access_type);
         } else {
           console.error("Invalid data format");
         }
@@ -157,6 +159,7 @@ export function NewProjectFirstLeftMenu({
         setLoader(false);
       })
       .catch((error) => {
+      
         console.error(error);
         setLoader(false);
       });

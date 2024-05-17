@@ -353,11 +353,11 @@ export function SharedProjects() {
                 </tr>
               ) : (
                 projectDetails.map((project) => (
-                  <tr key={project.project__id}>
+                  <tr key={project.project_id}>
                     <td>
                       <Link
                         to={`/project/${encodeURIComponent(
-                          project.project__id
+                          project.project_id
                         )}`}
                       >
                         {project.project_name}

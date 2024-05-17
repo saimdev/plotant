@@ -7,9 +7,10 @@ export const NotificationContext = createContext();
 export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [notificationsToast, setNotificationsToast] = useState([]);
+  const [notificationsCount, setNotificationsCount] = useState("");
   const updateNotifications = async () => {
     try {
-      const getNotifications = await fetch("/analysis/dummy", {
+      const getNotifications = await fetch("/analysis/getNotifications", {
         headers: {
           "Content-Type": "application/json",
         },
@@ -23,6 +24,8 @@ export const NotificationProvider = ({ children }) => {
       // }
       setNotifications(notificationsData.bell);
       setNotificationsToast(notificationsData.toaster);
+      console.log(notificationsData.unread_count);
+      setNotificationsCount(notificationsData.unread_count);
       console.log(notificationsData.toaster);
       notificationsData.toaster.forEach((notification) => {
         console.log(notification);
@@ -39,7 +42,7 @@ export const NotificationProvider = ({ children }) => {
 
   return (
     <NotificationContext.Provider
-      value={{ notifications, notificationsToast, updateNotifications }}
+      value={{ notifications, notificationsToast, updateNotifications, notificationsCount }}
     >
       {children}
     </NotificationContext.Provider>

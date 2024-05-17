@@ -13,7 +13,7 @@ const DashboardRightHeader = ({ username, profile }) => {
   const [sharedAccessType, setSharedAccessType] = useState("");
   const [acceptanceStatus, setAcceptanceStatus] = useState("");
   const [previous, setPrevious] = useState("");
-  const { notifications, notificationsToast, updateNotifications } =
+  const { notifications, notificationsToast, updateNotifications, notificationsCount } =
     useContext(NotificationContext);
 
   let renderingCheck = 0;
@@ -33,9 +33,8 @@ const DashboardRightHeader = ({ username, profile }) => {
     const month = dateObj.getMonth() + 1;
     const day = dateObj.getDate();
 
-    const formattedDate = `${year}-${month < 10 ? "0" : ""}${month}-${
-      day < 10 ? "0" : ""
-    }${day}`;
+    const formattedDate = `${year}-${month < 10 ? "0" : ""}${month}-${day < 10 ? "0" : ""
+      }${day}`;
 
     return formattedDate;
   };
@@ -209,7 +208,9 @@ const DashboardRightHeader = ({ username, profile }) => {
               onClick={showNotifications}
               style={{
                 cursor: "pointer",
-                position: "absolute",
+                position: "relative",
+                top: 0,
+                right:-19
               }}
             >
               <g clip-path="url(#clip0_307_323)">
@@ -228,34 +229,36 @@ const DashboardRightHeader = ({ username, profile }) => {
                 </clipPath>
               </defs>
             </svg>
-            <span
-              style={{
-                // position: "absolute",
-                position: "relative",
-                top: "-10px",
-                right: "-10px",
-                background: "red",
-                border: "none",
-                borderRadius: "9999px",
-                color: "white",
-                textAlign: "center",
-                fontSize: "0.7rem",
-                fontWeight: "bolder",
-                clipPath: "circle()",
-                lineHeight: "7px",
-              }}
-              className="p-1"
-            >
-              {notifications.length}
-            </span>
+            {
+              notificationsCount != "0" && <span
+                style={{
+                  // position: "absolute",
+                  position: "relative",
+                  top: "-10px",
+                  right: "-10px",
+                  background: "red",
+                  border: "none",
+                  borderRadius: "9999px",
+                  color: "white",
+                  textAlign: "center",
+                  fontSize: "0.7rem",
+                  fontWeight: "bolder",
+                  clipPath: "circle()",
+                  lineHeight: "7px",
+                }}
+                className="p-1"
+              >
+                {notificationsCount}
+              </span>
+            }
           </div>
 
           <div
             style={{
               position: "absolute",
               zIndex: 100000,
-              top:60,
-              right:40,
+              top: notificationsCount==="0"?40:60,
+              right: 40,
               background: "white",
               border: "1px solid lightgray",
               borderRadius: "4px",
@@ -345,32 +348,32 @@ const DashboardRightHeader = ({ username, profile }) => {
                     </p>
                   )}
                   {
-                    notification.acceptance === null && 
-                      <div>
-                        <button
-                          className="btn btn-danger"
-                          style={{
-                            padding: "0.2rem 0.4rem",
-                            fontSize: "0.6rem",
-                            cursor: "pointer",
-                          }}
-                          onClick={() => declineProject(notification.id)}
-                        >
-                          Reject
-                        </button>
-                        <button
-                          className="btn btn-success mx-3"
-                          style={{
-                            padding: "0.2rem 0.4rem",
-                            fontSize: "0.6rem",
-                            cursor: "pointer",
-                          }}
-                          onClick={() => acceptProject(notification.id)}
-                        >
-                          Accept
-                        </button>
-                      </div>
-                    }
+                    notification.acceptance === null &&
+                    <div>
+                      <button
+                        className="btn btn-danger"
+                        style={{
+                          padding: "0.2rem 0.4rem",
+                          fontSize: "0.6rem",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => declineProject(notification.id)}
+                      >
+                        Reject
+                      </button>
+                      <button
+                        className="btn btn-success mx-3"
+                        style={{
+                          padding: "0.2rem 0.4rem",
+                          fontSize: "0.6rem",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => acceptProject(notification.id)}
+                      >
+                        Accept
+                      </button>
+                    </div>
+                  }
                   {/* {
                     notification.acceptance==="3" && 
                       ""
@@ -502,7 +505,7 @@ const DashboardRightHeader = ({ username, profile }) => {
         sharedEmail={selectedNotification ? sharedPersonEmail : ""}
         sharedAccessType={selectedNotification ? sharedAccessType : ""}
         acceptanceStatus={selectedNotification ? acceptanceStatus : ""}
-        previous = {selectedNotification ? previous : ""}
+        previous={selectedNotification ? previous : ""}
       />
     </div>
   );

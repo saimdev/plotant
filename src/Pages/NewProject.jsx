@@ -94,6 +94,7 @@ export function NewProject() {
   const [greyShadeCheck, setGreyShadeCheck] = useState(false);
   const [logs, setLogs] = useState([]);
   const [logsCheck, setLogsCheck] = useState(false);
+  const [accessType, setAccessType] = useState("")
 
   const updateLogs = (newLogs) => {
     setLogs(newLogs);
@@ -1061,6 +1062,9 @@ export function NewProject() {
   const handleColumnsData = (columnsData) => {
     setColumnsData(columnsData);
   };
+  const handleAccessType = (access) => {
+    setAccessType(access);
+  }
   const handleTypes = (types) => {
     setTypes(types);
   };
@@ -1217,6 +1221,7 @@ export function NewProject() {
             onTypes={handleTypes}
             onUniqueValues={handleUniqueValues}
             onColumnsData={handleColumnsData}
+            onAccessType={handleAccessType}
             projectName={decodeURIComponent(projectName)}
           />
           {/* <NewProjectSecondLeftMenu selectedFile={selectedFile} jsonData={jsonData} columns={columns} guestId={guestId} types={types} uniqueValues={uniqueValues} columnsData={columnsData} onGraphNameChange={handleGraphNameChange}/> */}

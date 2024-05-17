@@ -371,6 +371,7 @@ export function AllProjects() {
             <thead className="dashboard-thead px-2">
               <th>Title</th>
               <th>Owner</th>
+              <th>Role</th>
               <th>Last Modified</th>
               <th>Actions</th>
             </thead>
@@ -391,7 +392,8 @@ export function AllProjects() {
                         {project.project__name}
                       </Link>
                     </td>
-                    <td>{project.role === "owner" ? "You" : project.role}</td>
+                    <td>{project.role === "owner" ? "You" : project.project_username}</td>
+                    <td>{project.role === "owner" ? "Read & Write" : project.role==="read"?"Read":"Write"}</td>
                     <td>{formateDate(project.date)}</td>
                     <td>
                       <Link
