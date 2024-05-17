@@ -50,6 +50,7 @@ export function Dashboard() {
 
     const data = await res.json();
     console.log(data);
+    
     setMyProjectsCount(data.projectsCount);
     console.log(data.latestProject);
     setLastDate(data.latestProject);
