@@ -18,7 +18,8 @@ export function NewProjectFirstLeftMenu({
   onColumnsData,
   projectName,
   onAccessType,
-  onProjectName
+  onProjectName,
+  graphHistory
 }) {
   const [loader, setLoader] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -439,18 +440,19 @@ export function NewProjectFirstLeftMenu({
       <div className="d-flex flex-column w-100 mt-5" style={{ borderTop: '1px solid lightgray' }}>
         <h5 style={{ fontSize: '0.9rem', fontWeight: 'bold', borderBottom: '1px solid lightgray' }} className="p-2">Plotted Graphs</h5>
         <div className="d-flex flex-column">
-          <div className="d-flex flex-row align-items-center justify-content-center py-1 plotted-graph-name">
-            <span style={{ background: 'var(--primary-color)' }} className="p-1 plotted-span"></span>
-            <p style={{ fontSize: '0.8rem' }} className="mx-2">Bar Graph</p>
-          </div>
-          <div className="d-flex flex-row align-items-center justify-content-center py-1 plotted-graph-name">
-            <span style={{ background: 'var(--primary-color)' }} className="p-1 plotted-span"></span>
-            <p style={{ fontSize: '0.8rem' }} className="mx-2">Bar Graph</p>
-          </div>
-          <div className="d-flex flex-row align-items-center justify-content-center py-1 plotted-graph-name">
-            <span style={{ background: 'var(--primary-color)' }} className="p-1 plotted-span"></span>
-            <p style={{ fontSize: '0.8rem' }} className="mx-2">Bar Graph</p>
-          </div>
+          {graphHistory.map((graph, index) => (
+            <Link
+              key={index}
+              className="plotted-graph-name px-2 py-2"
+              style={{
+                display: graph ? "flex" : "none",
+                fontSize: '0.8rem'
+              }}
+            >
+              <span style={{ background: 'var(--primary-color)' }} className="p-1 plotted-span"></span>
+              <p style={{ fontSize: '0.8rem', textOverflow:'ellipsis', whiteSpace:'nowrap', overflow:'hidden' }} className="mx-2 plotted-graph-name-p">{graph[14]}</p>
+            </Link>
+          ))}
         </div>
       </div>
     </div>

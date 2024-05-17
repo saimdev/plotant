@@ -57,3 +57,7 @@
 .plotted-graph-name:hover .index-filename{
     color:white;
 }
+
+.plotted-graph-name:hover .plotted-graph-name-p{
+    color:white !important
+}

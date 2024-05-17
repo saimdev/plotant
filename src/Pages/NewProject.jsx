@@ -250,7 +250,17 @@ export function NewProject() {
 
   // useEffect(() => {
 
-
+  useEffect(() => {
+    // console.log(dictionaryState);
+    // console.log(xAxis);
+    // console.log(yAxis);
+    if (!xAxis || !yAxis) {
+      setGraphName("");
+    }
+    if (xAxis && yAxis) {
+      setGraphHeading(`Relationship between ${xAxis} and ${yAxis}`);
+    }
+  }, [xAxis, yAxis]);
 
   // }, []);
 
@@ -674,7 +684,7 @@ export function NewProject() {
         legendPosition,
         greyShadeCheck,
         project_id: projectName,
-        file_id: fileId
+        file_id: fileId,
       }),
       credentials: "include"
     });
@@ -1228,6 +1238,7 @@ export function NewProject() {
             onAccessType={handleAccessType}
             projectName={decodeURIComponent(projectName)}
             onProjectName={handleProjectName}
+            graphHistory={graphHistory}
           />
           {/* <NewProjectSecondLeftMenu selectedFile={selectedFile} jsonData={jsonData} columns={columns} guestId={guestId} types={types} uniqueValues={uniqueValues} columnsData={columnsData} onGraphNameChange={handleGraphNameChange}/> */}
           <div className={`newprojectsecondmenu pb-5 d-flex flex-column ${accessType==="read"? "disabled-component":""}`}>
