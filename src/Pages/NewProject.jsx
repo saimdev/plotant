@@ -102,9 +102,9 @@ export function NewProject() {
     setLogsDisplay(true);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(barColors);
-  },[barColors])
+  }, [barColors])
 
   const getFileNameWithoutExtension = (fileName) => {
     return fileName.split(".")[0];
@@ -156,9 +156,7 @@ export function NewProject() {
   //   setGraphName(newName);
   //   onGraphNameChange(newName);
   // };
-
   const setLabels = (e, labelCheck) => {
-    // console.log(labelCheck===1?e.target.innerText:e.target.value);
     setYAxisValue("");
     setCondition([]);
     setConditionalParameters([]);
@@ -168,42 +166,19 @@ export function NewProject() {
     setTextureBg("#ffffff");
     setTextureColor("#000000");
     setDictionaryState([]);
-    // console.log("SAIM")
     setReference("");
+
     const labelValue = labelCheck === 1 ? e.target.innerText : e.target.value;
-    // console.log(labelValue);
     const labelIndex = selectedLabels.indexOf(labelValue);
-    // setConditionalParameters(null);
+
     if (labelIndex === -1) {
       if (xAxis.length === 0) {
         setXAxis(labelValue);
-      } else if (yAxis.length === 0) {
-        setYAxis(labelValue);
-        fetch("/analysis/getLabels", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            x_label: xAxis,
-            y_label: labelValue,
-            fileId: fileId,
-            projectId: projectName,
-          }),
-          credentials: "include",
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (Array.isArray(data.x) && Array.isArray(data.y)) {
-              setParameters(data);
-              // console.log(data);
-            } else {
-              console.error("Invalid data format");
-            }
-          })
-          .catch((error) => {
-            alert(error);
-          });
+      } else {
+        // Check if the label is not already in y-axis
+        if (!selectedLabels.includes(labelValue)) {
+          setYAxis(labelValue);
+        }
       }
 
       setSelectedLabels([...selectedLabels, labelValue]);
@@ -219,7 +194,37 @@ export function NewProject() {
         setYAxis("");
       }
     }
+
+    // Hit the API with selected x-axis and all selected y-axes
+    console.log(selectedLabels);
+    if (xAxis && yAxis) {
+      fetch("/analysis/getLabels", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          x_label: xAxis,
+          y_label: selectedLabels.filter(label => label !== xAxis),
+          fileId: fileId,
+          projectId: projectName,
+        }),
+        credentials: "include",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (Array.isArray(data.x) && Array.isArray(data.y)) {
+            setParameters(data);
+          } else {
+            console.error("Invalid data format");
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    }
   };
+
 
   const handleContainerToggle = (container) => {
     switch (container) {
@@ -807,7 +812,7 @@ export function NewProject() {
 
 
   function generateGreyShadeColors() {
-    setGreyShadeCheck(greyShadeCheck?false:true);
+    setGreyShadeCheck(greyShadeCheck ? false : true);
     if (greyShadeCheck === true) {
       if (parameters) {
         let generatedColorPalette;
@@ -977,7 +982,7 @@ export function NewProject() {
       return;
     }
 
-    if (parameters && logsCheck===false) {
+    if (parameters && logsCheck === false) {
       console.log("SAIM");
       let generatedColorPalette;
       if (Array.isArray(parameters.y)) {
@@ -991,7 +996,7 @@ export function NewProject() {
       }
       setBarColors(generatedColorPalette);
     }
-    else{
+    else {
       setLogsCheck(false);
       // let generatedColorPalette;
       // if (Array.isArray(parameters.y)) {
@@ -1082,7 +1087,7 @@ export function NewProject() {
     setAccessType(access);
   }
 
-  const handleProjectName = (project) =>{
+  const handleProjectName = (project) => {
     setProject_Name(project);
   }
 
@@ -1118,7 +1123,7 @@ export function NewProject() {
     // console.log("BarColors After", barColors);
   };
 
-  const handleHistoryClick = (index) =>{
+  const handleHistoryClick = (index) => {
     handlePreviousGraph(index);
   }
 
@@ -1200,7 +1205,7 @@ export function NewProject() {
   return (
     <div className="dashboard">
       <div className="dashboard-main d-flex flex-column">
-        <NewProjectTopMenu projectId={projectName} fileId={fileId} updateLogs={updateLogs} projectName={project_name} accessType={accessType}/>
+        <NewProjectTopMenu projectId={projectName} fileId={fileId} updateLogs={updateLogs} projectName={project_name} accessType={accessType} />
         <div className="d-flex flex-row">
           <div className="py-3" style={{ height: '100vh', width: '16vw', background: 'white', zIndex: 9999999, position: 'absolute', top: 0, right: 0, boxShadow: 'rgba(21,88,156, 0.50) 0px 3px 8px', display: logsDisplay ? 'block' : 'none', borderRadius: '8px 0 0 8px' }}>
             <div className="d-flex flex-row justify-content-between align-items-center w-100 px-3 pb-2" style={{ borderBottom: '1px solid lightgray' }}>
@@ -1255,7 +1260,7 @@ export function NewProject() {
             onGraphHistoryClick={handleHistoryClick}
           />
           {/* <NewProjectSecondLeftMenu selectedFile={selectedFile} jsonData={jsonData} columns={columns} guestId={guestId} types={types} uniqueValues={uniqueValues} columnsData={columnsData} onGraphNameChange={handleGraphNameChange}/> */}
-          <div className={`newprojectsecondmenu pb-5 d-flex flex-column ${accessType==="read"? "disabled-component":""}`}>
+          <div className={`newprojectsecondmenu pb-5 d-flex flex-column ${accessType === "read" ? "disabled-component" : ""}`}>
             <div
               className="w-100 d-flex flex-row align-items-center jsutify-content-between px-2 py-1 newprojectsecondmenu-links"
               style={{ background: "#7c3232" }}
