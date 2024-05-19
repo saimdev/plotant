@@ -209,8 +209,11 @@ function AreaBar({
     fill=mycolor${(labels.length)+1},
     fill opacity=0.2,
     draw=none,
+    closed,
   ] coordinates {
     ${labels.map((label, labelIndex) => `(${label}, ${dataset.data[labelIndex]})`).join(" ")}
+    (${labels[labels.length - 1]}, 0)
+    (${labels[0]}, 0)
   };`;
       console.log(color);
       console.log(plots);

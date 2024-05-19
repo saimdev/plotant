@@ -105,7 +105,7 @@ function HorizontalBarChart({
     const chartInstance = Chart.getChart("barChartCanvas");
     const options = chartInstance.config.options;
     console.log(options);
-    const stepSize = options.scales.y.ticks.stepSize;
+    const stepSize = options.scales.x.ticks.stepSize;
     const canvasWidth = canvas.width;
     const numBars = labels.length;
 
@@ -146,7 +146,7 @@ function HorizontalBarChart({
   
     \\begin{document}
     
-    \\begin{figure}
+    \\begin{figure*}
       \\centering
       \\begin{tikzpicture}
         \\begin{axis}[
@@ -162,8 +162,8 @@ function HorizontalBarChart({
           bar height=${barHeight}, % Set the height of the bars (changed from bar width to bar height)
           enlarge y limits=0.1, % Enlarge y limits to avoid cropping bars
           y dir=reverse, % Reverse the direction of y-axis
-          ymax=${maxYValue},
-          ytick distance=${stepSize},
+          xmax=${maxYValue},
+          xtick distance=${stepSize},
           reverse legend, % Reverse the order of legend entries
         ]
       
@@ -172,7 +172,7 @@ function HorizontalBarChart({
         \\end{axis}
       \\end{tikzpicture}
       \\caption{}
-    \\end{figure}
+    \\end{figure*}
     
     \\end{document}
   `;
@@ -290,7 +290,6 @@ function HorizontalBarChart({
                   size: yLabelSize,
                   weight: yLabelWeight,
                 },
-                stepSize: stepSize,
               },
             },
             x: {
@@ -312,6 +311,7 @@ function HorizontalBarChart({
                   size: xLabelSize,
                   weight: xLabelWeight,
                 },
+                stepSize: stepSize, 
               },
             },
           },

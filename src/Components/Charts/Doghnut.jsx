@@ -116,16 +116,37 @@ function Doghnut({
       ${colorDefinitions}
       \\begin{document}
       
-      \\begin{figure}
-        \\centering
-        \\begin{tikzpicture}
-        \\pie[rotate=180, 
-          text=inside, 
-          radius=5,
-          hide number, 
-          before number = {},
-          after number = {},
-          color={${colorList}},]
+      \\begin{figure*}
+      \\centering
+      \\begin{tikzpicture}
+      % <--- \\pie is the only command that provided by pgf-pie. The argument is a list of number and text combination in the formate of number/text, i.e. 10/A, 20/B, 30/C, 40/D. --->
+      \\pie[
+         % <--- The center of chart can be set by pos, default is {0,0}. The chart can be rotated by setting rotate (in degrees). The size of chart can be set by radius, default is 3. --->
+         % pos={8,0},
+         rotate=90,
+         radius=5,
+         % explode={0.1},
+         % <--- The value of sum indicates the sum of all data in the chart, it is 100 by default. It can be calculated automatically when auto is set. Then the angle of slices are determined by number value and sum. --->
+         sum=auto,
+         % <--- The slices order direction can be set to clockwise by setting change direction, default is counterclockwise. --->
+         % change direction, 
+         % <--- The number also can be hide by hide number --->
+         hide number,
+         % <--- The size of font in size pie can be scaled according to how big the part is automatically. --->
+         % scale font,
+         % <--- The value of text can be label (default), pin, inside or legend. --->
+         text=legend,
+         % text=inside,
+         % text=pin,
+         % <--- The polar area diagram is similar to a usual pie chart, except sectors are equal angles and differ rather in how far each sector extends from the center of the circle. Note: explode has no affects in square chart. --->
+         % polar,
+         % square,
+         % cloud,
+         % <--- Two parameters can be used to decorate number: before number and after number. Both are empty by default, but if sum=100, after number will be set to automatically if user doesn’t set it. --->
+         before number = {pkr},
+         after number = {},
+         % <---- The color can be specified by color ---->
+         color={${colorList}},]
         {`;
 
     let totalSum = 0;
@@ -140,7 +161,7 @@ function Doghnut({
       labels.forEach((label, labelIndex) => {
         const dataValue = dataset.data[labelIndex];
         const percentage = (dataValue / totalSum) * 100;
-        latexCode += `${dataValue*10}/, `;
+        latexCode += `${dataValue*10}/${label}, `;
       });
     });
 
@@ -152,7 +173,7 @@ function Doghnut({
         \\draw [fill=white, draw=black] (0,0) circle [radius=2];
       \\end{tikzpicture}
       \\caption{${graphHeading}}
-    \\end{figure}
+    \\end{figure*}
       
     \\end{document}
     `;

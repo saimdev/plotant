@@ -133,6 +133,24 @@ function BarChart({
     }
   };
 
+
+function getScreenDiagonalSize() {
+  var screenWidth = window.screen.width;
+  var screenHeight = window.screen.height;
+
+  var diagonalSize = Math.sqrt(screenWidth * screenWidth + screenHeight * screenHeight);
+  return diagonalSize*0.0104166667;
+}
+
+function calculatePPI(diagonalSizeInInches) {
+  var screenWidth = window.screen.width;
+  var screenHeight = window.screen.height;
+
+  var diagonalResolution = Math.sqrt(screenWidth * screenWidth + screenHeight * screenHeight);
+
+  var ppi = diagonalResolution / diagonalSizeInInches;
+  return ppi;
+}
   const generateLatex = (format) => {
     const { datasets, labels } = chartData;
     // const numDataPoints = labels.length;
@@ -140,12 +158,18 @@ function BarChart({
     const canvas = document.getElementById("barChartCanvas").getContext("2d").canvas;
     const chartInstance = Chart.getChart("barChartCanvas");
     const options = chartInstance.config.options;
-    console.log(options);
+    console.log(chartInstance);
     const stepSize = options.scales.y.ticks.stepSize;
     const canvasWidth = canvas.width;
+    const diagonalSizeInInches = getScreenDiagonalSize();
+    const ppi = calculatePPI(diagonalSizeInInches);
+    console.log("PPI", ppi);
+    const canvasWidth_Tex = (canvasWidth*72.27)/ppi
+    console.log(canvas.height);
     const numBars = labels.length;
 
     const barWidth = (canvasWidth / numBars);
+    const barWidth_Tex = (barWidth*72.27)/ppi;
     let colorDefinitions = ""; // String to hold color definitions
     let plots = ""; // String to hold plot commands
 
@@ -167,7 +191,7 @@ function BarChart({
           ybar,
           fill=mycolor${labelIndex}, % Use defined color for dataset
           draw=black,
-          bar width=${barWidth-200}, % Set the width of the bars
+          bar width=40pt, % Set the width of the bars
         ] coordinates {(${label}, ${dataset.data[labelIndex]}) };\n`;
       });
       
@@ -193,7 +217,7 @@ function BarChart({
 
     \\begin{document}
     
-    \\begin{figure}
+    \\begin{figure*}
       \\centering
       \\begin{tikzpicture}
         \\begin{axis}[
@@ -214,8 +238,8 @@ function BarChart({
 
         \\end{axis}
       \\end{tikzpicture}
-      \\caption{${graphHeading}}
-    \\end{figure}
+      \\caption{$${graphHeading}$}
+    \\end{figure*}
     
     \\end{document}
   `;

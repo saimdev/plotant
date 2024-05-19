@@ -41,6 +41,9 @@ function AreaChart({
     return new Blob([u8arr], { type: mime });
   }
 
+  const maxDataValue = Math.max(...chartData.datasets.flatMap(dataset => dataset.data));
+
+  const maxYValue = Math.ceil(maxDataValue / stepSize) * stepSize;
   const downloadChart = async (format) => {
     const canvas = document
       .getElementById("lineChartCanvas")
@@ -132,8 +135,8 @@ function AreaChart({
       \\usepackage{pgfplots}
       \\pgfplotsset{compat=1.17}
       \\definecolor{mycolor1}{HTML}{${barColors[0].substring(
-        1
-      )}}\n
+      1
+    )}}\n
       \\begin{document}
       
       \\begin{figure}
@@ -146,6 +149,10 @@ function AreaChart({
             xtick=data,
             symbolic x coords={${labels.join(", ")}},
             ymin=0,
+            ymax=${maxYValue},
+            ytick distance = ${stepSize},
+            xmin=${labels[0]},
+            xmax=${labels[labels.length - 1]},
             legend style={at={(0.5,-0.15)}, anchor=north, legend columns=-1},
             width=15cm, % Set the width of the chart
             grid=both,
@@ -159,19 +166,20 @@ function AreaChart({
       latexCode += `
             \\addplot[
               mark=*,
-              smooth, % Smooth the line
+              draw=none,
               fill=mycolor1, % Fill color below the line
-            ] coordinates {
-          `;
-
+              fill opacity=1.0,
+              closed, 
+            ] coordinates {`;
       labels.forEach((label, labelIndex) => {
-        latexCode += `(${label}, ${dataset.data[labelIndex]}) `;
+        latexCode += `\n(${label}, ${dataset.data[labelIndex]}) `;
       });
-
-      latexCode += `};`;
     });
 
     latexCode += `
+    (${labels[labels.length - 1]}, 0)
+    (${labels[0]}, 0)
+};
           \\end{axis}
         \\end{tikzpicture}
         \\caption{${graphHeading}}
@@ -203,7 +211,7 @@ function AreaChart({
         alert("LaTeX code copied to clipboard!");
         break;
     }
-};
+  };
 
 
   return (
