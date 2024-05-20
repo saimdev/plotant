@@ -42,37 +42,45 @@ export function SelectChart({
   fontFamily,
   stepSize,
   legendPosition,
+  selectedLabels
 }) {
   console.log(chartName);
-  let labels = Array.isArray(parameters.x)
-    ? parameters.x.map((param) => param)
-    : [parameters.x];
-  let dataValues = Array.isArray(parameters.y)
-    ? parameters.y.map((param) => param)
-    : [parameters.y];
-  if (Array.isArray(parameters.x)) {
-    labels.sort((a, b) => a - b);
-    const sortedIndices = parameters.x
-      .map((_, index) => index)
-      .sort((a, b) => parameters.x[a] - parameters.x[b]);
-    dataValues = sortedIndices.map((index) => dataValues[index]);
-  }
-
-  let data;
+  let labels = Array.isArray(parameters.labels.x)
+    ? parameters.labels.x.map((param) => param)
+    : [parameters.labels.x];
+    const dataValues = [];
+    const selectedLabelsLength = selectedLabels.length;
+    
+    for (let i = 1; i < selectedLabelsLength; i++) { 
+      const key = `y${i === 1 ? '' : i - 1}`; 
+      const dataArray = Array.isArray(parameters.labels[key])
+        ? parameters.labels[key].map((param) => param)
+        : [parameters.labels[key]];
+      
+      dataValues.push(dataArray);
+    }
+  // if (Array.isArray(parameters.labels.x)) {
+  //   labels.sort((a, b) => a - b);
+  //   const sortedIndices = parameters.labels.x
+  //     .map((_, index) => index)
+  //     .sort((a, b) => parameters.labels.x[a] - parameters.labels.x[b]);
+  //   dataValues = sortedIndices.map((index) => dataValues[index]);
+  // }
+    let data;
   // console.log(legends);
   if (legends.length === 0 || !parameters.z || chartName !== "Bar") {
+    const datasets = dataValues.map((dataArray, index) => ({
+      label: `${selectedLabels[index + 1]}`, 
+      data: dataArray,
+      backgroundColor: barColors[index % barColors.length], 
+      borderWidth: barBorders,
+      borderColor: borderColor,
+      stepped: stepped,
+    }));
+    
     data = {
-      labels: labels,
-      datasets: [
-        {
-          label: `${yLabel}`,
-          data: dataValues,
-          backgroundColor: barColors,
-          borderWidth: barBorders,
-          borderColor: borderColor,
-          stepped: stepped,
-        },
-      ],
+      labels: parameters.labels.x, 
+      datasets: datasets,
     };
   } else {
     const zValues = parameters.z;

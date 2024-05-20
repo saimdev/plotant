@@ -157,6 +157,7 @@ export function NewProject() {
   //   onGraphNameChange(newName);
   // };
   const setLabels = (e, labelCheck) => {
+    console.log(labelCheck);
     setYAxisValue("");
     setCondition([]);
     setConditionalParameters([]);
@@ -172,17 +173,18 @@ export function NewProject() {
     const labelIndex = selectedLabels.indexOf(labelValue);
 
     if (labelIndex === -1) {
+      console.log("LABEL INDEX -1");
       if (xAxis.length === 0) {
+        console.log(labelValue);
         setXAxis(labelValue);
+        setSelectedLabels([labelValue]); // Set only xAxis initially
       } else {
-        // Check if the label is not already in y-axis
-        if (!selectedLabels.includes(labelValue)) {
-          setYAxis(labelValue);
-        }
+        console.log("ELSE", labelValue);
+        setYAxis(prevYAxes => [...prevYAxes, labelValue]);
+        setSelectedLabels(prevSelectedLabels => [...prevSelectedLabels, labelValue]);
       }
-
-      setSelectedLabels([...selectedLabels, labelValue]);
     } else {
+      console.log("LABEL INDEX ELSE");
       const updatedLabels = [...selectedLabels];
       updatedLabels.splice(labelIndex, 1);
       setSelectedLabels(updatedLabels);
@@ -190,14 +192,13 @@ export function NewProject() {
       if (xAxis === labelValue) {
         setXAxis("");
         setParameters(null);
-      } else if (yAxis === labelValue) {
-        setYAxis("");
+      } else {
+        setYAxis(prevYAxes => prevYAxes.filter(label => label !== labelValue));
       }
     }
 
     // Hit the API with selected x-axis and all selected y-axes
-    console.log(selectedLabels);
-    if (xAxis && yAxis) {
+    if (xAxis && (yAxis.length > 0 || labelIndex === -1 && xAxis.length > 0)) {
       fetch("/analysis/getLabels", {
         method: "POST",
         headers: {
@@ -205,7 +206,7 @@ export function NewProject() {
         },
         body: JSON.stringify({
           x_label: xAxis,
-          y_label: selectedLabels.filter(label => label !== xAxis),
+          y_label: [...yAxis, labelValue].filter(label => label !== xAxis),
           fileId: fileId,
           projectId: projectName,
         }),
@@ -213,7 +214,8 @@ export function NewProject() {
       })
         .then((response) => response.json())
         .then((data) => {
-          if (Array.isArray(data.x) && Array.isArray(data.y)) {
+          console.log(data);
+          if (Array.isArray(data.labels.x) && Array.isArray(data.labels.y)) {
             setParameters(data);
           } else {
             console.error("Invalid data format");
@@ -224,6 +226,8 @@ export function NewProject() {
         });
     }
   };
+
+
 
 
   const handleContainerToggle = (container) => {
@@ -1363,18 +1367,14 @@ export function NewProject() {
                           <div
                             className="d-flex flex-row align-items-center"
                             id={`checkbox-${index}`}
+                            key={index}
                           >
                             <input
-                              key={index}
                               type="checkbox"
                               name={option}
-                              id={`checkbox`}
+                              id={`checkbox-${index}`}
                               value={option}
                               onClick={(e) => setLabels(e)}
-                              disabled={
-                                selectedLabels.length >= 2 &&
-                                !selectedLabels.includes(option)
-                              }
                               checked={selectedLabels.includes(option)}
                             />
                             <label
@@ -1389,6 +1389,8 @@ export function NewProject() {
                         ))}
                       </div>
                     )}
+
+
                   </div>
                 ) : (
                   ""
@@ -1928,6 +1930,7 @@ export function NewProject() {
                   fontFamily={fontFamily}
                   stepSize={stepSize}
                   legendPosition={legendPosition}
+                  selectedLabels={selectedLabels}
                 />
               )
             ) : (

@@ -32,6 +32,7 @@ function BarChart({
   stepSize,
   legendPosition,
 }) {
+  console.log(chartData);
   // const [imageFile, setImageFile] = useState('');
   // const [changedImage, setChangedImage] = useState(null);
   function dataURLtoBlob(dataurl) {
