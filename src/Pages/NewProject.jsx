@@ -177,7 +177,7 @@ export function NewProject() {
       if (xAxis.length === 0) {
         console.log(labelValue);
         setXAxis(labelValue);
-        setSelectedLabels([labelValue]); // Set only xAxis initially
+        setSelectedLabels([labelValue]); 
       } else {
         console.log("ELSE", labelValue);
         setYAxis(prevYAxes => [...prevYAxes, labelValue]);
@@ -197,7 +197,7 @@ export function NewProject() {
       }
     }
 
-    // Hit the API with selected x-axis and all selected y-axes
+  
     if (xAxis && (yAxis.length > 0 || labelIndex === -1 && xAxis.length > 0)) {
       fetch("/analysis/getLabels", {
         method: "POST",
