@@ -28,6 +28,7 @@ function Spline({
   fontFamily,
   stepSize,
   legendPosition,
+  barBorders,
 }) {
 
   function dataURLtoBlob(dataurl) {
@@ -41,6 +42,8 @@ function Spline({
     }
     return new Blob([u8arr], { type: mime });
   }
+
+
   const downloadChart = async (format) => {
     const canvas = document
       .getElementById("barChartCanvas")
@@ -224,13 +227,7 @@ function Spline({
         {stepped ? "Stepped-Line Chart" : "Line Chart"}
       </h2>
       <Line
-        data={{
-          ...chartData,
-          datasets: chartData.datasets.map((dataset, index) => ({
-            ...dataset,
-            borderColor: 'black',
-          })),
-        }}
+        data={chartData}
         options={{
           responsive: true,
           interaction: {
@@ -256,7 +253,7 @@ function Spline({
           },
           scales: {
             y: {
-              stacked: true,
+             
               title: {
                 display: true,
                 text: yLabel,
@@ -280,7 +277,7 @@ function Spline({
               max:maxYValue
             },
             x: {
-              stacked: true,
+             
               title: {
                 display: true,
                 text: xLabel,

@@ -8,7 +8,7 @@ import { Canvg } from "canvg";
 import { generatePath } from "react-router-dom";
 // import 'chartjs-plugin-export';
 
-function BarChart({
+function StackedBar({
   chartData,
   yLabel,
   xLabel,
@@ -306,7 +306,7 @@ function calculatePPI(diagonalSizeInInches) {
           },
           scales: {
             y: {
-            
+              stacked:true,
               title: {
                 display: true,
                 text: yLabel,
@@ -329,7 +329,7 @@ function calculatePPI(diagonalSizeInInches) {
               max:maxYValue,
             },
             x: {
-             
+              stacked:true,
               title: {
                 display: true,
                 text: xLabel,
@@ -404,4 +404,4 @@ function calculatePPI(diagonalSizeInInches) {
     </div>
   );
 }
-export default BarChart;
+export default StackedBar;

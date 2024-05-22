@@ -13,7 +13,7 @@ import AreaChart from "./AreaChart";
 import LineBar from "./LineBar";
 import AreaBar from "./AreaBar";
 import { getColor, rgba } from "chartjs-color";
-
+import StackedBar from "./StackedBar";
 Chart.register(CategoryScale);
 
 export function SelectChart({
@@ -50,18 +50,18 @@ export function SelectChart({
   let labels = Array.isArray(parameters.labels.x)
     ? parameters.labels.x.map((param) => param)
     : [parameters.labels.x];
-    const dataValues = [];
-    const selectedLabelsLength = selectedLabels.length;
-    
-    for (let i = 1; i < selectedLabelsLength; i++) { 
-      const key = `y${i === 1 ? '' : i - 1}`; 
-      console.log(key);
-      const dataArray = Array.isArray(parameters.labels[key])
-        ? parameters.labels[key].map((param) => param)
-        : [parameters.labels[key]];
-      console.log(dataArray);
-      dataValues.push(dataArray);
-    }
+  const dataValues = [];
+  const selectedLabelsLength = selectedLabels.length;
+
+  for (let i = 1; i < selectedLabelsLength; i++) {
+    const key = `y${i === 1 ? '' : i - 1}`;
+    console.log(key);
+    const dataArray = Array.isArray(parameters.labels[key])
+      ? parameters.labels[key].map((param) => param)
+      : [parameters.labels[key]];
+    console.log(dataArray);
+    dataValues.push(dataArray);
+  }
   // if (Array.isArray(parameters.labels.x)) {
   //   labels.sort((a, b) => a - b);
   //   const sortedIndices = parameters.labels.x
@@ -73,21 +73,21 @@ export function SelectChart({
   barColors.forEach((dataArray, index) => {
     console.log(barColors[index]);
   });
-  
-    let data;
+
+  let data;
   // console.log(legends);
-  
+
   if (legends.length === 0 || !parameters.labels.z || chartName !== "Bar") {
     const datasets = dataValues.map((dataArray, index) => ({
-      label: `${selectedLabels[index + 1]}`, 
+      label: `${selectedLabels[index + 1]}`,
       data: dataArray,
-      backgroundColor: chartName==="Area" ? `${barColors[index % barColors.length]}80` : barColors[index % barColors.length] , 
+      backgroundColor: chartName === "Area" ? `${barColors[index % barColors.length]}80` : chartName === "Pie" ? barColors : barColors[index % barColors.length] ,
       borderWidth: barBorders,
       borderColor: borderColor,
       stepped: stepped,
     }))
     data = {
-      labels: parameters.labels.x, 
+      labels: parameters.labels.x,
       datasets: datasets,
     };
   } else {
@@ -113,7 +113,7 @@ export function SelectChart({
         data: quantities,
         backgroundColor: barColors[index % barColors.length],
         borderWidth: barBorders,
-        
+
       })
     );
 
@@ -122,7 +122,7 @@ export function SelectChart({
     data = {
       labels: labels,
       datasets: datasets,
-      fill: chartName==='Area' ? true : false
+      fill: chartName === 'Area' ? true : false
     };
   }
   switch (chartName) {
@@ -150,6 +150,7 @@ export function SelectChart({
           stepSize={stepSize}
           legendPosition={legendPosition}
           barColors={barColors}
+          barBorders={barBorders}
         />
       );
     case "Doghnut":
@@ -254,6 +255,7 @@ export function SelectChart({
           fontFamily={fontFamily}
           stepSize={stepSize}
           legendPosition={legendPosition}
+          barBorders={barBorders}
         />
       );
     case "Horizontal":
@@ -381,6 +383,33 @@ export function SelectChart({
           dlColor={dlColor}
           dataLabelsConfig={dataLabelsConfig}
           barColors={barColors}
+          fontFamily={fontFamily}
+          stepSize={stepSize}
+          legendPosition={legendPosition}
+        />
+      );
+    case "Stacked":
+      return (
+        <StackedBar
+          chartData={data}
+          yLabel={yLabel}
+          xLabel={xLabel}
+          xLabelColor={xLabelColor}
+          yLabelColor={yLabelColor}
+          graphHeadSize={graphHeadSize}
+          xLabelSize={xLabelSize}
+          yLabelSize={yLabelSize}
+          xLabelWeight={xLabelWeight}
+          yLabelWeight={yLabelWeight}
+          graphHeadWeight={graphHeadWeight}
+          barColors={barColors}
+          graphHeading={graphHeading}
+          barBorders={barBorders}
+          legendCheck={legendCheck}
+          dlSize={dlSize}
+          dlWeight={dlWeight}
+          dlColor={dlColor}
+          dataLabelsConfig={dataLabelsConfig}
           fontFamily={fontFamily}
           stepSize={stepSize}
           legendPosition={legendPosition}

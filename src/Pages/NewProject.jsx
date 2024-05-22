@@ -69,7 +69,7 @@ export function NewProject() {
   const [graphHeading, setGraphHeading] = useState("");
   const [fileId, setFileId] = useState("");
   const [stepSize, setStepSize] = useState(1);
-  const [legendPosition, setLegendPosition] = useState("Top");
+  const [legendPosition, setLegendPosition] = useState("right");
   const [barBorders, setBarBoders] = useState(1);
   const [condition, setCondition] = useState([]);
   const [conditionalParameters, setConditionalParameters] = useState([]);
@@ -674,6 +674,7 @@ export function NewProject() {
     "Area",
     "Multiple",
     "AreaBar",
+    "Stacked"
   ];
 
   const handleLinkHover = (linkName, event) => {
@@ -705,7 +706,7 @@ export function NewProject() {
           },
           body: JSON.stringify({
             x_label: xAxis,
-            y_label: yAxis,
+            y_label: selectedLabels.slice(1),
             z: labelValue,
             fileId: fileId,
             projectId: projectName,
@@ -2355,8 +2356,8 @@ export function NewProject() {
                         onChange={(e) => setLegendPosition(e.target.value)}
                       >
                         <option value="left">Left</option>
-                        <option value="right">Right</option>
-                        <option value="top" selected>
+                        <option value="right" selected>Right</option>
+                        <option value="top">
                           Top
                         </option>
                         <option value="bottom">Bottom</option>

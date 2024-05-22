@@ -31,13 +31,23 @@
     pointer-events: none;
 }
 
-.plotted-graph-name:hover{
+.plotted-graph-name>a:hover{
     background-color: var(--primary-color);
     color:white;
     cursor: pointer;
 }
 
-.plotted-graph-name:hover .plotted-span{
+.plotted-graph-name>a:focus{
+    background-color: var(--primary-color);
+    color:white;
+    cursor: pointer;
+}
+
+.plotted-graph-name>a:focus .index-filename{
+    color:white
+}
+
+.plotted-graph-name>a:hover .plotted-span{
     background-color: white !important;
 }
 
@@ -45,7 +55,7 @@
     clip-path: circle();
 }
 
-.plotted-graph-name:hover .file-names-link{
+.plotted-graph-name>a:hover .filename-p{
     color: white !important;
 }
 
@@ -54,10 +64,10 @@
     font-weight: bold;
 }
 
-.plotted-graph-name:hover .index-filename{
+.plotted-graph-name>a:hover .index-filename{
     color:white;
 }
 
-.plotted-graph-name:hover .plotted-graph-name-p{
+.plotted-graph-name>a:hover .plotted-graph-name-p{
     color:white !important
 }

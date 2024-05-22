@@ -419,22 +419,22 @@ export function NewProjectFirstLeftMenu({
       <div className="d-flex flex-column w-100" style={{ borderTop: '1px solid lightgray' }}>
         <h5 style={{ fontSize: '0.9rem', fontWeight: 'bold', borderBottom: '1px solid lightgray' }} className="p-2">Project Files</h5>
 
-        <div className="d-flex flex-column" style={{minHeight:'40vh', height:'40vh', overflowY:'auto'}}>
-          <div className="d-flex flex-row align-items-center justify-content-center py-1 plotted-graph-name">
+        <div className="d-flex flex-column py-1 plotted-graph-name" style={{minHeight:'40vh', height:'40vh', overflowY:'auto'}}>
+          {/* <div className="d-flex flex-row align-items-center justify-content-center py-1 plotted-graph-name"> */}
             {allFilesName.map((file, index) => (
               <Link
                 key={file.id}
                 onClick={() => getData(file.id, file.name)}
-                className="file-names-link"
+                className="file-names-link py-1 px-2"
                 style={{
                   display: file ? "flex" : "none",
                   fontSize: '0.8rem'
                 }}
               >
-                <p><span className="index-filename">{index + 1}.</span> {file ? file.name : ""}</p>
+                <p className="filename-p"><span className="index-filename">{index + 1}.</span> {file ? file.name : ""}</p>
               </Link>
             ))}
-          </div>
+          {/* </div> */}
         </div>
       </div>
 

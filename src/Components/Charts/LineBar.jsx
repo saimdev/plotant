@@ -67,7 +67,7 @@ function LineBar({
     labels: labels,
     datasets: barData.map((data, index) => ({
       type:'bar',
-      label: `Bar Dataset ${index + 1}`,
+      label: `Bar ${labels[index]}`,
       backgroundColor: barColors[index % barColors.length],
       borderColor: barColors[index % barColors.length],
       borderWidth: barBorders,
@@ -79,7 +79,7 @@ function LineBar({
     labels: labels,
     datasets: lineData.map((data, index) => ({
       type:'line',
-      label: `Line Dataset ${index + 1}`,
+      label: `Line  ${labels[index]}`,
       borderColor: barColors[index % barColors.length],
       backgroundColor: barColors[index % barColors.length],
       borderWidth: barBorders,

@@ -27,6 +27,8 @@ function PieChart({
   fontFamily,
   legendPosition,
 }) {
+
+  
   function dataURLtoBlob(dataurl) {
     var arr = dataurl.split(","),
       mime = arr[0].match(/:(.*?);/)[1],
@@ -265,7 +267,7 @@ for (let i = datasets.length - 1; i >= 0; i--) {
               },
             },
             legend: {
-              display: legendCheck,
+              display: true,
               position: legendPosition,
             },
             datalabels: {
@@ -280,7 +282,8 @@ for (let i = datasets.length - 1; i >= 0; i--) {
               },
             },
           },
-          scales: false,
+          scales: false
+
         }}
         id="barChartCanvas"
       />
