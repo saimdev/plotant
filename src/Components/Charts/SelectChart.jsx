@@ -12,6 +12,7 @@ import Doghnut from "./Doghnut";
 import AreaChart from "./AreaChart";
 import LineBar from "./LineBar";
 import AreaBar from "./AreaBar";
+import { getColor, rgba } from "chartjs-color";
 
 Chart.register(CategoryScale);
 
@@ -44,7 +45,8 @@ export function SelectChart({
   legendPosition,
   selectedLabels
 }) {
-  console.log(chartName);
+  console.log(selectedLabels);
+  console.log(parameters.labels);
   let labels = Array.isArray(parameters.labels.x)
     ? parameters.labels.x.map((param) => param)
     : [parameters.labels.x];
@@ -53,10 +55,11 @@ export function SelectChart({
     
     for (let i = 1; i < selectedLabelsLength; i++) { 
       const key = `y${i === 1 ? '' : i - 1}`; 
+      console.log(key);
       const dataArray = Array.isArray(parameters.labels[key])
         ? parameters.labels[key].map((param) => param)
         : [parameters.labels[key]];
-      
+      console.log(dataArray);
       dataValues.push(dataArray);
     }
   // if (Array.isArray(parameters.labels.x)) {
@@ -66,18 +69,23 @@ export function SelectChart({
   //     .sort((a, b) => parameters.labels.x[a] - parameters.labels.x[b]);
   //   dataValues = sortedIndices.map((index) => dataValues[index]);
   // }
+  console.log(dataValues);
+  barColors.forEach((dataArray, index) => {
+    console.log(barColors[index]);
+  });
+  
     let data;
   // console.log(legends);
-  if (legends.length === 0 || !parameters.z || chartName !== "Bar") {
+  
+  if (legends.length === 0 || !parameters.labels.z || chartName !== "Bar") {
     const datasets = dataValues.map((dataArray, index) => ({
       label: `${selectedLabels[index + 1]}`, 
       data: dataArray,
-      backgroundColor: barColors[index % barColors.length], 
+      backgroundColor: chartName==="Area" ? `${barColors[index % barColors.length]}80` : barColors[index % barColors.length] , 
       borderWidth: barBorders,
       borderColor: borderColor,
       stepped: stepped,
-    }));
-    
+    }))
     data = {
       labels: parameters.labels.x, 
       datasets: datasets,
@@ -105,6 +113,7 @@ export function SelectChart({
         data: quantities,
         backgroundColor: barColors[index % barColors.length],
         borderWidth: barBorders,
+        
       })
     );
 
@@ -113,6 +122,7 @@ export function SelectChart({
     data = {
       labels: labels,
       datasets: datasets,
+      fill: chartName==='Area' ? true : false
     };
   }
   switch (chartName) {

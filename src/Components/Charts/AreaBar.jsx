@@ -31,9 +31,9 @@ function AreaBar({
   stepSize,
   legendPosition,
 }) {
-  const { labels, barData, lineData } = chartData;
+  const { labels, datasets} = chartData;
   const maxDataValue = Math.max(...chartData.datasets.flatMap(dataset => dataset.data));
-
+  console.log(barColors);
   const maxYValue = Math.ceil(maxDataValue / stepSize) * stepSize;
   function dataURLtoBlob(dataurl) {
     var arr = dataurl.split(","),
@@ -46,38 +46,45 @@ function AreaBar({
     }
     return new Blob([u8arr], { type: mime });
   }
+  console.log(chartData);
+
+  const barData = datasets.map(dataset => dataset.data);
+  const lineData = datasets.map(dataset => dataset.data);
+
+  const barChartData = {
+    labels: labels,
+    datasets: barData.map((data, index) => ({
+      type:'bar',
+      label: `Bar Dataset ${index + 1}`,
+      backgroundColor: barColors[index % barColors.length],
+      borderColor: barColors[index % barColors.length],
+      borderWidth: barBorders,
+      data: data,
+    })),
+  };
+  
+  const lineChartData = {
+    labels: labels,
+    datasets: lineData.map((data, index) => ({
+      label: `Line Dataset ${index + 1}`,
+      borderColor: `${barColors[index % barColors.length]}80`,
+      backgroundColor: `${barColors[index % barColors.length]}80`,
+      borderWidth: barBorders,
+      fill: true,
+      data: data,
+    })),
+  };
+  
   const data = {
     labels: labels,
     datasets: [
-      {
-        type: "line",
-        label: "Line Dataset",
-        borderColor: "rgba(255, 99, 132, 0.2)",
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        borderWidth: barBorders,
-        fill: true,
-        data: chartData.datasets[0].data,
-      },
-      {
-        type: "bar",
-        label: "Bar Dataset",
-        backgroundColor: barColors,
-        borderColor: barColors,
-        borderWidth: barBorders,
-        data: chartData.datasets[0].data,
-      },
-
-      //   {
-      //     type: 'pie',
-      //     label: 'Line Dataset',
-      //     borderColor: barColors,
-      //     backgroundColor: barColors,
-      //     borderWidth: barBorders,
-      //     fill: false,
-      //     data: chartData.datasets[0].data
-      //   }
+      ...barChartData.datasets, 
+      ...lineChartData.datasets, 
+      
     ],
   };
+
+  console.log(lineChartData);
 
   const downloadChart = async (format) => {
     const canvas = document

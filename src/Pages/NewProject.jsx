@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import "../assets/css/NewProject.css";
 import NewProjectTopMenu from "../Components/Dashboard/NewProjectTopMenu";
@@ -11,6 +11,7 @@ import LabelTable from "../Components/SpreadSheet/LabelTable";
 import { useParams } from "react-router-dom";
 import Table from "../Components/SpreadSheet/Table";
 import UserTable from "../Components/SpreadSheet/UserTable";
+import Draggable from "react-draggable";
 
 export function NewProject() {
   const [loader, setLoader] = useState(true);
@@ -96,6 +97,9 @@ export function NewProject() {
   const [logsCheck, setLogsCheck] = useState(false);
   const [accessType, setAccessType] = useState("");
   const [project_name, setProject_Name] = useState("");
+  const [clickedImageIndex, setClickedImageIndex] = useState(null);
+
+  const nodeRef = useRef(null);
 
   const updateLogs = (newLogs) => {
     setLogs(newLogs);
@@ -142,7 +146,165 @@ export function NewProject() {
     setStepped(false);
   };
 
+  const handleColorChange = (index, newColor) => {
+    const updatedColors = [...barColors];
+    updatedColors[index] = newColor;
+    setBarColors(updatedColors);
+  };
 
+  const handleImageClick = (index) => {
+    if (showModal) {
+      setShowModal(false);
+    } else {
+      setShowModal(true);
+      setClickedImageIndex(index);
+    }
+  };
+
+  const handleTextureChange = (value, index, check = 0, color, bg) => {
+    const updatedBarColors = [...barColors];
+    // console.log(color);
+    // console.log(value, index, check, color);
+    if (check === 0) {
+      // console.log("Entered");
+      setDictionaryState((prevState) => ({
+        ...prevState,
+        [index]: value,
+      }));
+    } else if (check === 1) {
+      setColorStatesTexture((prevState) => ({
+        ...prevState,
+        [index]: color,
+      }));
+      setTextureColor(color);
+    } else {
+      setColorStatesBgTexture((prevState) => ({
+        ...prevState,
+        [index]: bg,
+      }));
+      setTextureBg(bg);
+    }
+    // const updatedDictionary = { ...dictionaryState };
+    // console.log("SAIM");
+    switch (value) {
+      case "steric":
+        updatedBarColors[index] = createAsteriskPattern(color, bg);
+        break;
+      case "diagnolLeft":
+        updatedBarColors[index] = createUpwardDiagonalPattern(color, bg);
+        break;
+      case "diagnolRight":
+        updatedBarColors[index] = createDiagonalPattern(color, bg);
+        break;
+      case "dash":
+        updatedBarColors[index] = createDashPattern(color, bg);
+        break;
+      case "dots":
+        updatedBarColors[index] = createOPattern(color, bg);
+        break;
+      case "cross":
+        updatedBarColors[index] = createStericsPattern(color, bg);
+        break;
+    }
+    setBarColors(updatedBarColors);
+    // console.log(updatedDictionary);
+    // console.log("SAIM");
+  };
+
+  function createDiagonalPattern(color = "black", bgColor = "transparent") {
+    let shape = document.createElement("canvas");
+    shape.width = 10;
+    shape.height = 10;
+    let c = shape.getContext("2d");
+    c.fillStyle = bgColor;
+    c.fillRect(0, 0, shape.width, shape.height);
+    c.strokeStyle = color;
+    c.beginPath();
+    c.moveTo(2, 0);
+    c.lineTo(10, 8);
+    c.stroke();
+    c.beginPath();
+    c.moveTo(0, 8);
+    c.lineTo(2, 10);
+    c.stroke();
+    return c.createPattern(shape, "repeat");
+  }
+
+  function createStericsPattern(color = "black", bgColor = "transparent") {
+    let shape = document.createElement("canvas");
+    shape.width = 10;
+    shape.height = 10;
+    let c = shape.getContext("2d");
+    c.fillStyle = bgColor;
+    c.fillRect(0, 0, shape.width, shape.height);
+    c.strokeStyle = color;
+    c.beginPath();
+    c.moveTo(0, 0);
+    c.lineTo(10, 10);
+    c.stroke();
+    c.beginPath();
+    c.moveTo(10, 0);
+    c.lineTo(0, 10);
+    c.stroke();
+    return c.createPattern(shape, "repeat");
+  }
+
+  function createUpwardDiagonalPattern(
+    color = "black",
+    bgColor = "transparent"
+  ) {
+    let shape = document.createElement("canvas");
+    shape.width = 10;
+    shape.height = 10;
+    let c = shape.getContext("2d");
+    c.fillStyle = bgColor;
+    c.fillRect(0, 0, shape.width, shape.height);
+    c.strokeStyle = color;
+    c.beginPath();
+    c.moveTo(0, 10);
+    c.lineTo(10, 0);
+    c.stroke();
+    return c.createPattern(shape, "repeat");
+  }
+
+  function createAsteriskPattern(color = "black", bgColor = "transparent") {
+    let shape = document.createElement("canvas");
+    shape.width = 10;
+    shape.height = 10;
+    let c = shape.getContext("2d");
+    c.fillStyle = bgColor;
+    c.fillRect(0, 0, shape.width, shape.height);
+    c.font = "bold 10px Arial";
+    c.fillStyle = color;
+    c.fillText("*", 0, 10);
+    return c.createPattern(shape, "repeat");
+  }
+
+  function createDashPattern(color = "black", bgColor = "transparent") {
+    let shape = document.createElement("canvas");
+    shape.width = 10;
+    shape.height = 10;
+    let c = shape.getContext("2d");
+    c.fillStyle = bgColor;
+    c.fillRect(0, 0, shape.width, shape.height);
+    c.font = "bold 10px Arial";
+    c.fillStyle = color;
+    c.fillText("-", 0, 10);
+    return c.createPattern(shape, "repeat");
+  }
+
+  function createOPattern(color = "black", bgColor = "transparent") {
+    let shape = document.createElement("canvas");
+    shape.width = 10;
+    shape.height = 10;
+    let c = shape.getContext("2d");
+    c.fillStyle = bgColor;
+    c.fillRect(0, 0, shape.width, shape.height);
+    c.font = "bold 10px Arial";
+    c.fillStyle = color;
+    c.fillText("o", 0, 10);
+    return c.createPattern(shape, "repeat");
+  }
 
   useEffect(() => {
     // console.log("JSON DATA CHANGED");
@@ -177,7 +339,7 @@ export function NewProject() {
       if (xAxis.length === 0) {
         console.log(labelValue);
         setXAxis(labelValue);
-        setSelectedLabels([labelValue]); 
+        setSelectedLabels([labelValue]);
       } else {
         console.log("ELSE", labelValue);
         setYAxis(prevYAxes => [...prevYAxes, labelValue]);
@@ -197,7 +359,7 @@ export function NewProject() {
       }
     }
 
-  
+
     if (xAxis && (yAxis.length > 0 || labelIndex === -1 && xAxis.length > 0)) {
       fetch("/analysis/getLabels", {
         method: "POST",
@@ -490,7 +652,7 @@ export function NewProject() {
     // console.log("BarColors before", barColors);
 
     const generatedColorPalette = [];
-    for (let i = 0; i < parameters.y.length - 4; i++) {
+    for (let i = 0; i < parameters.labels.y.length - 4; i++) {
       generatedColorPalette.push(
         `#${Math.floor(Math.random() * 16777215).toString(16)}`
       );
@@ -821,26 +983,26 @@ export function NewProject() {
       if (parameters) {
         let generatedColorPalette;
         if (Array.isArray(parameters.y)) {
-          // Generate an array of random grey values (0-255)
+
           generatedColorPalette = parameters.y.map((_) => {
             const greyValue = Math.floor(Math.random() * 256);
-            const hex = greyValue.toString(16).padStart(2, "0"); // Ensure two digits for each component
-            return `#${hex}${hex}${hex}`; // Use the same value for R, G, and B components
+            const hex = greyValue.toString(16).padStart(2, "0");
+            return `#${hex}${hex}${hex}`;
           });
         } else {
-          // Generate a single random grey value
+
           const greyValue = Math.floor(Math.random() * 256);
           const hex = greyValue.toString(16).padStart(2, "0");
-          generatedColorPalette = [`#${hex}${hex}${hex}`]; // Use the same value for R, G, and B components
+          generatedColorPalette = [`#${hex}${hex}${hex}`];
         }
         console.log(generatedColorPalette);
-        // Ensure colors are not identical (loop until different)
+
         let unique = false;
         while (!unique) {
           unique = true;
           for (let i = 0; i < generatedColorPalette.length - 1; i++) {
             if (generatedColorPalette[i] === generatedColorPalette[i + 1]) {
-              // Regenerate the duplicate color
+
               const greyValue = Math.floor(Math.random() * 256);
               const hex = greyValue.toString(16).padStart(2, "0");
               generatedColorPalette[i + 1] = `#${hex}${hex}${hex}`; // Use the same value for R, G, and B components
@@ -875,6 +1037,7 @@ export function NewProject() {
   };
 
   const handleConditionChange = (e, option) => {
+    console.log(selectedLabels);
     let updatedCondition;
     if (condition.includes(option)) {
       updatedCondition = condition.filter((item) => item !== option);
@@ -885,32 +1048,49 @@ export function NewProject() {
     setCondition(updatedCondition);
 
     if (xAxis && yAxis && updatedCondition.length > 0) {
-      const yValues = [];
+      const yValues = {};
       const filteredZ = {};
+
       updatedCondition.forEach((opt) => {
-        const eIndex = parameters["x"].indexOf(opt);
+        const eIndex = parameters.labels["x"].indexOf(opt);
         if (eIndex !== -1) {
           if (parameters["z"]) {
             filteredZ[opt] = parameters["z"][opt];
-            yValues.push(parameters["y"][eIndex]);
-          } else {
-            yValues.push(parameters["y"][eIndex]);
+          }
+          // Iterate over all possible y keys
+          let yIndex = 0;
+          while (`y${yIndex === 0 ? '' : yIndex}` in parameters.labels) {
+            const key = `y${yIndex === 0 ? '' : yIndex}`;
+            if (!yValues[key]) {
+              yValues[key] = [];
+            }
+            yValues[key].push(parameters.labels[key][eIndex]);
+            yIndex++;
           }
         }
       });
+
+      const conditionalLabels = { x: updatedCondition };
+
       if (Object.keys(filteredZ).length !== 0) {
-        setConditionalParameters({ x: updatedCondition, z: filteredZ });
-      } else {
-        setConditionalParameters({ x: updatedCondition, y: yValues });
+        conditionalLabels.z = filteredZ;
       }
+
+      Object.keys(yValues).forEach((key) => {
+        conditionalLabels[key] = yValues[key];
+      });
+
+      setConditionalParameters({ labels: conditionalLabels });
+      console.log(selectedLabels);
     } else {
-      setConditionalParameters({ x: null, y: null });
+      setConditionalParameters({ labels: { x: null, y: null } });
       setCondition([]);
     }
   };
 
+
+
   const handleYAxisConditionChange = (option, checked) => {
-    // console.log(condition)
     let updatedConditions = { ...yAxisConditions };
 
     if (checked) {
@@ -918,42 +1098,51 @@ export function NewProject() {
     } else {
       delete updatedConditions[option];
     }
-    // console.log(yAxisConditions);
+
     setYAxisConditions(updatedConditions);
 
     if (Object.keys(updatedConditions).length > 0 && yAxisValue) {
-      const filteredValues = parameters["y"].reduce(
-        (accumulator, value, index) => {
-          if (updatedConditions.lessThan && value < parseFloat(yAxisValue)) {
-            accumulator.indices.push(index);
+      const yKeys = Object.keys(parameters.labels).filter(key => key.startsWith('y'));
+
+      const filteredValues = yKeys.reduce((accumulator, yKey) => {
+        const yValues = parameters.labels[yKey];
+        yValues.forEach((value, index) => {
+          if (
+            (updatedConditions.lessThan && value < parseFloat(yAxisValue)) ||
+            (updatedConditions.greaterThan && value > parseFloat(yAxisValue)) ||
+            (updatedConditions.equalTo && value === parseFloat(yAxisValue))
+          ) {
+            if (!accumulator.indices.includes(index)) {
+              accumulator.indices.push(index);
+            }
+            if (!accumulator[yKey]) {
+              accumulator[yKey] = [];
+            }
+            accumulator[yKey].push(value);
           }
-          if (updatedConditions.greaterThan && value > parseFloat(yAxisValue)) {
-            accumulator.indices.push(index);
-          }
-          if (updatedConditions.equalTo && value === parseFloat(yAxisValue)) {
-            accumulator.indices.push(index);
-          }
-          return accumulator;
-        },
-        { indices: [] }
-      );
+        });
+        return accumulator;
+      }, { indices: [] });
 
       const xValues = filteredValues.indices.map(
-        (index) => parameters["x"][index]
+        (index) => parameters.labels["x"][index]
       );
 
-      setConditionalParameters({
-        x: xValues,
-        y: parameters["y"].filter((_, index) =>
+      const conditionalLabels = { x: xValues };
+
+      yKeys.forEach(yKey => {
+        conditionalLabels[yKey] = parameters.labels[yKey].filter((_, index) =>
           filteredValues.indices.includes(index)
-        ),
+        );
       });
+
+      setConditionalParameters({ labels: conditionalLabels });
     } else {
-      // setCondition([]);
       setYAxisConditions([]);
-      setConditionalParameters({ x: null, y: null });
+      setConditionalParameters({ labels: { x: null, y: null } });
     }
   };
+
 
   const setYAxisFilterValue = (e) => {
     setYAxisValue(e.target.value);
@@ -989,8 +1178,8 @@ export function NewProject() {
     if (parameters && logsCheck === false) {
       console.log("SAIM");
       let generatedColorPalette;
-      if (Array.isArray(parameters.y)) {
-        generatedColorPalette = parameters.y.map(
+      if (Array.isArray(parameters.labels.y)) {
+        generatedColorPalette = parameters.labels.y.map(
           (_) => `#${Math.floor(Math.random() * 16777215).toString(16)}`
         );
       } else {
@@ -1265,6 +1454,644 @@ export function NewProject() {
           />
           {/* <NewProjectSecondLeftMenu selectedFile={selectedFile} jsonData={jsonData} columns={columns} guestId={guestId} types={types} uniqueValues={uniqueValues} columnsData={columnsData} onGraphNameChange={handleGraphNameChange}/> */}
           <div className={`newprojectsecondmenu pb-5 d-flex flex-column ${accessType === "read" ? "disabled-component" : ""}`}>
+            {isModalOpen && (
+              <>
+                <Draggable nodeRef={nodeRef}>
+                  <div id="chargeCompleteModal" class="modal" ref={nodeRef}>
+                    <div
+                      class="d-flex flex-row justify-content-start align-items-start modal-content-first"
+                      style={{ height: "100%", borderRadius: "10px" }}
+                    >
+                      <div className="modal-menu d-flex flex-column align-items-center">
+                        <button
+                          onClick={() => setModalOption("color")}
+                          style={{
+                            background:
+                              modalOption === "color" ? "white" : "transparent",
+                            color: modalOption === "color" ? "black" : "white",
+                            borderRadius: modalOption === "color" ? "5px" : "0",
+                            borderBottom:
+                              modalOption === "font" ? "0" : "1px solid white",
+                          }}
+                        >
+                          Color Theme
+                        </button>
+                        <button
+                          onClick={() => setModalOption("font")}
+                          style={{
+                            background:
+                              modalOption === "font" ? "white" : "transparent",
+                            color: modalOption === "font" ? "black" : "white",
+                            borderRadius: modalOption === "font" ? "5px" : "0",
+                            borderBottom:
+                              modalOption === "dl" ? "0" : "1px solid white",
+                          }}
+                        >
+                          Font Styles
+                        </button>
+                        <button
+                          onClick={() => setModalOption("dl")}
+                          style={{
+                            background:
+                              modalOption === "dl" ? "white" : "transparent",
+                            color: modalOption === "dl" ? "black" : "white",
+                            borderRadius: modalOption === "dl" ? "5px" : "0",
+                            borderBottom:
+                              modalOption === "bg" ? "0" : "1px solid white",
+                          }}
+                        >
+                          DataLabels
+                        </button>
+                        <button
+                          onClick={() => setModalOption("bg")}
+                          style={{
+                            background:
+                              modalOption === "bg" ? "white" : "transparent",
+                            color: modalOption === "bg" ? "black" : "white",
+                            borderRadius: modalOption === "bg" ? "5px" : "0",
+                            borderBottom:
+                              modalOption === "texture" ? "0" : "1px solid white",
+                          }}
+                        >
+                          Background Color
+                        </button>
+                        <button
+                          onClick={() => setModalOption("texture")}
+                          style={{
+                            background:
+                              modalOption === "texture" ? "white" : "transparent",
+                            color: modalOption === "texture" ? "black" : "white",
+                            borderRadius: modalOption === "texture" ? "5px" : "0",
+                            borderBottom:
+                              modalOption === "textureStyles"
+                                ? "0"
+                                : "1px solid white",
+                          }}
+                        >
+                          Texture
+                        </button>
+                        <button
+                          onClick={() => setModalOption("textureStyles")}
+                          style={{
+                            background:
+                              modalOption === "textureStyles"
+                                ? "white"
+                                : "transparent",
+                            color:
+                              modalOption === "textureStyles" ? "black" : "white",
+                            borderRadius:
+                              modalOption === "textureStyles" ? "5px" : "0",
+                          }}
+                        >
+                          Texture Styles
+                        </button>
+                      </div>
+                      {modalOption === "color" ? (
+                        <div className="modal-right d-flex flex-column justify-content-between align-items-start p-3 w-100">
+                          <div style={{ height: "470px", overflowY: "auto" }}>
+                            <div className="d-flex flex-row flex-wrap w-100 justify-content-start">
+                              {barColors.map((color, index) => (
+                                <div
+                                  key={index}
+                                  className="color-theme-div d-flex flex-column align-items-center my-3 mx-2"
+                                >
+                                  <p>{parameters.labels.x[index]}</p>
+                                  <div className="d-flex flex-column align-items-center">
+                                    <label>
+                                      <input
+                                        type="color"
+                                        value={color}
+                                        onChange={(e) =>
+                                          handleColorChange(index, e.target.value)
+                                        }
+                                      />
+                                    </label>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      {modalOption === "bg" ? (
+                        <div className="modal-right d-flex flex-column justify-content-between align-items-start p-3 w-100">
+                          <div className="d-flex flex-row flex-wrap w-100 justify-content-around">
+                            <div className="color-theme-div d-flex flex-column align-items-center my-3 w-100">
+                              <h5 className="mb-2">Grids Color</h5>
+                              <div className="d-flex flex-row flex-wrap justify-content-around w-100">
+                                <div className="d-flex flex-column align-items-center">
+                                  <p>X-Axis</p>
+                                  <input
+                                    type="color"
+                                    name=""
+                                    id=""
+                                    value={xLabelColor}
+                                    onChange={(e) => setXLabelColor(e.target.value)}
+                                  />
+                                </div>
+                                <div className="d-flex flex-column align-items-center">
+                                  <p>Y-Axis</p>
+                                  <input
+                                    type="color"
+                                    name=""
+                                    id=""
+                                    value={yLabelColor}
+                                    onChange={(e) => setYLabelColor(e.target.value)}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      {modalOption === "font" ? (
+                        <div className="modal-right d-flex flex-column justify-content-between align-items-start p-3 w-100">
+                          <div className="d-flex flex-row flex-wrap w-100 justify-content-around">
+                            <div className="color-theme-div font-styles d-flex flex-column align-items-center my-3">
+                              <div className="d-flex flex-column align-items-center w-25">
+                                <p className="my-2">Font Family</p>
+                                <select
+                                  value={fontFamily}
+                                  onChange={(e) => setFontFamily(e.target.value)}
+                                  style={{
+                                    borderRadius: "6px",
+                                    border: "1px solid lightgray",
+                                    fontSize: "0.9rem",
+                                    padding: "3px 8px",
+                                  }}
+                                >
+                                  <option value="Arial">Arial</option>
+                                  <option value="Times New Roman">
+                                    Times New Roman
+                                  </option>
+                                  <option value="Georgia">Georgia</option>
+                                </select>
+                              </div>
+                              <h5 className="my-1 mt-3">Heading</h5>
+                              <div className="d-flex flex-row justify-content-around flex-wrap w-100">
+                                <div className="d-flex flex-column align-items-center w-100">
+                                  <p className="my-2">Text</p>
+                                  <input
+                                    type="text"
+                                    name=""
+                                    id=""
+                                    className="w-100"
+                                    placeholder={graphHeading}
+                                    value={graphHeading}
+                                    onChange={(e) => setGraphHeading(e.target.value)}
+                                    style={{
+                                      borderRadius: "6px",
+                                      border: "1px solid lightgray",
+                                      fontSize: "0.9rem",
+                                      padding: "3px 8px",
+                                    }}
+                                  />
+                                </div>
+                                <div className="d-flex flex-column align-items-center">
+                                  <p className="my-2">Size</p>
+                                  <input
+                                    type="number"
+                                    name=""
+                                    id=""
+                                    className="w-75"
+                                    value={graphHeadSize}
+                                    onChange={(e) => setGraphHeadSize(e.target.value)}
+                                    style={{
+                                      borderRadius: "6px",
+                                      border: "1px solid lightgray",
+                                      fontSize: "0.9rem",
+                                      padding: "3px 8px",
+                                    }}
+                                  />
+                                </div>
+                                <div className="d-flex flex-column align-items-center w-25">
+                                  <p className="my-2">Weight</p>
+                                  <select
+                                    value={graphHeadWeight}
+                                    onChange={(e) =>
+                                      setGraphHeadWeight(e.target.value)
+                                    }
+                                  >
+                                    <option value="normal">Normal</option>
+                                    <option value="bold">Bold</option>
+                                    <option value="bolder">Extra-Bold</option>
+                                    <option value="medium">Medium</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <h5 className="mt-3 mb-1">Labels</h5>
+                              <div className="d-flex flex-row justify-content-around flex-wrap w-100">
+                                <div className="d-flex flex-column align-items-center">
+                                  <p className="my-2">X-Label Size</p>
+                                  <input
+                                    type="number"
+                                    name=""
+                                    id=""
+                                    className="w-75"
+                                    value={xLabelSize}
+                                    onChange={(e) => setXLabelSize(e.target.value)}
+                                    style={{
+                                      borderRadius: "6px",
+                                      border: "1px solid lightgray",
+                                      fontSize: "0.9rem",
+                                      padding: "3px 8px",
+                                    }}
+                                  />
+                                </div>
+                                <div className="d-flex flex-column align-items-center w-25">
+                                  <p className="my-2">X-Label Weight</p>
+                                  <select
+                                    value={xLabelWeight}
+                                    onChange={(e) => setXLabelWeight(e.target.value)}
+                                  >
+                                    <option value="normal">Normal</option>
+                                    <option value="bold">Bold</option>
+                                    <option value="bolder">Extra-Bold</option>
+                                    <option value="medium">Medium</option>
+                                  </select>
+                                </div>
+                                <div className="d-flex flex-column align-items-center">
+                                  <p className="my-2">Y-Label Size</p>
+                                  <input
+                                    type="number"
+                                    name=""
+                                    id=""
+                                    className="w-75"
+                                    value={yLabelSize}
+                                    onChange={(e) => setYLabelSize(e.target.value)}
+                                    style={{
+                                      borderRadius: "6px",
+                                      border: "1px solid lightgray",
+                                      fontSize: "0.9rem",
+                                      padding: "3px 8px",
+                                    }}
+                                  />
+                                </div>
+                                <div className="d-flex flex-column align-items-center w-25">
+                                  <p className="my-2">Y-Label Weight</p>
+                                  <select
+                                    value={yLabelWeight}
+                                    onChange={(e) => setYLabelWeight(e.target.value)}
+                                  >
+                                    <option value="normal">Normal</option>
+                                    <option value="bold">Bold</option>
+                                    <option value="bolder">Extra-Bold</option>
+                                    <option value="medium">Medium</option>
+                                  </select>
+                                </div>
+                              </div>
+                              {graphName === "Bar" ? (
+                                <>
+                                  <h5 className="mt-4 mb-1">Bar Chart</h5>
+                                  <div className="d-flex flex-row align-items-center justify-content-around flex-wrap w-100">
+                                    <div className="d-flex flex-column mt-2 align-items-center">
+                                      <label
+                                        htmlFor=""
+                                        className="text-center"
+                                        style={{
+                                          color: "rgb(68,68,68)",
+                                          fontSize: "0.95rem",
+                                        }}
+                                      >
+                                        Border Width
+                                      </label>
+                                      <input
+                                        type="number"
+                                        name=""
+                                        className="w-75"
+                                        id=""
+                                        value={barBorders}
+                                        onChange={(e) => setBarBoders(e.target.value)}
+                                        style={{
+                                          borderRadius: "6px",
+                                          border: "1px solid lightgray",
+                                          fontSize: "0.9rem",
+                                          padding: "3px 8px",
+                                        }}
+                                      />
+                                    </div>
+                                    <div className="d-flex flex-column mt-2 align-items-center">
+                                      <label
+                                        htmlFor=""
+                                        className="text-center"
+                                        style={{
+                                          color: "rgb(68,68,68)",
+                                          fontSize: "0.95rem",
+                                        }}
+                                      >
+                                        Border Color
+                                      </label>
+                                      <input
+                                        type="color"
+                                        name=""
+                                        id=""
+                                        value={borderColor}
+                                        onChange={(e) =>
+                                          setBorderColor(e.target.value)
+                                        }
+                                        style={{
+                                          borderRadius: "0",
+                                          border: "0",
+                                          fontSize: "0",
+                                          padding: "0",
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
+                                </>
+                              ) : (
+                                ""
+                              )}
+                            </div>
+                          </div>
+                          {/* <button onClick={closeModal} style={{background:'red', color:'white', borderRadius:'5px', padding:'3px 8px', border:'none'}} className="btn btn-danger">Close x</button> */}
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      {modalOption === "dl" ? (
+                        <div className="modal-right d-flex flex-column justify-content-between align-items-start p-3 w-100">
+                          <div className="d-flex flex-row flex-wrap w-100 justify-content-around">
+                            <div className="color-theme-div font-styles d-flex flex-column align-items-center my-3">
+                              <h5 className="mt-3 mb-1">Labels</h5>
+                              <div className="d-flex flex-row justify-content-around flex-wrap w-100">
+                                <div className="d-flex flex-column align-items-center">
+                                  <p className="my-2">Size</p>
+                                  <input
+                                    type="number"
+                                    name=""
+                                    id=""
+                                    className="w-50"
+                                    value={dlSize}
+                                    onChange={(e) => setDLSize(e.target.value)}
+                                    style={{
+                                      borderRadius: "6px",
+                                      border: "1px solid lightgray",
+                                      fontSize: "0.9rem",
+                                      padding: "3px 8px",
+                                    }}
+                                  />
+                                </div>
+                                <div className="d-flex flex-column align-items-center w-25">
+                                  <p className="my-2">Weight</p>
+                                  <select
+                                    value={dlWeight}
+                                    onChange={(e) => setDLWeight(e.target.value)}
+                                  >
+                                    <option value="normal">Normal</option>
+                                    <option value="bold">Bold</option>
+                                    <option value="bolder">Extra-Bold</option>
+                                    <option value="medium">Medium</option>
+                                  </select>
+                                </div>
+                                <div className="d-flex flex-column align-items-center">
+                                  <p className="my-2">Color</p>
+                                  <input
+                                    type="color"
+                                    name=""
+                                    id=""
+                                    value={dlColor}
+                                    onChange={(e) => setDLColor(e.target.value)}
+                                    style={{
+                                      borderRadius: "0",
+                                      border: "0",
+                                      fontSize: "0",
+                                      padding: "0",
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          {/* <button onClick={closeModal} style={{background:'red', color:'white', borderRadius:'5px', padding:'3px 8px', border:'none'}} className="btn btn-danger">Close x</button> */}
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      {modalOption === "texture" && (
+                        <div className="modal-right d-flex flex-column justify-content-between align-items-start p-3 w-100">
+                          <div style={{ height: "470px", overflowY: "auto" }}>
+                            <div className="d-flex flex-row flex-wrap w-100 justify-content-start">
+                              {barColors.map((color, index) => (
+                                <div
+                                  key={index}
+                                  className="color-theme-div d-flex flex-column align-items-center my-3 mx-2"
+                                  style={{ position: "relative" }}
+                                >
+                                  <p>{parameters.labels.x[index]}</p>
+                                  <div className="">
+                                    <img
+                                      src={require("../assets/imgs/diagnol-left.png")}
+                                      alt=""
+                                      style={{
+                                        width: "50px",
+                                        height: "30px",
+                                        cursor: "pointer",
+                                        border: "2px solid gray",
+                                        borderRadius: "3px",
+                                      }}
+                                      onClick={() => handleImageClick(index)}
+                                    />
+                                  </div>
+                                  {showModal && clickedImageIndex === index && (
+                                    <div
+                                      className="textures-options mt-2 p-2"
+                                      style={{
+                                        background: "#15589c",
+                                        borderRadius: "5px",
+                                        position: "absolute",
+                                        top: "100%",
+                                        zIndex: "1000",
+                                      }}
+                                    >
+                                      <div className="texture-modal-content">
+                                        {/* <span className="close" onClick={handleCloseModal} style={{cursor:'pointer'}}>&times;</span> */}
+                                        <img
+                                          src={require("../assets/imgs/diagnol-left.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("diagnolLeft", index)
+                                          }
+                                        />
+                                        <img
+                                          src={require("../assets/imgs/diagnol-right.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("diagnolRight", index)
+                                          }
+                                        />
+                                        <img
+                                          src={require("../assets/imgs/dash.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("dash", index)
+                                          }
+                                        />
+                                        <img
+                                          src={require("../assets/imgs/dots.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("dots", index)
+                                          }
+                                        />
+                                        <img
+                                          src={require("../assets/imgs/cross.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("cross", index)
+                                          }
+                                        />
+                                        <img
+                                          src={require("../assets/imgs/steric.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("steric", index)
+                                          }
+                                        />
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      {modalOption === "textureStyles" && (
+                        <div className="modal-right d-flex flex-column justify-content-between align-items-start p-3 w-100">
+                          <div
+                            className="d-flex flex-row flex-wrap w-100 justify-content-start"
+                            style={{ height: "470px", overflowY: "auto" }}
+                          >
+                            <div className="color-theme-div d-flex flex-column align-items-center my-3 w-100">
+                              <h5 className="mb-2">Texture Styles</h5>
+                              {/* <div className="d-flex flex-row flex-wrap justify-content-around w-100"> */}
+                              {Object.entries(dictionaryState).map(
+                                ([index, value]) => (
+                                  <div
+                                    key={index}
+                                    className="d-flex flex-row flex-wrap justify-content-around align-items-center w-100"
+                                  >
+                                    <p
+                                      style={{
+                                        color: "rgb(68,68,68)",
+                                        fontSize: "0.9rem",
+                                      }}
+                                    >
+                                      {parameters.labels.x[index]}
+                                    </p>
+                                    <div className="d-flex flex-column align-items-center my-1">
+                                      <p style={{ fontSize: "0.9rem" }}>Color</p>
+                                      <input
+                                        type="color"
+                                        name=""
+                                        id=""
+                                        value={
+                                          colorStatesTexture[index]
+                                            ? colorStatesTexture[index]
+                                            : "#0000000"
+                                        }
+                                        onChange={(e) =>
+                                          handleTextureChange(
+                                            value,
+                                            index,
+                                            1,
+                                            e.target.value,
+                                            colorStatesBgTexture[index]
+                                          )
+                                        }
+                                      />
+                                    </div>
+                                    <div className="d-flex flex-column align-items-center my-1">
+                                      <p style={{ fontSize: "0.9rem" }}>
+                                        Background Color
+                                      </p>
+                                      <input
+                                        type="color"
+                                        name=""
+                                        id=""
+                                        value={
+                                          colorStatesBgTexture[index]
+                                            ? colorStatesBgTexture[index]
+                                            : "#ffffff"
+                                        }
+                                        onChange={(e) =>
+                                          handleTextureChange(
+                                            value,
+                                            index,
+                                            2,
+                                            colorStatesTexture[index],
+                                            e.target.value
+                                          )
+                                        }
+                                      />
+                                    </div>
+                                  </div>
+                                )
+                              )}
+                              {/* </div> */}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      <button
+                        onClick={closeModal}
+                        style={{
+                          border: "none",
+                          background: "transparent",
+                          fontSize: "1.2rem",
+                          borderRadius: "0 10px 0 10px",
+                        }}
+                        className="modal-close-button px-2"
+                      >
+                        x
+                      </button>
+                    </div>
+                  </div>
+                </Draggable>
+                <div id="overlay" class="overlay"></div>
+              </>
+            )}
             <div
               className="w-100 d-flex flex-row align-items-center jsutify-content-between px-2 py-1 newprojectsecondmenu-links"
               style={{ background: "#7c3232" }}
@@ -1818,7 +2645,6 @@ export function NewProject() {
           </div>
           <div
             className="graphs-home-container d-flex flex-row justify-content-center"
-            style={{ paddingRight: "14px" }}
           >
             {/* {
                                   graphName && (
@@ -1832,7 +2658,7 @@ export function NewProject() {
                                   // <img src={require('../../assets/imgs/graph.png')} alt="" style={{width:'46vw', height:'30vw'}}/>
                                   <h2 style={{alignSelf:'center'}}>PlotAnt- Visualize Your Data</h2>
                                 } */}
-            {xAxis && !graphName ? (
+            {/* {xAxis && !graphName ? (
               <LabelTable
                 jsonData={parameters ? parameters : uniqueValues}
                 label={xAxis}
@@ -1843,19 +2669,20 @@ export function NewProject() {
             ) : (
               // <img src={require('../../assets/imgs/graph.png')} alt="" style={{width:'46vw', height:'30vw'}}/>
               <h2 style={{ alignSelf: "center" }}>
-                PlotAnt- Visualize Your Data
+                PlotAnt - Visualize Your Data
               </h2>
-            )}
+            )} */}
 
-            {yAxis && !graphName ? (
+            {xAxis && yAxis && !graphName ? (
               parameters ? (
                 <LabelTable
                   jsonData={parameters ? parameters : uniqueValues}
-                  label={yAxis}
-                  column={"y"}
+                  selectedLabels={selectedLabels}
                 />
               ) : (
-                ""
+                <h2 style={{ alignSelf: "center" }}>
+                  PlotAnt - Visualize Your Data
+                </h2>
               )
             ) : (
               ""
@@ -1899,6 +2726,7 @@ export function NewProject() {
                   fontFamily={fontFamily}
                   stepSize={stepSize}
                   legendPosition={legendPosition}
+                  selectedLabels={selectedLabels}
                 />
               ) : (
                 <SelectChart

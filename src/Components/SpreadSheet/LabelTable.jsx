@@ -1,62 +1,54 @@
-import React, { useState, useEffect} from "react";
+import React from "react";
 import '../../assets/css/Table.css';
 
-export function LabelTable({jsonData, label, column}) {
+export function LabelTable({ jsonData, selectedLabels }) {
+  console.log(selectedLabels);
+  console.log(jsonData);
 
-  const [attr, setAttr] = useState();
-  
-  // console.log(jsonData);
-    // console.log(jsonData.Month);
-    // console.log(label);
-    
-  // const isSummition = label.includes('£');
-  // if(isSummition){
-  //   label=label.replace('£', '')
-  //   label=label.replace(' ','');
-  // }
-  // console.log(label);
-  // console.log(jsonData[label]);
-  var Data = [];
-  // console.log(jsonData);
-  if (jsonData.y && column==='y'){
-    Data = jsonData.y || [];
-  }
+  // Extract the data keys dynamically from jsonData
+  const dataKeys = Object.keys(jsonData.labels);
 
-  // if (jsonData.x){
-  //   Data = jsonData.x || [];
-  // }
-  if(jsonData.x && column==='x'){
-    Data = jsonData.x || [];
-  }
-  if(jsonData[label]){
-    Data = jsonData[label];
-    // console.log(Data);
-  }
-  
-  // const yData = jsonData.y || [];
+  // Create a mapping from selected labels to jsonData keys
+  const labelToDataKey = selectedLabels.reduce((acc, label, index) => {
+    if (dataKeys[index]) {
+      acc[label] = dataKeys[index];
+    }
+    return acc;
+  }, {});
+
+  // Extract data rows based on the selected labels
+  const dataRows = jsonData.labels.x.map((_, index) => {
+    let rowData = {};
+    selectedLabels.forEach((label) => {
+      const key = labelToDataKey[label];
+      if (key) {
+        rowData[label] = jsonData.labels[key][index];
+      }
+    });
+    return rowData;
+  });
+
   return (
-        <div className="home-data-table label-table">
-           <table className="w-100">
-            <thead>
-              <tr>
-                <th>{label}</th>
-              </tr>
-            </thead>
-            <tbody>
-                {
-                Data.map((xValue, index) => (
-                  <tr key={index}>
-                      <td key={index}><input type="text" name="" id="" value={xValue} onChange={(e)=>setAttr(e.target.value)}/></td>
-                      {/* <td>{xValue}</td>
-                      <td>{yData[index]}</td> */}
-                  </tr>
-              )) 
-              }
-            </tbody>
-          </table>
-        </div>
-        // <p>Checking</p>
-
+    <div className="home-data-table label-table">
+      <table className="w-100">
+        <thead>
+          <tr>
+            {selectedLabels.map((label) => (
+              <th key={label}>{label}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {dataRows.map((row, rowIndex) => (
+            <tr key={rowIndex}>
+              {selectedLabels.map((label) => (
+                <td key={label}>{row[label]}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

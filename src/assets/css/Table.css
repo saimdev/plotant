@@ -97,8 +97,7 @@
 .label-table{
     min-height: 250px;
     max-height: 250px;
-    overflow-y: auto;
-    min-width: 180px;
-    max-width: 180px;
+    max-width: 50vw;
+    overflow: auto;
 }
 

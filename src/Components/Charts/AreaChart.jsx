@@ -1,8 +1,9 @@
-import React from "react";
+import React, {useRef, useEffect} from "react";
 import { Line } from "react-chartjs-2";
 import "../../assets/css/Charts.css";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
+
 
 function AreaChart({
   chartData,
@@ -41,7 +42,22 @@ function AreaChart({
     return new Blob([u8arr], { type: mime });
   }
 
+  const chartContainer = useRef(null);
   const maxDataValue = Math.max(...chartData.datasets.flatMap(dataset => dataset.data));
+
+  // useEffect(() => {
+  //   if (chartContainer && chartContainer.current) {
+  //     const ctx = chartContainer.current.getContext("2d");
+  //     let gradient = null;
+
+  //     if (chartData.datasets.length > 0) {
+  //       gradient = ctx.createLinearGradient(0, 0, 0, 400);
+  //       gradient.addColorStop(0, rgba(getColor(barColors[0]).rgb, 0.5));
+  //       gradient.addColorStop(0.5, rgba(getColor(barColors[1]).rgb, 0.25));
+  //       gradient.addColorStop(1, rgba(getColor(barColors[2]).rgb, 0));
+  //     }
+  //   }
+  // })
 
   const maxYValue = Math.ceil(maxDataValue / stepSize) * stepSize;
   const downloadChart = async (format) => {
@@ -220,15 +236,7 @@ function AreaChart({
         Area Chart
       </h2>
       <Line
-        data={{
-          ...chartData,
-          datasets: chartData.datasets.map((dataset, index) => ({
-            ...dataset,
-            fill: true, // Fill under the line
-            backgroundColor: barColors[0],
-            borderColor: barColors,
-          })),
-        }}
+        data={chartData}
         options={{
           responsive: true,
           interaction: {
@@ -294,6 +302,13 @@ function AreaChart({
                   weight: xLabelWeight,
                 },
               },
+            },
+          },
+          elements: {
+            line: {
+              tension: 0.0,
+              fill: true, 
+              backgroundColor: barColors
             },
           },
         }}
