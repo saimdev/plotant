@@ -9,6 +9,7 @@ export function UserTable({ jsonData, xLabel, yLabel, onResponse, projectId, fil
     const [selectedCell, setSelectedCell] = useState({ row: -1, column: -1 });
 
     const handleCellChange = async (newValue, rowIndex, columnIndex) => {
+        console.log(newValue, columnIndex, rowIndex);
         const columnKey = Object.keys(jsonData[0])[columnIndex];
 
         const updatedData = tableData.map((row, index) => {

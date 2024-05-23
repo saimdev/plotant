@@ -32,7 +32,7 @@ export function NewProject() {
   const [parameters, setParameters] = useState(null);
   // const [loader, setLoader] = useState(false);
   const [xAxis, setXAxis] = useState("");
-  const [yAxis, setYAxis] = useState("");
+  const [yAxis, setYAxis] = useState(null);
   const [selectedLabels, setSelectedLabels] = useState([]);
   const [selectedLegends, setSelectedLegends] = useState([]);
   // const [colorPalette, setColorPalette] = useState([]);
@@ -98,6 +98,7 @@ export function NewProject() {
   const [accessType, setAccessType] = useState("");
   const [project_name, setProject_Name] = useState("");
   const [clickedImageIndex, setClickedImageIndex] = useState(null);
+  const [currentGraphId, setCurrentGraphId] = useState(null);
 
   const nodeRef = useRef(null);
 
@@ -131,19 +132,57 @@ export function NewProject() {
   };
 
   const handleEditedResponse = (res) => {
-    setParameters(res);
-    setIsOpenFilterX(false);
-    setIsOpenFilterY(false);
-    setReference("");
-    setIsModalOpen(false);
-    setColumnsData(null);
-    setCondition([]);
-    setConditionalParameters([]);
-    setLegends("");
-    setDictionaryState([]);
-    setColorStatesBgTexture([]);
-    setColorStatesTexture([]);
-    setStepped(false);
+    if (xAxis && yAxis) {
+      console.log(res);
+      setParameters(res);
+    }
+    else {
+      handleGraphNameChange("");
+      setXAxis("");
+      setYAxis("");
+      setSelectedLabels([]);
+      setIsOpen(false);
+      setIsOpenFilterX(false);
+      setIsOpenFilterY(false);
+      setReference("");
+      setModalOption((selectedLabels.length > 2) ? "font" : "color");
+      setIsModalOpen(false);
+      setXLabelColor("lightgray");
+      setYLabelColor("lightgray");
+      setGraphHeadSize(16);
+      setGraphHeadWeight("normal");
+      setXLabelSize(12);
+      setXLabelWeight("normal");
+      setYLabelSize(12);
+      setYLabelWeight("normal");
+      setIsContainerDataOpen(true);
+      setIsContainerFilterOpen(false);
+      setIsContainerVisualOpen(false);
+      setGraphHeading("");
+      // setColumnsData(null);
+      setBarBoders(1);
+      setCondition([]);
+      setConditionalParameters([]);
+      setTextureBg("white");
+      setTextureColor("black");
+      setLegends("");
+      setDictionaryState([]);
+      setColorStatesBgTexture([]);
+      setColorStatesTexture([]);
+      setBarBoders(1);
+      setBorderColor("#000000");
+      setDLSize(12);
+      setDLWeight("normal");
+      setDLColor("#ffffff");
+      setStepped(false);
+      setDataLabelsConfig(false);
+      setFontFamily("Arial");
+      setStepSize(1);
+      setGreyShadeCheck(false);
+      setLegendPosition("Top");
+      setParameters(null);
+    }
+
   };
 
   const handleColorChange = (index, newColor) => {
@@ -319,6 +358,8 @@ export function NewProject() {
   //   onGraphNameChange(newName);
   // };
   const setLabels = (e, labelCheck) => {
+    console.log(e.target.value, labelCheck);
+    console.log(selectedLabels)
     // console.log(labelCheck);
     setYAxisValue("");
     setCondition([]);
@@ -337,18 +378,24 @@ export function NewProject() {
     if (labelIndex === -1) {
       // console.log("LABEL INDEX -1");
       if (xAxis.length === 0) {
+        console.log(labelIndex);
         // console.log(labelValue);
         setXAxis(labelValue);
         setSelectedLabels([labelValue]);
       } else {
+        console.log(xAxis);
+        console.log(yAxis);
         // console.log("ELSE", labelValue);
         setYAxis(prevYAxes => [...prevYAxes, labelValue]);
         setSelectedLabels(prevSelectedLabels => [...prevSelectedLabels, labelValue]);
       }
     } else {
+
       // console.log("LABEL INDEX ELSE");
       const updatedLabels = [...selectedLabels];
+      console.log(updatedLabels);
       updatedLabels.splice(labelIndex, 1);
+      console.log(updatedLabels);
       setSelectedLabels(updatedLabels);
 
       if (xAxis === labelValue) {
@@ -359,7 +406,9 @@ export function NewProject() {
       }
     }
 
-
+    console.log(xAxis);
+    console.log([...yAxis, labelValue].filter(label => label !== xAxis))
+    // console.log(setYAxis(prevYAxes => prevYAxes.filter(label => label !== labelValue)));
     if (xAxis && (yAxis.length > 0 || labelIndex === -1 && xAxis.length > 0)) {
       fetch("/analysis/getLabels", {
         method: "POST",
@@ -763,10 +812,11 @@ export function NewProject() {
     }
   };
 
-  const handlePreviousGraph = (index) => {
+  const handlePreviousGraph = (index, currentGraphHistoryId) => {
     // console.log(index);
     // console.log(graphHistory[index][16]);
     setHistoryIndex(index);
+    console.log(graphHistory[index][4]);
     // console.log(graphHistory[index][34], graphHistory[index][35], graphHistory[index][36]);
     setGraphName(graphHistory[index][0]);
     setParameters(graphHistory[index][1]);
@@ -805,6 +855,7 @@ export function NewProject() {
     setStepSize(graphHistory[index][34]);
     setLegendPosition(graphHistory[index][35]);
     setGreyShadeCheck(graphHistory[index][36]);
+    setCurrentGraphId(currentGraphHistoryId);
   };
 
   const newGraph = async () => {
@@ -858,12 +909,18 @@ export function NewProject() {
         greyShadeCheck,
         project_id: projectName,
         file_id: fileId,
+        currentGraphId
       }),
       credentials: "include"
     });
 
     const data = await response.json();
     const graphid = data.id;
+    console.log(typeof(yAxis));
+    const parsedArray = Object.values(yAxis).flat();
+    console.log(parsedArray);
+    setYAxis(parsedArray);
+    
     const newGraphState = [
       graphName,
       parameters,
@@ -915,7 +972,7 @@ export function NewProject() {
     setIsOpenFilterX(false);
     setIsOpenFilterY(false);
     setReference("");
-    setModalOption((selectedLabels.length>2) ? "font" : "color");
+    setModalOption((selectedLabels.length > 2) ? "font" : "color");
     setIsModalOpen(false);
     setXLabelColor("lightgray");
     setYLabelColor("lightgray");
@@ -1036,7 +1093,7 @@ export function NewProject() {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setModalOption((selectedLabels.length>2)  ? "font" : "color");
+    setModalOption((selectedLabels.length > 2) ? "font" : "color");
   };
 
   const handleConditionChange = (e, option) => {
@@ -1224,7 +1281,7 @@ export function NewProject() {
     setIsOpenFilterX(false);
     setIsOpenFilterY(false);
     setReference("");
-    setModalOption((selectedLabels.length>2)  ? "font" : "color");
+    setModalOption((selectedLabels.length > 2) ? "font" : "color");
     setIsModalOpen(false);
     setXLabelColor("lightgray");
     setYLabelColor("lightgray");
@@ -1467,19 +1524,19 @@ export function NewProject() {
                     >
                       <div className="modal-menu d-flex flex-column align-items-center">
                         {
-                          !(selectedLabels.length>2)&&<button
-                          onClick={() => setModalOption((selectedLabels.length>2)?"font":"color")}
-                          style={{
-                            background:
-                              modalOption === "color" ? "white" : "transparent",
-                            color: modalOption === "color" ? "black" : "white",
-                            borderRadius: modalOption === "color" ? "5px" : "0",
-                            borderBottom:
-                              modalOption === "font" ? "0" : "1px solid white",
-                          }}
-                        >
-                          Color Theme
-                        </button>
+                          !(selectedLabels.length > 2) && <button
+                            onClick={() => setModalOption((selectedLabels.length > 2) ? "font" : "color")}
+                            style={{
+                              background:
+                                modalOption === "color" ? "white" : "transparent",
+                              color: modalOption === "color" ? "black" : "white",
+                              borderRadius: modalOption === "color" ? "5px" : "0",
+                              borderBottom:
+                                modalOption === "font" ? "0" : "1px solid white",
+                            }}
+                          >
+                            Color Theme
+                          </button>
                         }
                         <button
                           onClick={() => setModalOption("font")}
@@ -1521,41 +1578,41 @@ export function NewProject() {
                           Background Color
                         </button>
                         {
-                          !(selectedLabels.length>2) && <button
-                          onClick={() => setModalOption("texture")}
-                          style={{
-                            background:
-                              modalOption === "texture" ? "white" : "transparent",
-                            color: modalOption === "texture" ? "black" : "white",
-                            borderRadius: modalOption === "texture" ? "5px" : "0",
-                            borderBottom:
-                              modalOption === "textureStyles"
-                                ? "0"
-                                : "1px solid white",
-                          }}
-                        >
-                          Texture
-                        </button>
+                          !(selectedLabels.length > 2) && <button
+                            onClick={() => setModalOption("texture")}
+                            style={{
+                              background:
+                                modalOption === "texture" ? "white" : "transparent",
+                              color: modalOption === "texture" ? "black" : "white",
+                              borderRadius: modalOption === "texture" ? "5px" : "0",
+                              borderBottom:
+                                modalOption === "textureStyles"
+                                  ? "0"
+                                  : "1px solid white",
+                            }}
+                          >
+                            Texture
+                          </button>
                         }
                         {
-                          !(selectedLabels.length>2) && <button
-                          onClick={() => setModalOption("textureStyles")}
-                          style={{
-                            background:
-                              modalOption === "textureStyles"
-                                ? "white"
-                                : "transparent",
-                            color:
-                              modalOption === "textureStyles" ? "black" : "white",
-                            borderRadius:
-                              modalOption === "textureStyles" ? "5px" : "0",
-                          }}
-                        >
-                          Texture Styles
-                        </button>
+                          !(selectedLabels.length > 2) && <button
+                            onClick={() => setModalOption("textureStyles")}
+                            style={{
+                              background:
+                                modalOption === "textureStyles"
+                                  ? "white"
+                                  : "transparent",
+                              color:
+                                modalOption === "textureStyles" ? "black" : "white",
+                              borderRadius:
+                                modalOption === "textureStyles" ? "5px" : "0",
+                            }}
+                          >
+                            Texture Styles
+                          </button>
                         }
                       </div>
-                      {modalOption === "color" && !(selectedLabels.length>2)  ? (
+                      {modalOption === "color" && !(selectedLabels.length > 2) ? (
                         <div className="modal-right d-flex flex-column justify-content-between align-items-start p-3 w-100">
                           <div style={{ height: "470px", overflowY: "auto" }}>
                             <div className="d-flex flex-row flex-wrap w-100 justify-content-start">
@@ -2232,7 +2289,7 @@ export function NewProject() {
                       xAxis ?
                         <div className="d-flex flex-column mt-3">
                           <div className="d-flex flex-row" style={{ borderTop: '1px solid lightgray', borderBottom: '1px solid lightgray' }}>
-                            <p style={{ color: 'gray', fontSize: '0.9rem', fontWeight:'bold' }}>X-Axis: <span style={{fontSize:'0.7rem', fontStyle:'italic', fontWeight:'normal'}}>(You can select only one)</span></p>
+                            <p style={{ color: 'gray', fontSize: '0.9rem', fontWeight: 'bold' }}>X-Axis: <span style={{ fontSize: '0.7rem', fontStyle: 'italic', fontWeight: 'normal' }}>(You can select only one)</span></p>
                           </div>
                           <div className="d-flex flex-row justify-content-center w-100" style={{ borderBottom: '1px solid lightgray' }}>
                             <p style={{ fontSize: '0.9rem' }}>{xAxis}</p>
@@ -2241,14 +2298,14 @@ export function NewProject() {
                         : ""
                     }
                     {
-                      yAxis && selectedLabels.length>1?
+                      yAxis && selectedLabels.length > 1 ?
                         <div className="d-flex flex-column mt-4">
                           <div className="d-flex flex-row" style={{ borderTop: '1px solid lightgray', borderBottom: '1px solid lightgray' }}>
-                            <p style={{ color: 'gray', fontSize: '0.9rem', fontWeight:'bold' }}>Y-Axis: <span style={{fontSize:'0.7rem', fontStyle:'italic', fontWeight:'normal'}}>(You can select multiple fields)</span></p>
+                            <p style={{ color: 'gray', fontSize: '0.9rem', fontWeight: 'bold' }}>Y-Axis: <span style={{ fontSize: '0.7rem', fontStyle: 'italic', fontWeight: 'normal' }}>(You can select multiple fields)</span></p>
                           </div>
                           {
                             selectedLabels.slice(1).map((label, index) => (
-                              <div className="d-flex flex-row justify-content-center w-100" style={{borderBottom: index === selectedLabels.length -2 ? '1px solid lightgray' : 'none'}}>
+                              <div className="d-flex flex-row justify-content-center w-100" style={{ borderBottom: index === selectedLabels.length - 2 ? '1px solid lightgray' : 'none' }}>
                                 <p style={{
                                   fontSize: '0.9rem',
                                 }}>
@@ -2356,7 +2413,7 @@ export function NewProject() {
                         )}
                       </button>
                       {!isLegendsOpen && xAxis && yAxis && (
-                        <div className={`custom-dropdown-list-user-panel ${selectedLabels.length>2 ? "disabled-component": ""}`}>
+                        <div className={`custom-dropdown-list-user-panel ${selectedLabels.length > 2 ? "disabled-component" : ""}`}>
                           {columns.map((option, index) => (
                             <div className="d-flex flex-row align-items-center">
                               <input
@@ -2587,7 +2644,7 @@ export function NewProject() {
                       <button
                         onClick={toggleDropdownFiltersY}
                         className="d-flex flex-row justify-content-between align-items-center"
-                        style={{whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}
+                        style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
                       >
                         Y-Axis
                         {isOpenFilterY ? (
@@ -2820,7 +2877,7 @@ export function NewProject() {
                 className="d-flex flex-row align-items-start mx-3"
               >
                 <div
-                  onClick={() => handlePreviousGraph(index)}
+                  onClick={() => handlePreviousGraph(index, history[37])}
                   style={{ cursor: "pointer" }}
                 >
                   <SelectChart
@@ -2834,6 +2891,7 @@ export function NewProject() {
                     }
                     xLabel={history[3]}
                     yLabel={history[4]}
+                    selectedLabels={history[5]}
                     barColors={history[2]}
                     xLabelColor={history[6]}
                     yLabelColor={history[7]}
@@ -2863,6 +2921,7 @@ export function NewProject() {
                 </div>
                 <img
                   src={require("../assets/imgs/delete.png")}
+                  className={`${accessType==="read"? "disabled-component":""}`}
                   style={{ width: "20px", cursor: "pointer" }}
                   onClick={() => deleteGraph(history[37])}
                   alt=""
