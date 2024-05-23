@@ -591,7 +591,8 @@ export function NewProject() {
         stepSize1,
         greyShadeCheck1,
         legendPosition1,
-        graphid
+        graphid,
+        selectedLabels1
       ];
       // console.log("CHECK");
       setGraphHistory((prevHistory) => [newGraphState, ...prevHistory]);
@@ -901,7 +902,7 @@ export function NewProject() {
       stepSize,
       greyShadeCheck,
       legendPosition,
-      graphid
+      graphid,
     ];
     // console.log(data);
     window.alert(data.message);
