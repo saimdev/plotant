@@ -27,6 +27,7 @@ function HorizontalBarChart({
   fontFamily,
   stepSize,
   legendPosition,
+  selectedLabels
 }) {
   function dataURLtoBlob(dataurl) {
     var arr = dataurl.split(","),
@@ -256,7 +257,7 @@ function HorizontalBarChart({
               },
             },
             legend: {
-              display: legendCheck,
+              display: selectedLabels.length>2 ? legendCheck: false,
               position: legendPosition,
             },
             datalabels: {

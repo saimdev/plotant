@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from "react";
-import PieChart from "./PieChart";
-import BarChart from "./BarChart";
-import Spline from "./Spline";
+import PieChart from "../PieChart";
+import BarChart from "../BarChart";
+import Spline from "../Spline";
 import { ColorPicker, useColor } from "react-color-palette";
 import "react-color-palette/css";
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
-import LegendBarChart from "./LegendBarChart";
-import HorizontalBarChart from "./Horizontal";
-import Doghnut from "./Doghnut";
-import AreaChart from "./AreaChart";
-import LineBar from "./LineBar";
-import AreaBar from "./AreaBar";
-import { getColor, rgba } from "chartjs-color";
-import StackedBar from "./StackedBar";
+import LegendBarChart from "../LegendBarChart";
+import HorizontalBarChart from "../Horizontal";
+import Doghnut from "../Doghnut";
+import AreaChart from "../AreaChart";
+import LineBar from "../LineBar";
+import AreaBar from "../AreaBar";
+
 Chart.register(CategoryScale);
 
-export function SelectChart({
+export function SelectChartVisitor({
   chartName,
   parameters,
   yLabel,
@@ -45,50 +44,36 @@ export function SelectChart({
   legendPosition,
   selectedLabels
 }) {
-  // console.log(selectedLabels);
-  // console.log(parameters.labels);
-  let labels = Array.isArray(parameters.labels.x)
-    ? parameters.labels.x.map((param) => param)
-    : [parameters.labels.x];
-  const dataValues = [];
-  const selectedLabelsLength = selectedLabels.length;
-
-  for (let i = 1; i < selectedLabelsLength; i++) {
-    const key = `y${i === 1 ? '' : i - 1}`;
-    // console.log(key);
-    const dataArray = Array.isArray(parameters.labels[key])
-      ? parameters.labels[key].map((param) => param)
-      : [parameters.labels[key]];
-    // console.log(dataArray);
-    dataValues.push(dataArray);
+  console.log(chartName);
+  let labels = Array.isArray(parameters.x)
+    ? parameters.x.map((param) => param)
+    : [parameters.x];
+  let dataValues = Array.isArray(parameters.y)
+    ? parameters.y.map((param) => param)
+    : [parameters.y];
+  if (Array.isArray(parameters.x)) {
+    labels.sort((a, b) => a - b);
+    const sortedIndices = parameters.x
+      .map((_, index) => index)
+      .sort((a, b) => parameters.x[a] - parameters.x[b]);
+    dataValues = sortedIndices.map((index) => dataValues[index]);
   }
-  // if (Array.isArray(parameters.labels.x)) {
-  //   labels.sort((a, b) => a - b);
-  //   const sortedIndices = parameters.labels.x
-  //     .map((_, index) => index)
-  //     .sort((a, b) => parameters.labels.x[a] - parameters.labels.x[b]);
-  //   dataValues = sortedIndices.map((index) => dataValues[index]);
-  // }
-  console.log(dataValues);
-  barColors.forEach((dataArray, index) => {
-    // console.log(barColors[index]);
-  });
 
   let data;
   // console.log(legends);
-
-  if (legends.length === 0 || !parameters.labels.z || chartName !== "Bar") {
-    const datasets = dataValues.map((dataArray, index) => ({
-      label: `${selectedLabels[index + 1]}`,
-      data: dataArray,
-      backgroundColor: chartName === "Area"  ? `${barColors[index % barColors.length]}80` : chartName === "Pie" || chartName === "Doghnut" || (chartName === "Bar" && !(selectedLabels.length>2)) || (chartName === "Line" && !(selectedLabels.length>2)) || (chartName === "Horizontal" && !(selectedLabels.length>2)) || (chartName === "Stepped" && !(selectedLabels.length>2)) || (chartName === "Stacked" && !(selectedLabels.length>2)) || (chartName === "Multiple" && !(selectedLabels.length>2)) || (chartName === "AreaBar" && !(selectedLabels.length>2))? barColors : barColors[index % barColors.length] ,
-      borderWidth: barBorders,
-      borderColor: borderColor,
-      stepped: stepped,
-    }))
+  if (legends.length === 0 || !parameters.z || chartName !== "Bar") {
     data = {
-      labels: parameters.labels.x,
-      datasets: datasets,
+      labels: labels,
+      datasets: [
+        {
+          label: `${yLabel}`,
+          data: dataValues,
+          backgroundColor: barColors,
+          borderWidth: barBorders,
+          borderColor: borderColor,
+          stepped: stepped,
+        },
+      ],
     };
   } else {
     const zValues = parameters.z;
@@ -113,7 +98,6 @@ export function SelectChart({
         data: quantities,
         backgroundColor: barColors[index % barColors.length],
         borderWidth: barBorders,
-
       })
     );
 
@@ -122,7 +106,6 @@ export function SelectChart({
     data = {
       labels: labels,
       datasets: datasets,
-      fill: chartName === 'Area' ? true : false
     };
   }
   switch (chartName) {
@@ -150,7 +133,6 @@ export function SelectChart({
           stepSize={stepSize}
           legendPosition={legendPosition}
           barColors={barColors}
-          barBorders={barBorders}
           selectedLabels={selectedLabels}
         />
       );
@@ -259,7 +241,6 @@ export function SelectChart({
           fontFamily={fontFamily}
           stepSize={stepSize}
           legendPosition={legendPosition}
-          barBorders={barBorders}
           selectedLabels={selectedLabels}
         />
       );
@@ -398,37 +379,9 @@ export function SelectChart({
           selectedLabels={selectedLabels}
         />
       );
-    case "Stacked":
-      return (
-        <StackedBar
-          chartData={data}
-          yLabel={yLabel}
-          xLabel={xLabel}
-          xLabelColor={xLabelColor}
-          yLabelColor={yLabelColor}
-          graphHeadSize={graphHeadSize}
-          xLabelSize={xLabelSize}
-          yLabelSize={yLabelSize}
-          xLabelWeight={xLabelWeight}
-          yLabelWeight={yLabelWeight}
-          graphHeadWeight={graphHeadWeight}
-          barColors={barColors}
-          graphHeading={graphHeading}
-          barBorders={barBorders}
-          legendCheck={legendCheck}
-          dlSize={dlSize}
-          dlWeight={dlWeight}
-          dlColor={dlColor}
-          dataLabelsConfig={dataLabelsConfig}
-          fontFamily={fontFamily}
-          stepSize={stepSize}
-          legendPosition={legendPosition}
-          selectedLabels={selectedLabels}
-        />
-      );
     default:
       return null;
   }
 }
 
-export default SelectChart;
+export default SelectChartVisitor;

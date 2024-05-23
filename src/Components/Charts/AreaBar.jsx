@@ -30,6 +30,7 @@ function AreaBar({
   fontFamily,
   stepSize,
   legendPosition,
+  selectedLabels
 }) {
   const { labels, datasets} = chartData;
   const maxDataValue = Math.max(...chartData.datasets.flatMap(dataset => dataset.data));
@@ -55,8 +56,8 @@ function AreaBar({
     labels: labels,
     datasets: barData.map((data, index) => ({
       type:'bar',
-      label: `Bar Dataset ${index + 1}`,
-      backgroundColor: barColors[index % barColors.length],
+      label: `Bar ${selectedLabels[index + 1]}`,
+      backgroundColor: selectedLabels.length>2 ? barColors[index % barColors.length]: barColors,
       borderColor: barColors[index % barColors.length],
       borderWidth: barBorders,
       data: data,
@@ -66,9 +67,9 @@ function AreaBar({
   const lineChartData = {
     labels: labels,
     datasets: lineData.map((data, index) => ({
-      label: `Line Dataset ${index + 1}`,
-      borderColor: `${barColors[index % barColors.length]}80`,
-      backgroundColor: `${barColors[index % barColors.length]}80`,
+      label: `Area ${selectedLabels[index + 1]}`,
+      borderColor: selectedLabels.length>2 ? `${barColors[index % barColors.length]}80`: `${barColors[0]}80`,
+      backgroundColor: selectedLabels.length>2 ? `${barColors[index % barColors.length]}80`: `${barColors[0]}80`,
       borderWidth: barBorders,
       fill: true,
       data: data,
@@ -313,7 +314,7 @@ function AreaBar({
               },
             },
             legend: {
-              display: legendCheck,
+              display: selectedLabels.length>2 ? legendCheck: false,
               position: legendPosition,
             },
             datalabels: {

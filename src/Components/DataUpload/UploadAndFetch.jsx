@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import "../../assets/css/UploadAndFetch.css";
 import Parameters from "./Parameters";
 import Table from "../SpreadSheet/Table";
-import LabelTable from "../SpreadSheet/LabelTable";
-import SelectChart from "../Charts/SelectChart";
+import LabelTableVisitor from "../SpreadSheet/Visitor/LabelTableVisitor";
+import SelectChartVisitor from "../Charts/Visitor/SelectChartVisitor";
 import HeaderLogo from "../HeaderLogo";
 import { Audio } from "react-loader-spinner";
 import { ColorPicker, useColor } from "react-color-palette";
@@ -2287,7 +2287,7 @@ export function UploadAndFetch() {
                                   )
                                 } */}
                   {xAxis && !graphName ? (
-                    <LabelTable
+                    <LabelTableVisitor
                       jsonData={parameters ? parameters : uniqueValues}
                       label={xAxis}
                       column={"x"}
@@ -2303,7 +2303,7 @@ export function UploadAndFetch() {
 
                   {yAxis && !graphName ? (
                     parameters ? (
-                      <LabelTable
+                      <LabelTableVisitor
                         jsonData={parameters ? parameters : uniqueValues}
                         label={yAxis}
                         column={"y"}
@@ -2324,7 +2324,7 @@ export function UploadAndFetch() {
                                 } */}
                   {graphName && xAxis && yAxis ? (
                     condition.length !== 0 || yAxisConditions.length !== 0 ? (
-                      <SelectChart
+                      <SelectChartVisitor
                         chartName={graphName}
                         parameters={conditionalParameters}
                         xLabel={xAxis}
@@ -2353,9 +2353,10 @@ export function UploadAndFetch() {
                         fontFamily={fontFamily}
                         stepSize={stepSize}
                         legendPosition={legendPosition}
+                        selectedLabels={selectedLabels}
                       />
                     ) : (
-                      <SelectChart
+                      <SelectChartVisitor
                         chartName={graphName}
                         parameters={parameters}
                         xLabel={xAxis}
@@ -2384,6 +2385,7 @@ export function UploadAndFetch() {
                         fontFamily={fontFamily}
                         stepSize={stepSize}
                         legendPosition={legendPosition}
+                        selectedLabels={selectedLabels}
                       />
                     )
                   ) : (
@@ -2423,7 +2425,7 @@ export function UploadAndFetch() {
                         onClick={() => handlePreviousGraph(index)}
                         style={{ cursor: "pointer" }}
                       >
-                        <SelectChart
+                        <SelectChartVisitor
                           chartName={history[0]}
                           parameters={
                             history[17] &&
@@ -2448,7 +2450,7 @@ export function UploadAndFetch() {
                           textureColor={history[20]}
                           textureBg={history[21]}
                           legends={history[22]}
-                          legendCheck={false}
+                          legendCheck={true}
                           borderColor={history[27]}
                           dlSize={history[28]}
                           dlWeight={history[29]}

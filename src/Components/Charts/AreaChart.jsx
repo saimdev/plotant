@@ -29,6 +29,7 @@ function AreaChart({
   barBorders,
   stepSize,
   legendPosition,
+  selectedLabels
 }) {
   function dataURLtoBlob(dataurl) {
     var arr = dataurl.split(","),
@@ -254,7 +255,7 @@ function AreaChart({
               },
             },
             legend: {
-              display: legendCheck,
+              display: selectedLabels.length>2 ? legendCheck: false,
               position: legendPosition,
             },
             datalabels: false,

@@ -30,9 +30,10 @@ function LineBar({
   fontFamily,
   stepSize,
   legendPosition,
+  selectedLabels
 }) {
   const { labels, datasets } = chartData;
-
+  console.log(barColors);
   const maxDataValue = Math.max(...chartData.datasets.flatMap(dataset => dataset.data));
 
   const maxYValue = Math.ceil(maxDataValue / stepSize) * stepSize;
@@ -47,19 +48,7 @@ function LineBar({
     }
     return new Blob([u8arr], { type: mime });
   }
-  function getRandomColor() {
-    const letters = "0123456789ABCDEF";
-    let color = "#";
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
 
-  let randomBorderColor;
-  do {
-    randomBorderColor = getRandomColor();
-  } while (barColors.includes(randomBorderColor));
   const barData = datasets.map(dataset => dataset.data);
   const lineData = datasets.map(dataset => dataset.data);
 
@@ -67,8 +56,8 @@ function LineBar({
     labels: labels,
     datasets: barData.map((data, index) => ({
       type:'bar',
-      label: `Bar ${labels[index]}`,
-      backgroundColor: barColors[index % barColors.length],
+      label: `Bar  ${selectedLabels[index+1]}`,
+      backgroundColor: selectedLabels.length>2 ? barColors[index % barColors.length]: barColors,
       borderColor: barColors[index % barColors.length],
       borderWidth: barBorders,
       data: data,
@@ -79,8 +68,8 @@ function LineBar({
     labels: labels,
     datasets: lineData.map((data, index) => ({
       type:'line',
-      label: `Line  ${labels[index]}`,
-      borderColor: barColors[index % barColors.length],
+      label: `Line  ${selectedLabels[index+1]}`,
+      borderColor: selectedLabels.length>2 ? barColors[index % barColors.length]: barColors,
       backgroundColor: barColors[index % barColors.length],
       borderWidth: barBorders,
       fill:false,
@@ -318,7 +307,7 @@ function LineBar({
               },
             },
             legend: {
-              display: legendCheck,
+              display: selectedLabels.length>2 ? legendCheck: false,
               position: legendPosition,
             },
             datalabels: {

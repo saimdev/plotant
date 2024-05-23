@@ -48,7 +48,7 @@ export function NewProject() {
   // const [showVisualizations, setShowVisualizations] = useState(true);
   // const [showData, setShowData] = useState(true);
   const [reference, setReference] = useState("");
-  const [modalOption, setModalOption] = useState("color");
+  const [modalOption, setModalOption] = useState("font");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [xLabelColor, setXLabelColor] = useState("lightgray");
   const [yLabelColor, setYLabelColor] = useState("lightgray");
@@ -107,7 +107,7 @@ export function NewProject() {
   };
 
   useEffect(() => {
-    console.log(barColors);
+    // console.log(barColors);
   }, [barColors])
 
   const getFileNameWithoutExtension = (fileName) => {
@@ -319,7 +319,7 @@ export function NewProject() {
   //   onGraphNameChange(newName);
   // };
   const setLabels = (e, labelCheck) => {
-    console.log(labelCheck);
+    // console.log(labelCheck);
     setYAxisValue("");
     setCondition([]);
     setConditionalParameters([]);
@@ -335,18 +335,18 @@ export function NewProject() {
     const labelIndex = selectedLabels.indexOf(labelValue);
 
     if (labelIndex === -1) {
-      console.log("LABEL INDEX -1");
+      // console.log("LABEL INDEX -1");
       if (xAxis.length === 0) {
-        console.log(labelValue);
+        // console.log(labelValue);
         setXAxis(labelValue);
         setSelectedLabels([labelValue]);
       } else {
-        console.log("ELSE", labelValue);
+        // console.log("ELSE", labelValue);
         setYAxis(prevYAxes => [...prevYAxes, labelValue]);
         setSelectedLabels(prevSelectedLabels => [...prevSelectedLabels, labelValue]);
       }
     } else {
-      console.log("LABEL INDEX ELSE");
+      // console.log("LABEL INDEX ELSE");
       const updatedLabels = [...selectedLabels];
       updatedLabels.splice(labelIndex, 1);
       setSelectedLabels(updatedLabels);
@@ -376,7 +376,7 @@ export function NewProject() {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
+          // console.log(data);
           if (Array.isArray(data.labels.x) && Array.isArray(data.labels.y)) {
             setParameters(data);
           } else {
@@ -593,7 +593,7 @@ export function NewProject() {
         legendPosition1,
         graphid
       ];
-      console.log("CHECK");
+      // console.log("CHECK");
       setGraphHistory((prevHistory) => [newGraphState, ...prevHistory]);
     });
     // }
@@ -605,7 +605,7 @@ export function NewProject() {
   }
 
   const deleteGraph = async (graphId) => {
-    console.log(graphId);
+    // console.log(graphId);
     const res = await fetch("/analysis/deleteGraph", {
       headers: {
         "Content-Type": "application/json"
@@ -766,7 +766,7 @@ export function NewProject() {
     // console.log(index);
     // console.log(graphHistory[index][16]);
     setHistoryIndex(index);
-    console.log(graphHistory[index][34], graphHistory[index][35], graphHistory[index][36]);
+    // console.log(graphHistory[index][34], graphHistory[index][35], graphHistory[index][36]);
     setGraphName(graphHistory[index][0]);
     setParameters(graphHistory[index][1]);
     setBarColors(graphHistory[index][2]);
@@ -811,7 +811,7 @@ export function NewProject() {
     // console.log(conditionalParameters);
     // console.log(yAxisConditions);
 
-    console.log(projectName);
+    // console.log(projectName);
     const response = await fetch("/analysis/saveGraph", {
       headers: {
         "Content-Type": "application/json"
@@ -914,7 +914,7 @@ export function NewProject() {
     setIsOpenFilterX(false);
     setIsOpenFilterY(false);
     setReference("");
-    setModalOption("color");
+    setModalOption((selectedLabels.length>2) ? "font" : "color");
     setIsModalOpen(false);
     setXLabelColor("lightgray");
     setYLabelColor("lightgray");
@@ -973,19 +973,20 @@ export function NewProject() {
   };
 
   const openModal = () => {
+    console.log(selectedLabels);
     setIsModalOpen(true);
     // console.log(barColors);
   };
 
 
-  function generateGreyShadeColors() {
+  function generateGreyShadeColors(check) {
     setGreyShadeCheck(greyShadeCheck ? false : true);
-    if (greyShadeCheck === true) {
+    if (check === true) {
       if (parameters) {
         let generatedColorPalette;
-        if (Array.isArray(parameters.y)) {
+        if (Array.isArray(parameters.labels.y)) {
 
-          generatedColorPalette = parameters.y.map((_) => {
+          generatedColorPalette = parameters.labels.y.map((_) => {
             const greyValue = Math.floor(Math.random() * 256);
             const hex = greyValue.toString(16).padStart(2, "0");
             return `#${hex}${hex}${hex}`;
@@ -996,7 +997,7 @@ export function NewProject() {
           const hex = greyValue.toString(16).padStart(2, "0");
           generatedColorPalette = [`#${hex}${hex}${hex}`];
         }
-        console.log(generatedColorPalette);
+        // console.log(generatedColorPalette);
 
         let unique = false;
         while (!unique) {
@@ -1018,8 +1019,8 @@ export function NewProject() {
     } else {
       if (parameters) {
         let generatedColorPalette;
-        if (Array.isArray(parameters.y)) {
-          generatedColorPalette = parameters.y.map(
+        if (Array.isArray(parameters.labels.y)) {
+          generatedColorPalette = parameters.labels.y.map(
             (_) => `#${Math.floor(Math.random() * 16777215).toString(16)}`
           );
         } else {
@@ -1034,11 +1035,11 @@ export function NewProject() {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setModalOption("color");
+    setModalOption((selectedLabels.length>2)  ? "font" : "color");
   };
 
   const handleConditionChange = (e, option) => {
-    console.log(selectedLabels);
+    // console.log(selectedLabels);
     let updatedCondition;
     if (condition.includes(option)) {
       updatedCondition = condition.filter((item) => item !== option);
@@ -1082,7 +1083,7 @@ export function NewProject() {
       });
 
       setConditionalParameters({ labels: conditionalLabels });
-      console.log(selectedLabels);
+      // console.log(selectedLabels);
     } else {
       setConditionalParameters({ labels: { x: null, y: null } });
       setCondition([]);
@@ -1177,7 +1178,7 @@ export function NewProject() {
     }
 
     if (parameters && logsCheck === false) {
-      console.log("SAIM");
+      // console.log("SAIM");
       let generatedColorPalette;
       if (Array.isArray(parameters.labels.y)) {
         generatedColorPalette = parameters.labels.y.map(
@@ -1211,7 +1212,7 @@ export function NewProject() {
   };
 
   const handleFileId = (fileId) => {
-    console.log("SAIM");
+    // console.log("SAIM");
     setFileId(fileId);
     getGraphs(fileId);
     handleGraphNameChange("");
@@ -1222,7 +1223,7 @@ export function NewProject() {
     setIsOpenFilterX(false);
     setIsOpenFilterY(false);
     setReference("");
-    setModalOption("color");
+    setModalOption((selectedLabels.length>2)  ? "font" : "color");
     setIsModalOpen(false);
     setXLabelColor("lightgray");
     setYLabelColor("lightgray");
@@ -1323,7 +1324,7 @@ export function NewProject() {
 
   const getLogsGraph = async (id) => {
     setLogsCheck(true);
-    console.log(id);
+    // console.log(id);
     const res = await fetch("/analysis/getLogsGraph", {
       headers: {
         "Content-Type": "application/json"
@@ -1334,8 +1335,8 @@ export function NewProject() {
       method: "POST"
     });
     const data = await res.json();
-    console.log(data);
-    console.log(data.data.parameters);
+    // console.log(data);
+    // console.log(data.data.parameters);
     handleGraphNameChange(data.data.graphName);
     setXAxis(data.data.xAxis);
     setYAxis(data.data.yAxis);
@@ -1464,8 +1465,9 @@ export function NewProject() {
                       style={{ height: "100%", borderRadius: "10px" }}
                     >
                       <div className="modal-menu d-flex flex-column align-items-center">
-                        <button
-                          onClick={() => setModalOption("color")}
+                        {
+                          !(selectedLabels.length>2)&&<button
+                          onClick={() => setModalOption((selectedLabels.length>2)?"font":"color")}
                           style={{
                             background:
                               modalOption === "color" ? "white" : "transparent",
@@ -1477,6 +1479,7 @@ export function NewProject() {
                         >
                           Color Theme
                         </button>
+                        }
                         <button
                           onClick={() => setModalOption("font")}
                           style={{
@@ -1516,7 +1519,8 @@ export function NewProject() {
                         >
                           Background Color
                         </button>
-                        <button
+                        {
+                          !(selectedLabels.length>2) && <button
                           onClick={() => setModalOption("texture")}
                           style={{
                             background:
@@ -1531,7 +1535,9 @@ export function NewProject() {
                         >
                           Texture
                         </button>
-                        <button
+                        }
+                        {
+                          !(selectedLabels.length>2) && <button
                           onClick={() => setModalOption("textureStyles")}
                           style={{
                             background:
@@ -1546,8 +1552,9 @@ export function NewProject() {
                         >
                           Texture Styles
                         </button>
+                        }
                       </div>
-                      {modalOption === "color" ? (
+                      {modalOption === "color" && !(selectedLabels.length>2)  ? (
                         <div className="modal-right d-flex flex-column justify-content-between align-items-start p-3 w-100">
                           <div style={{ height: "470px", overflowY: "auto" }}>
                             <div className="d-flex flex-row flex-wrap w-100 justify-content-start">
@@ -2190,7 +2197,7 @@ export function NewProject() {
                     </button>
 
                     {isOpen && (
-                      <div className="custom-dropdown-list data-dropdown-list">
+                      <div className="custom-dropdown-list-user-panel data-dropdown-list">
                         {columns.map((option, index) => (
                           <div
                             className="d-flex flex-row align-items-center"
@@ -2217,6 +2224,41 @@ export function NewProject() {
                         ))}
                       </div>
                     )}
+
+
+
+                    {
+                      xAxis ?
+                        <div className="d-flex flex-column mt-3">
+                          <div className="d-flex flex-row" style={{ borderTop: '1px solid lightgray', borderBottom: '1px solid lightgray' }}>
+                            <p style={{ color: 'gray', fontSize: '0.9rem', fontWeight:'bold' }}>X-Axis: <span style={{fontSize:'0.7rem', fontStyle:'italic', fontWeight:'normal'}}>(You can select only one)</span></p>
+                          </div>
+                          <div className="d-flex flex-row justify-content-center w-100" style={{ borderBottom: '1px solid lightgray' }}>
+                            <p style={{ fontSize: '0.9rem' }}>{xAxis}</p>
+                          </div>
+                        </div>
+                        : ""
+                    }
+                    {
+                      yAxis && selectedLabels.length>1?
+                        <div className="d-flex flex-column mt-4">
+                          <div className="d-flex flex-row" style={{ borderTop: '1px solid lightgray', borderBottom: '1px solid lightgray' }}>
+                            <p style={{ color: 'gray', fontSize: '0.9rem', fontWeight:'bold' }}>Y-Axis: <span style={{fontSize:'0.7rem', fontStyle:'italic', fontWeight:'normal'}}>(You can select multiple fields)</span></p>
+                          </div>
+                          {
+                            selectedLabels.slice(1).map((label, index) => (
+                              <div className="d-flex flex-row justify-content-center w-100" style={{borderBottom: index === selectedLabels.length -2 ? '1px solid lightgray' : 'none'}}>
+                                <p style={{
+                                  fontSize: '0.9rem',
+                                }}>
+                                  {label}
+                                </p>
+                              </div>
+                            ))
+                          }
+                        </div>
+                        : ""
+                    }
 
 
                   </div>
@@ -2313,7 +2355,7 @@ export function NewProject() {
                         )}
                       </button>
                       {!isLegendsOpen && xAxis && yAxis && (
-                        <div className="custom-dropdown-list">
+                        <div className={`custom-dropdown-list-user-panel ${selectedLabels.length>2 ? "disabled-component": ""}`}>
                           {columns.map((option, index) => (
                             <div className="d-flex flex-row align-items-center">
                               <input
@@ -2461,7 +2503,8 @@ export function NewProject() {
                             type="checkbox"
                             name=""
                             id=""
-                            onChange={() => generateGreyShadeColors()}
+                            onChange={() => generateGreyShadeColors(!greyShadeCheck)}
+                            checked={greyShadeCheck}
                           />
                           <label htmlFor="" className="mx-2">
                             Grey Shade Color
@@ -2498,7 +2541,7 @@ export function NewProject() {
                         onClick={toggleDropdownFiltersX}
                         className="d-flex flex-row justify-content-between align-items-center"
                       >
-                        {xAxis}
+                        X-Axis ({xAxis})
                         {isOpenFilterX ? (
                           <img
                             src={require("../assets/imgs/upload.png")}
@@ -2543,8 +2586,9 @@ export function NewProject() {
                       <button
                         onClick={toggleDropdownFiltersY}
                         className="d-flex flex-row justify-content-between align-items-center"
+                        style={{whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}
                       >
-                        {yAxis}
+                        Y-Axis
                         {isOpenFilterY ? (
                           <img
                             src={require("../assets/imgs/upload.png")}

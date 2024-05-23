@@ -157,17 +157,19 @@
     border-radius: 5px;
 }
 
-.custom-dropdown-list{
-    max-height: 16vh !important;
+.custom-dropdown-list-user-panel{
+    max-height: 20vh !important;
     min-height: 100% !important;
     overflow-y: auto;   
 }
 
-.data-dropdown-list{
-    max-height: 60vh !important;
-    min-height: 60vh !important;
-    /* border: 1px solid red; */
+.custom-dropdown-list{
+    max-height: 20vh !important;
+    min-height: 100% !important;
+    overflow-y: auto;   
 }
+
+
 
 .custom-dropdown-list-filters{
     max-height: 20vh !important;
@@ -176,6 +178,10 @@
 }
 
 .custom-dropdown-list-filters>div{
+    font-size: 0.8rem;
+}
+
+.custom-dropdown-list-user-panel>div{
     font-size: 0.8rem;
 }
 

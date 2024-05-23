@@ -26,6 +26,7 @@ function PieChart({
   dataLabelsConfig,
   fontFamily,
   legendPosition,
+  selectedLabels
 }) {
 
   

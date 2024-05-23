@@ -31,6 +31,7 @@ function BarChart({
   fontFamily,
   stepSize,
   legendPosition,
+  selectedLabels
 }) {
   console.log(chartData);
   // const [imageFile, setImageFile] = useState('');
@@ -289,7 +290,7 @@ function calculatePPI(diagonalSizeInInches) {
               },
             },
             legend: {
-              display: true,
+              display: selectedLabels.length>2 ? legendCheck: false,
               position: legendPosition,
             },
             datalabels: {

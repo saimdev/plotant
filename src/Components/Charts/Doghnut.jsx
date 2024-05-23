@@ -28,6 +28,7 @@ function Doghnut({
   fontFamily,
   stepSize,
   legendPosition,
+  selectedLabels
 }) {
   function dataURLtoBlob(dataurl) {
     var arr = dataurl.split(","),
@@ -254,7 +255,7 @@ function Doghnut({
               },
             },
             legend: {
-              display: legendCheck,
+              display: true,
               position: legendPosition,
             },
             datalabels: {

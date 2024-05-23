@@ -29,6 +29,7 @@ function Spline({
   stepSize,
   legendPosition,
   barBorders,
+  selectedLabels
 }) {
 
   function dataURLtoBlob(dataurl) {
@@ -245,7 +246,7 @@ function Spline({
               },
             },
             legend: {
-              display: legendCheck,
+              display: selectedLabels.length>2 ? legendCheck: false,
               position: legendPosition,
               // position:'top'
             },
