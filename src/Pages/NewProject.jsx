@@ -715,9 +715,9 @@ export function NewProject() {
         })
           .then((response) => response.json())
           .then((data) => {
-            if (Array.isArray(data.x) && Array.isArray(data.y)) {
+            if (Array.isArray(data.labels.x) && Array.isArray(data.labels.y)) {
               setParameters(data);
-              // console.log(data);
+              console.log(data);
             } else {
               console.error("Invalid data format");
             }

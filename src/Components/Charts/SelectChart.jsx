@@ -46,7 +46,7 @@ export function SelectChart({
   selectedLabels
 }) {
   // console.log(selectedLabels);
-  // console.log(parameters.labels);
+  console.log(parameters.labels);
   let labels = Array.isArray(parameters.labels.x)
     ? parameters.labels.x.map((param) => param)
     : [parameters.labels.x];
@@ -91,7 +91,7 @@ export function SelectChart({
       datasets: datasets,
     };
   } else {
-    const zValues = parameters.z;
+    const zValues = parameters.labels.z;
     // console.log(zValues);
 
     const uniqueNames = [

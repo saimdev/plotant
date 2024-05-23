@@ -278,7 +278,6 @@ function Spline({
               max:maxYValue
             },
             x: {
-             
               title: {
                 display: true,
                 text: xLabel,
@@ -297,7 +296,13 @@ function Spline({
                   size: xLabelSize,
                   weight: xLabelWeight,
                 },
+                // stepSize:20.5
               },
+            },
+          },
+          elements: {
+            line: {
+              tension: 0.0,
             },
           },
         }}

@@ -190,7 +190,7 @@ export function NewProjectTopMenu({ projectId, fileId, updateLogs, projectName, 
             fileId && <Link
             to=""
             style={{ borderRight: "1px solid white" }}
-            className="px-2 py-1"
+            className={`px-2 py-1 ${accessType==="read"? "disabled-component":""}`}
             onClick={openLogs}
           >
             History

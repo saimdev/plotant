@@ -349,6 +349,7 @@ function calculatePPI(diagonalSizeInInches) {
                   size: xLabelSize,
                   weight: xLabelWeight,
                 },
+                
               },
             },
           },
