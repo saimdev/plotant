@@ -29,7 +29,8 @@ function Spline({
   stepSize,
   legendPosition,
   barBorders,
-  selectedLabels
+  selectedLabels,
+  smoothness
 }) {
 
   function dataURLtoBlob(dataurl) {
@@ -302,7 +303,7 @@ function Spline({
           },
           elements: {
             line: {
-              tension: 0.0,
+              tension: smoothness?0.4:0.0,
             },
           },
         }}

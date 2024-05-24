@@ -30,7 +30,8 @@ function LineBar({
   fontFamily,
   stepSize,
   legendPosition,
-  selectedLabels
+  selectedLabels,
+  smoothness
 }) {
   const { labels, datasets } = chartData;
   console.log(barColors);
@@ -371,6 +372,11 @@ function LineBar({
                   weight: xLabelWeight,
                 },
               },
+            },
+          },
+          elements: {
+            line: {
+              tension: smoothness?0.4:0.0,
             },
           },
         }}

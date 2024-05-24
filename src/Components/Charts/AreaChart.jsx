@@ -29,7 +29,8 @@ function AreaChart({
   barBorders,
   stepSize,
   legendPosition,
-  selectedLabels
+  selectedLabels,
+  smoothness
 }) {
   function dataURLtoBlob(dataurl) {
     var arr = dataurl.split(","),
@@ -307,7 +308,7 @@ function AreaChart({
           },
           elements: {
             line: {
-              tension: 0.0,
+              tension: smoothness?0.4:0.0,
               fill: true, 
               backgroundColor: barColors
             },

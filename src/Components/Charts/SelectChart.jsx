@@ -43,7 +43,8 @@ export function SelectChart({
   fontFamily,
   stepSize,
   legendPosition,
-  selectedLabels
+  selectedLabels,
+  smoothness
 }) {
   // console.log(selectedLabels);
   console.log(parameters.labels);
@@ -261,6 +262,7 @@ export function SelectChart({
           legendPosition={legendPosition}
           barBorders={barBorders}
           selectedLabels={selectedLabels}
+          smoothness={smoothness}
         />
       );
     case "Horizontal":
@@ -342,6 +344,7 @@ export function SelectChart({
           stepSize={stepSize}
           legendPosition={legendPosition}
           selectedLabels={selectedLabels}
+          smoothness={smoothness}
         />
       );
     case "Multiple":
@@ -369,6 +372,7 @@ export function SelectChart({
           stepSize={stepSize}
           legendPosition={legendPosition}
           selectedLabels={selectedLabels}
+          smoothness={smoothness}
         />
       );
     case "AreaBar":
@@ -396,6 +400,7 @@ export function SelectChart({
           stepSize={stepSize}
           legendPosition={legendPosition}
           selectedLabels={selectedLabels}
+          smoothness={smoothness}
         />
       );
     case "Stacked":

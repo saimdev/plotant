@@ -86,6 +86,7 @@ export function NewProject() {
   const [dlWeight, setDLWeight] = useState("normal");
   const [stepped, setStepped] = useState(false);
   const [dataLabelsConfig, setDataLabelsConfig] = useState(false);
+  const [smoothness, setSmoothness] = useState(false);
   const [fontFamily, setFontFamily] = useState("Arial");
   const [hoveredLink, setHoveredLink] = useState(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -856,6 +857,7 @@ export function NewProject() {
     setLegendPosition(graphHistory[index][35]);
     setGreyShadeCheck(graphHistory[index][36]);
     setCurrentGraphId(currentGraphHistoryId);
+    setSmoothness(graphHistory[index][37])
   };
 
   const newGraph = async () => {
@@ -909,7 +911,8 @@ export function NewProject() {
         greyShadeCheck,
         project_id: projectName,
         file_id: fileId,
-        currentGraphId
+        currentGraphId,
+        smoothness
       }),
       credentials: "include"
     });
@@ -960,6 +963,7 @@ export function NewProject() {
       greyShadeCheck,
       legendPosition,
       graphid,
+      smoothness
     ];
     // console.log(data);
     window.alert(data.message);
@@ -1007,6 +1011,7 @@ export function NewProject() {
     setStepSize(1);
     setGreyShadeCheck(false);
     setLegendPosition("Top");
+    setSmoothness(false);
     // setXAxis("");
     // setYAxis("");
     // setSelectedLabels([]);
@@ -2740,12 +2745,27 @@ export function NewProject() {
                         type="checkbox"
                         name=""
                         id=""
+                        checked={dataLabelsConfig}
                         onChange={() => setDataLabelsConfig(!dataLabelsConfig)}
                       />
                       <label htmlFor="" className="mx-2">
                         Display DataLabels
                       </label>
                     </div>
+                    {
+                     ( graphName==="Line" || graphName==="Multiple" || graphName==="AreaBar" || graphName==="Area") && <div className="d-flex flex-row my-1 data-labels-config align-items-center">
+                      <input
+                        type="checkbox"
+                        name=""
+                        id=""
+                        checked={smoothness}
+                        onChange={() => setSmoothness(!smoothness)}
+                      />
+                      <label htmlFor="" className="mx-2">
+                        Smooth Graph
+                      </label>
+                    </div>
+                    }
                     {graphName && xAxis && yAxis ? (
                       <>
                         <div className="color-pallettes-graphs d-flex flex-row flex-wrap justify-content-start align-items-center">
@@ -3102,6 +3122,7 @@ export function NewProject() {
                   stepSize={stepSize}
                   legendPosition={legendPosition}
                   selectedLabels={selectedLabels}
+                  smoothness={smoothness}
                 />
               ) : (
                 <SelectChart
@@ -3134,6 +3155,7 @@ export function NewProject() {
                   stepSize={stepSize}
                   legendPosition={legendPosition}
                   selectedLabels={selectedLabels}
+                  smoothness={smoothness}
                 />
               )
             ) : (
@@ -3189,6 +3211,7 @@ export function NewProject() {
                     stepSize={history[34]}
                     greyShadeCheck={history[35]}
                     legendPosition={history[36]}
+                    smoothness={history[38]}
                   />
                 </div>
                 <img

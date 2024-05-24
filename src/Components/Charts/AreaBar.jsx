@@ -30,7 +30,8 @@ function AreaBar({
   fontFamily,
   stepSize,
   legendPosition,
-  selectedLabels
+  selectedLabels,
+  smoothness
 }) {
   const { labels, datasets} = chartData;
   const maxDataValue = Math.max(...chartData.datasets.flatMap(dataset => dataset.data));
@@ -378,6 +379,11 @@ function AreaBar({
                   weight: xLabelWeight,
                 },
               },
+            },
+          },
+          elements: {
+            line: {
+              tension: smoothness?0.4:0.0,
             },
           },
         }}
