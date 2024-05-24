@@ -310,7 +310,7 @@ function calculatePPI(diagonalSizeInInches) {
             
               title: {
                 display: true,
-                text: yLabel,
+                text: selectedLabels.length>2 ? "YAxis": yLabel,
                 font: {
                   family: fontFamily,
                   size: 13,
@@ -333,7 +333,7 @@ function calculatePPI(diagonalSizeInInches) {
              
               title: {
                 display: true,
-                text: xLabel,
+                text: selectedLabels.length>2 ? "XAxis": xLabel,
                 font: {
                   family: fontFamily,
                   size: 13,

@@ -48,7 +48,7 @@ export function NewProject() {
   // const [showVisualizations, setShowVisualizations] = useState(true);
   // const [showData, setShowData] = useState(true);
   const [reference, setReference] = useState("");
-  const [modalOption, setModalOption] = useState("font");
+  const [modalOption, setModalOption] = useState("color");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [xLabelColor, setXLabelColor] = useState("lightgray");
   const [yLabelColor, setYLabelColor] = useState("lightgray");
@@ -145,7 +145,7 @@ export function NewProject() {
       setIsOpenFilterX(false);
       setIsOpenFilterY(false);
       setReference("");
-      setModalOption((selectedLabels.length > 2) ? "font" : "color");
+      setModalOption("color");
       setIsModalOpen(false);
       setXLabelColor("lightgray");
       setYLabelColor("lightgray");
@@ -972,7 +972,7 @@ export function NewProject() {
     setIsOpenFilterX(false);
     setIsOpenFilterY(false);
     setReference("");
-    setModalOption((selectedLabels.length > 2) ? "font" : "color");
+    setModalOption("color");
     setIsModalOpen(false);
     setXLabelColor("lightgray");
     setYLabelColor("lightgray");
@@ -1093,7 +1093,7 @@ export function NewProject() {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setModalOption((selectedLabels.length > 2) ? "font" : "color");
+    setModalOption("color");
   };
 
   const handleConditionChange = (e, option) => {
@@ -1281,7 +1281,7 @@ export function NewProject() {
     setIsOpenFilterX(false);
     setIsOpenFilterY(false);
     setReference("");
-    setModalOption((selectedLabels.length > 2) ? "font" : "color");
+    setModalOption("color");
     setIsModalOpen(false);
     setXLabelColor("lightgray");
     setYLabelColor("lightgray");
@@ -1523,9 +1523,9 @@ export function NewProject() {
                       style={{ height: "100%", borderRadius: "10px" }}
                     >
                       <div className="modal-menu d-flex flex-column align-items-center">
-                        {
-                          !(selectedLabels.length > 2) && <button
-                            onClick={() => setModalOption((selectedLabels.length > 2) ? "font" : "color")}
+                      
+                          <button
+                            onClick={() => setModalOption("color")}
                             style={{
                               background:
                                 modalOption === "color" ? "white" : "transparent",
@@ -1537,7 +1537,7 @@ export function NewProject() {
                           >
                             Color Theme
                           </button>
-                        }
+                      
                         <button
                           onClick={() => setModalOption("font")}
                           style={{
@@ -1577,8 +1577,7 @@ export function NewProject() {
                         >
                           Background Color
                         </button>
-                        {
-                          !(selectedLabels.length > 2) && <button
+                       <button
                             onClick={() => setModalOption("texture")}
                             style={{
                               background:
@@ -1593,9 +1592,8 @@ export function NewProject() {
                           >
                             Texture
                           </button>
-                        }
-                        {
-                          !(selectedLabels.length > 2) && <button
+                      
+                       <button
                             onClick={() => setModalOption("textureStyles")}
                             style={{
                               background:
@@ -1610,13 +1608,14 @@ export function NewProject() {
                           >
                             Texture Styles
                           </button>
-                        }
+                      
                       </div>
-                      {modalOption === "color" && !(selectedLabels.length > 2) ? (
+                      {modalOption === "color" ? (
                         <div className="modal-right d-flex flex-column justify-content-between align-items-start p-3 w-100">
                           <div style={{ height: "470px", overflowY: "auto" }}>
                             <div className="d-flex flex-row flex-wrap w-100 justify-content-start">
-                              {barColors.map((color, index) => (
+                              {
+                              selectedLabels.length<=2?barColors.map((color, index) => (
                                 <div
                                   key={index}
                                   className="color-theme-div d-flex flex-column align-items-center my-3 mx-2"
@@ -1627,6 +1626,44 @@ export function NewProject() {
                                       <input
                                         type="color"
                                         value={color}
+                                        onChange={(e) =>
+                                          handleColorChange(index, e.target.value)
+                                        }
+                                      />
+                                    </label>
+                                  </div>
+                                </div>
+                              )):
+                              selectedLabels.length>2 && graphName==="Pie" || graphName==="Doghnut" ?barColors.map((color, index) => (
+                                <div
+                                  key={index}
+                                  className="color-theme-div d-flex flex-column align-items-center my-3 mx-2"
+                                >
+                                  <p>{parameters.labels.x[index]}</p>
+                                  <div className="d-flex flex-column align-items-center">
+                                    <label>
+                                      <input
+                                        type="color"
+                                        value={color}
+                                        onChange={(e) =>
+                                          handleColorChange(index, e.target.value)
+                                        }
+                                      />
+                                    </label>
+                                  </div>
+                                </div>
+                              )):
+                              selectedLabels.slice(1).map((label, index) => (
+                                <div
+                                  key={index}
+                                  className="color-theme-div d-flex flex-column align-items-center my-3 mx-2"
+                                >
+                                  <p>{selectedLabels[index+1]}</p>
+                                  <div className="d-flex flex-column align-items-center">
+                                    <label>
+                                      <input
+                                        type="color"
+                                        value={barColors[index]}
                                         onChange={(e) =>
                                           handleColorChange(index, e.target.value)
                                         }
@@ -1942,7 +1979,7 @@ export function NewProject() {
                         <div className="modal-right d-flex flex-column justify-content-between align-items-start p-3 w-100">
                           <div style={{ height: "470px", overflowY: "auto" }}>
                             <div className="d-flex flex-row flex-wrap w-100 justify-content-start">
-                              {barColors.map((color, index) => (
+                              {selectedLabels.length<=2 ? barColors.map((color, index) => (
                                 <div
                                   key={index}
                                   className="color-theme-div d-flex flex-column align-items-center my-3 mx-2"
@@ -2058,7 +2095,242 @@ export function NewProject() {
                                     </div>
                                   )}
                                 </div>
-                              ))}
+                              )):
+                              selectedLabels.length>2 && (graphName==="Pie" ||graphName==="Doghnut") ?barColors.map((color, index) => (
+                                <div
+                                  key={index}
+                                  className="color-theme-div d-flex flex-column align-items-center my-3 mx-2"
+                                  style={{ position: "relative" }}
+                                >
+                                  <p>{parameters.labels.x[index]}</p>
+                                  <div className="">
+                                    <img
+                                      src={require("../assets/imgs/diagnol-left.png")}
+                                      alt=""
+                                      style={{
+                                        width: "50px",
+                                        height: "30px",
+                                        cursor: "pointer",
+                                        border: "2px solid gray",
+                                        borderRadius: "3px",
+                                      }}
+                                      onClick={() => handleImageClick(index)}
+                                    />
+                                  </div>
+                                  {showModal && clickedImageIndex === index && (
+                                    <div
+                                      className="textures-options mt-2 p-2"
+                                      style={{
+                                        background: "#15589c",
+                                        borderRadius: "5px",
+                                        position: "absolute",
+                                        top: "100%",
+                                        zIndex: "1000",
+                                      }}
+                                    >
+                                      <div className="texture-modal-content">
+                                        {/* <span className="close" onClick={handleCloseModal} style={{cursor:'pointer'}}>&times;</span> */}
+                                        <img
+                                          src={require("../assets/imgs/diagnol-left.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("diagnolLeft", index)
+                                          }
+                                        />
+                                        <img
+                                          src={require("../assets/imgs/diagnol-right.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("diagnolRight", index)
+                                          }
+                                        />
+                                        <img
+                                          src={require("../assets/imgs/dash.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("dash", index)
+                                          }
+                                        />
+                                        <img
+                                          src={require("../assets/imgs/dots.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("dots", index)
+                                          }
+                                        />
+                                        <img
+                                          src={require("../assets/imgs/cross.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("cross", index)
+                                          }
+                                        />
+                                        <img
+                                          src={require("../assets/imgs/steric.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("steric", index)
+                                          }
+                                        />
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              )):
+                              selectedLabels.slice(1).map((label, index) => (
+                                <div
+                                  key={index}
+                                  className="color-theme-div d-flex flex-column align-items-center my-3 mx-2"
+                                  style={{ position: "relative" }}
+                                >
+                                  <p>{selectedLabels[index+1]}</p>
+                                  <div className="">
+                                    <img
+                                      src={require("../assets/imgs/diagnol-left.png")}
+                                      alt=""
+                                      style={{
+                                        width: "50px",
+                                        height: "30px",
+                                        cursor: "pointer",
+                                        border: "2px solid gray",
+                                        borderRadius: "3px",
+                                      }}
+                                      onClick={() => handleImageClick(index)}
+                                    />
+                                  </div>
+                                  {showModal && clickedImageIndex === index && (
+                                    <div
+                                      className="textures-options mt-2 p-2"
+                                      style={{
+                                        background: "#15589c",
+                                        borderRadius: "5px",
+                                        position: "absolute",
+                                        top: "100%",
+                                        zIndex: "1000",
+                                      }}
+                                    >
+                                      <div className="texture-modal-content">
+                                        {/* <span className="close" onClick={handleCloseModal} style={{cursor:'pointer'}}>&times;</span> */}
+                                        <img
+                                          src={require("../assets/imgs/diagnol-left.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("diagnolLeft", index)
+                                          }
+                                        />
+                                        <img
+                                          src={require("../assets/imgs/diagnol-right.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("diagnolRight", index)
+                                          }
+                                        />
+                                        <img
+                                          src={require("../assets/imgs/dash.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("dash", index)
+                                          }
+                                        />
+                                        <img
+                                          src={require("../assets/imgs/dots.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("dots", index)
+                                          }
+                                        />
+                                        <img
+                                          src={require("../assets/imgs/cross.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("cross", index)
+                                          }
+                                        />
+                                        <img
+                                          src={require("../assets/imgs/steric.png")}
+                                          className="my-1"
+                                          alt=""
+                                          style={{
+                                            width: "60px",
+                                            height: "40px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleTextureChange("steric", index)
+                                          }
+                                        />
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              ))
+                              }
                             </div>
                           </div>
                         </div>
